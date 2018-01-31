@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="hexo," />
 
 
 
@@ -79,16 +79,18 @@
 
 
 
-<meta name="description" content="anye137&apos;s blogs">
-<meta property="og:type" content="website">
-<meta property="og:title" content="anye137&#39;s blogs">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta name="description" content="​        - 搭建博客使用hexo+github搭建个人博客，具体操作见参考网址http://mp.weixin.qq.com/s/rMZZkHbMeKXsSAvAdsgyRw  修改主题这里我用的是next主题，GitHub地址https://github.com/iissnan/hexo-theme-next在站点目录打开git bash，输入">
+<meta name="keywords" content="hexo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用hexo搭建博客">
+<meta property="og:url" content="http://yoursite.com/2018/01/31/用hexo搭建博客/index.html">
 <meta property="og:site_name" content="anye137&#39;s blogs">
-<meta property="og:description" content="anye137&apos;s blogs">
+<meta property="og:description" content="​        - 搭建博客使用hexo+github搭建个人博客，具体操作见参考网址http://mp.weixin.qq.com/s/rMZZkHbMeKXsSAvAdsgyRw  修改主题这里我用的是next主题，GitHub地址https://github.com/iissnan/hexo-theme-next在站点目录打开git bash，输入">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-31T16:51:32.637Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="anye137&#39;s blogs">
-<meta name="twitter:description" content="anye137&apos;s blogs">
+<meta name="twitter:title" content="用hexo搭建博客">
+<meta name="twitter:description" content="​        - 搭建博客使用hexo+github搭建个人博客，具体操作见参考网址http://mp.weixin.qq.com/s/rMZZkHbMeKXsSAvAdsgyRw  修改主题这里我用的是next主题，GitHub地址https://github.com/iissnan/hexo-theme-next在站点目录打开git bash，输入">
 
 
 
@@ -118,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/01/31/用hexo搭建博客/"/>
 
 
 
 
 
-  <title>anye137's blogs</title>
+  <title>用hexo搭建博客 | anye137's blogs</title>
   
 
 
@@ -143,8 +145,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -281,9 +282,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -313,9 +314,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/01/31/用hexo搭建博客/" itemprop="url">用hexo搭建博客</a></h1>
+          <h1 class="post-title" itemprop="name headline">用hexo搭建博客</h1>
         
 
         <div class="post-meta">
@@ -387,19 +386,52 @@
       
 
       
-        
-          <p>​        -</p>
+        <p>​        -</p>
 <h1 id="搭建博客"><a href="#搭建博客" class="headerlink" title="搭建博客"></a>搭建博客</h1><p>使用hexo+github搭建个人博客，具体操作见参考网址<br><a href="http://mp.weixin.qq.com/s/rMZZkHbMeKXsSAvAdsgyRw" target="_blank" rel="noopener">http://mp.weixin.qq.com/s/rMZZkHbMeKXsSAvAdsgyRw</a></p>
 <p><br></p>
 <h1 id="修改主题"><a href="#修改主题" class="headerlink" title="修改主题"></a>修改主题</h1><p>这里我用的是next主题，GitHub地址<br><a href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="noopener">https://github.com/iissnan/hexo-theme-next</a><br>在站点目录打开git bash，输入</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/01/31/用hexo搭建博客/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
+<a id="more"></a>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/iissnan/hexo-theme-next themes/next</span><br></pre></td></tr></table></figure>
+<p>将next主题下载到站点目录的themes/next文件夹中。打开站点的_config.yml配置文件，修改主题为next<br><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Extensions</span></span><br><span class="line"><span class="comment">## Plugins: https://hexo.io/plugins/</span></span><br><span class="line"><span class="comment">## Themes: https://hexo.io/themes/</span></span><br><span class="line"><span class="attr">theme:</span> <span class="string">next</span></span><br></pre></td></tr></table></figure></p>
+<p>next主题有好几种样式。打开主题中的_config.yml文件，进行设置<br><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ---------------------------------------------------------------</span></span><br><span class="line"><span class="comment"># Scheme Settings</span></span><br><span class="line"><span class="comment"># ---------------------------------------------------------------</span></span><br><span class="line"><span class="comment"># Schemes</span></span><br><span class="line"><span class="comment">#scheme: Muse</span></span><br><span class="line"><span class="comment">#scheme: Mist</span></span><br><span class="line"><span class="comment">#scheme: Pisces</span></span><br><span class="line"><span class="attr">scheme:</span> <span class="string">Gemini</span></span><br></pre></td></tr></table></figure></p>
+<p>最后在站点目录下打开git bash，输入<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ hexo clean</span><br><span class="line">$ hexo g</span><br><span class="line">$ hexo d</span><br></pre></td></tr></table></figure></p>
+<p>到此，主题修改完毕。<br>其他一些配置，诸如修改作者昵称、头像、网页标题、图标、博客语言，以及增加标签页面和分类页面，设置主页底部的站点建立时间等</p>
+<p>可参考next主题的<a href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="noopener">GitHub</a> 以及 <a href="http://theme-next.iissnan.com/" target="_blank" rel="noopener">NexT使用文档</a></p>
+<p><br></p>
+<h1 id="添加本地搜索功能"><a href="#添加本地搜索功能" class="headerlink" title="添加本地搜索功能"></a>添加本地搜索功能</h1><p>参考网址<br><a href="http://hisen.me/20170407-Hexo%20next%E4%B8%BB%E9%A2%98%E6%B7%BB%E5%8A%A0%E6%9C%AC%E5%9C%B0%E6%90%9C%E7%B4%A2%20-%20%E4%B8%8D%E4%BD%BF%E7%94%A8%E7%AC%AC%E4%B8%89%E6%96%B9%E6%9C%8D%E5%8A%A1/" target="_blank" rel="noopener">http://hisen.me/20170407-Hexo%20next%E4%B8%BB%E9%A2%98%E6%B7%BB%E5%8A%A0%E6%9C%AC%E5%9C%B0%E6%90%9C%E7%B4%A2%20-%20%E4%B8%8D%E4%BD%BF%E7%94%A8%E7%AC%AC%E4%B8%89%E6%96%B9%E6%9C%8D%E5%8A%A1/</a></p>
+<p>内容摘录如下：</p>
+<h2 id="安装插件"><a href="#安装插件" class="headerlink" title="安装插件"></a>安装插件</h2><p>在站点根目录打开git bash，输入以下内容，安装 hexo-generator-search 和 hexo-generator-searchdb<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ npm install hexo-generator-search --save</span><br><span class="line">$ npm install hexo-generator-searchdb --save</span><br></pre></td></tr></table></figure></p>
+<h2 id="启用搜索"><a href="#启用搜索" class="headerlink" title="启用搜索"></a>启用搜索</h2><p>编辑站点文件_config.yml，添加以下内容开启搜索<br><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">search:</span></span><br><span class="line"><span class="attr">  path:</span> <span class="string">search.xml</span></span><br><span class="line"><span class="attr">  field:</span> <span class="string">post</span></span><br><span class="line"><span class="attr">  format:</span> <span class="string">html</span></span><br><span class="line"><span class="attr">  limit:</span> <span class="number">10000</span></span><br></pre></td></tr></table></figure></p>
+<p>编辑主题文件_config.yml，启用本地搜索功能：<br><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Local search</span></span><br><span class="line"><span class="attr">local_search:</span></span><br><span class="line"><span class="attr">  enable:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure></p>
+<p>最后重新生成和部署站点就行了</p>
+<p><br></p>
+<h1 id="发布新文章"><a href="#发布新文章" class="headerlink" title="发布新文章"></a>发布新文章</h1><h2 id="新建文章"><a href="#新建文章" class="headerlink" title="新建文章"></a>新建文章</h2><p>站点目录下，输入</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo n <span class="string">"blog_name"</span></span><br></pre></td></tr></table></figure>
+<p>然后站点目录下source/_post文件夹中多了一个 blog_name.md 文件，此文件的内容即是博客的内容。我们可以使用编辑器编辑此文件。个人推荐的编辑器是<a href="https://www.typora.io/?mt=8&amp;uo=4&amp;ct=appcards" target="_blank" rel="noopener">Topyra</a> 或 <a href="https://www.zybuluo.com/cmd/" target="_blank" rel="noopener">Cmd Markdown</a></p>
+<h2 id="添加标签和分类"><a href="#添加标签和分类" class="headerlink" title="添加标签和分类"></a>添加标签和分类</h2><p>blog_name.md文件开头是这样的</p>
+<figure class="highlight md"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: 用hexo搭建博客</span><br><span class="line">date: 2018-01-31 17:46:57</span><br><span class="line">tags: </span><br><span class="line">---</span><br></pre></td></tr></table></figure>
+<p>添加标签和分类，如下：</p>
+<figure class="highlight md"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: 用hexo搭建博客</span><br><span class="line">date: 2018-01-31 17:46:57</span><br><span class="line">tags: [hexo]</span><br><span class="line">categories: hexo</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
+<p>多个标签可用逗号隔开</p>
+<p>若要创建多级分类，则</p>
+<figure class="highlight md"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">categories: </span><br><span class="line">  - 一级分类</span><br><span class="line">  - 二级分类</span><br></pre></td></tr></table></figure>
+<p>要想新建博客时默认带上tags: [] 和 categories:</p>
+<p>打开站点目录下 scaffolds/post.md 文件，默认内容如下：</p>
+<figure class="highlight md"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: &#123;&#123; title &#125;&#125;</span><br><span class="line">date: &#123;&#123; date &#125;&#125;</span><br><span class="line">tags:</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
+<p>修改成</p>
+<figure class="highlight md"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: &#123;&#123; title &#125;&#125;</span><br><span class="line">date: &#123;&#123; date &#125;&#125;</span><br><span class="line">tags: []</span><br><span class="line">categories:</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
+<h2 id="设置阅读全文"><a href="#设置阅读全文" class="headerlink" title="设置阅读全文"></a>设置阅读全文</h2><p>默认情况下，站点首页会显示最新的文章的全部内容，我们可以设置成只显示文章的一部分，然后在后面提供一个链接<strong>阅读全文</strong>来进入文章的详情页。</p>
+<p>在文章中合适的位置添加 <code>&lt; !--more--&gt;</code> 标签，这样只有标签前的内容会在首页中显示</p>
+<p><br></p>
+<h1 id="预览和发布博客"><a href="#预览和发布博客" class="headerlink" title="预览和发布博客"></a>预览和发布博客</h1><h2 id="预览"><a href="#预览" class="headerlink" title="预览"></a>预览</h2><p>保存博客md文件，进入站点目录，打开git bash，输入</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo s --debug</span><br></pre></td></tr></table></figure>
+<p>浏览器输入 <a href="http://localhost:4000" target="_blank" rel="noopener">http://localhost:4000</a> 即可预览</p>
+<h2 id="发布"><a href="#发布" class="headerlink" title="发布"></a>发布</h2><p>在站点目录下，打开git bash，输入</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ hexo clean</span><br><span class="line">$ hexo g</span><br><span class="line">$ hexo d</span><br></pre></td></tr></table></figure>
+<p>即可将博客内容部署到GitHub</p>
+<h1 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h1><p>至此，hexo搭建博客基本完成啦O(∩_∩)O</p>
+<p>其实我之前用过WordPress搭建过博客，然而写了十篇左右就没怎么写了，后来那个站点也弃了，改用有道云笔记记录自己平时的学习笔记。希望以后在做好有道云笔记的同时，也多写写博客！</p>
+
       
     </div>
     
@@ -414,142 +446,36 @@
 
     <footer class="post-footer">
       
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/31/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="anye137">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/apple-touch-icon-anye137.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="anye137's blogs">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/01/31/hello-world/" itemprop="url">Hello World</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-31T12:48:57+08:00">
-                2018-01-31
-              </time>
-            
-
-            
-
-            
-          </span>
-
+        <div class="post-tags">
           
-
+            <a href="/tags/hexo/" rel="tag"># hexo</a>
           
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
       
 
       
       
-        <div class="post-eof"></div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/31/hello-world/" rel="next" title="Hello World">
+                <i class="fa fa-chevron-left"></i> Hello World
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
       
     </footer>
   </div>
@@ -559,10 +485,11 @@
   </article>
 
 
-    
-  </section>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -570,6 +497,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -590,8 +521,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -683,6 +623,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#搭建博客"><span class="nav-number">1.</span> <span class="nav-text">搭建博客</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#修改主题"><span class="nav-number">2.</span> <span class="nav-text">修改主题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#添加本地搜索功能"><span class="nav-number">3.</span> <span class="nav-text">添加本地搜索功能</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装插件"><span class="nav-number">3.1.</span> <span class="nav-text">安装插件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#启用搜索"><span class="nav-number">3.2.</span> <span class="nav-text">启用搜索</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#发布新文章"><span class="nav-number">4.</span> <span class="nav-text">发布新文章</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#新建文章"><span class="nav-number">4.1.</span> <span class="nav-text">新建文章</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#添加标签和分类"><span class="nav-number">4.2.</span> <span class="nav-text">添加标签和分类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#设置阅读全文"><span class="nav-number">4.3.</span> <span class="nav-text">设置阅读全文</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#预览和发布博客"><span class="nav-number">5.</span> <span class="nav-text">预览和发布博客</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#预览"><span class="nav-number">5.1.</span> <span class="nav-text">预览</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#发布"><span class="nav-number">5.2.</span> <span class="nav-text">发布</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#后记"><span class="nav-number">6.</span> <span class="nav-text">后记</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -823,6 +779,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
