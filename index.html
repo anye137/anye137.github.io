@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="java, web, python, machine learning, Hexo, NexT" />
 
 
 
@@ -161,7 +161,7 @@
       </a>
     </div>
       
-        <p class="site-subtitle"></p>
+        <h1 class="site-subtitle" itemprop="description"></h1>
       
   </div>
 
@@ -297,7 +297,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/java-Collections-Map/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/java-Collections-Map/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="anye137">
@@ -314,9 +314,9 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
+          <h2 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/java-Collections-Map/" itemprop="url">java集合框架常用知识点总结</a></h1>
+                <a class="post-title-link" href="/2018/java-Collections-Map/" itemprop="url">java集合框架常用知识点总结</a></h2>
         
 
         <div class="post-meta">
@@ -368,7 +368,7 @@
 
           
           
-             <span id="/java-Collections-Map/" class="leancloud_visitors" data-flag-title="java集合框架常用知识点总结">
+             <span id="/2018/java-Collections-Map/" class="leancloud_visitors" data-flag-title="java集合框架常用知识点总结">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -403,7 +403,7 @@
           <h1 id="ArrayList"><a href="#ArrayList" class="headerlink" title="ArrayList"></a>ArrayList</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">ArrayList&lt;String&gt; a=<span class="keyword">new</span> ArrayList&lt;String&gt;();</span><br><span class="line"></span><br><span class="line"><span class="comment">//add()函数</span></span><br><span class="line">a.add(<span class="string">"a"</span>);     <span class="comment">//[a]</span></span><br><span class="line">a.add(<span class="string">"b"</span>);		<span class="comment">//[a, b]</span></span><br><span class="line">a.add(<span class="string">"c"</span>);		<span class="comment">//[a, b, c]</span></span><br><span class="line">a.add(<span class="number">1</span>, <span class="string">"d"</span>);	<span class="comment">//[a, d, b, c]</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//contains()</span></span><br><span class="line"><span class="keyword">boolean</span> b=a.contains(<span class="string">"f"</span>);    <span class="comment">//false</span></span><br><span class="line">  </span><br><span class="line"><span class="comment">//get()</span></span><br><span class="line">String s1=a.get(<span class="number">1</span>);  <span class="comment">//d</span></span><br><span class="line">String s2=a.get(<span class="number">5</span>);  <span class="comment">//运行时抛出IndexOutOfBoundsException</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//indexOf()</span></span><br><span class="line"><span class="keyword">int</span> i=a.indexOf(<span class="string">"a"</span>);  <span class="comment">//0</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//remove()</span></span><br><span class="line">a.remove(<span class="string">"a"</span>);  <span class="comment">//[d, b, c]</span></span><br><span class="line">a.remove(<span class="number">1</span>);	<span class="comment">//[d, c]</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//set()</span></span><br><span class="line">a.set(<span class="number">1</span>,<span class="string">"aaa"</span>);  <span class="comment">//[d, aaa]</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//size()</span></span><br><span class="line"><span class="keyword">int</span> si=a.size();  <span class="comment">//2</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">//addAll() </span></span><br><span class="line">ArrayList&lt;String&gt; a1=<span class="keyword">new</span> ArrayList&lt;String&gt;();</span><br><span class="line">a1.add(<span class="string">"e"</span>);</span><br><span class="line">a1.add(<span class="string">"f"</span>);</span><br><span class="line">a.addAll(a1);  <span class="comment">//[d, aaa, e, f]</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">//clear()</span></span><br><span class="line">a.clear();  <span class="comment">//[]</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//遍历</span></span><br><span class="line"><span class="keyword">for</span>(String s:a)&#123;</span><br><span class="line">  System.out.println(s);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/java-Collections-Map/#more" rel="contents">
+            <a class="btn" href="/2018/java-Collections-Map/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -454,7 +454,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/hexo-blog/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/hexo-blog/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="anye137">
@@ -471,9 +471,9 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
+          <h2 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/hexo-blog/" itemprop="url">用hexo搭建博客</a></h1>
+                <a class="post-title-link" href="/2018/hexo-blog/" itemprop="url">用hexo搭建博客</a></h2>
         
 
         <div class="post-meta">
@@ -525,7 +525,7 @@
 
           
           
-             <span id="/hexo-blog/" class="leancloud_visitors" data-flag-title="用hexo搭建博客">
+             <span id="/2018/hexo-blog/" class="leancloud_visitors" data-flag-title="用hexo搭建博客">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -563,7 +563,7 @@
 <h1 id="修改主题"><a href="#修改主题" class="headerlink" title="修改主题"></a>修改主题</h1><p>这里我用的是next主题，GitHub地址<br><a href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="noopener">https://github.com/iissnan/hexo-theme-next</a><br>在站点目录打开git bash，输入</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/hexo-blog/#more" rel="contents">
+            <a class="btn" href="/2018/hexo-blog/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -614,7 +614,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/hello-world/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/hello-world/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="anye137">
@@ -631,9 +631,9 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
+          <h2 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/hello-world/" itemprop="url">Hello World</a></h1>
+                <a class="post-title-link" href="/2018/hello-world/" itemprop="url">Hello World</a></h2>
         
 
         <div class="post-meta">
@@ -663,7 +663,7 @@
 
           
           
-             <span id="/hello-world/" class="leancloud_visitors" data-flag-title="Hello World">
+             <span id="/2018/hello-world/" class="leancloud_visitors" data-flag-title="Hello World">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -780,7 +780,7 @@
                 alt="anye137" />
             
               <p class="site-author-name" itemprop="name">anye137</p>
-              <p class="site-description motion-element" itemprop="description">anye137's blogs</p>
+              <p class="site-description motion-element" itemprop="description"></p>
           </div>
 
           <nav class="site-state motion-element">
@@ -887,7 +887,7 @@
 </div>
 
 
-  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io" rel="external nofollow">Hexo</a> 强力驱动</div>
 
 
 
@@ -895,7 +895,7 @@
 
 
 
-  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next" rel="external nofollow">NexT.Gemini</a> v5.1.4</div>
 
 
 
