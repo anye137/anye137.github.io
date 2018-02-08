@@ -3,16 +3,48 @@
 
 
     
+  <url>
+    <loc>http://yoursite.com/2018/java-web-filter-1/</loc>
+    <lastmod>2018-02-08T14:07:05.855Z</lastmod>
+    <data>
+        <display>
+        <title>java web Filter（过滤器）上</title>
+        <pubTime>2018-02-06T08:34:51.000Z</pubTime>
+        
+        <tag>java</tag>
+         
+        <tag>java web</tag>
+         
+        <tag>Filter</tag>
+         
+        <tag>防盗链</tag>
+         
+        <tag>字符编码</tag>
+         
+         
+           
+             
+              <breadCrumb title="java" url="http://yoursite.com/categories/java/"/>
+          
+             
+              <breadCrumb title="java web" url="http://yoursite.com/categories/java/java-web/"/>
+          
+        </display>
+    </data>
+    </url>
+
     
   <url>
     <loc>http://yoursite.com/2018/java-Collections-Map/</loc>
-    <lastmod>2018-02-02T08:18:44.770Z</lastmod>
+    <lastmod>2018-02-06T08:55:15.470Z</lastmod>
     <data>
         <display>
         <title>java集合框架常用知识点总结</title>
         <pubTime>2018-02-02T01:58:53.000Z</pubTime>
         
         <tag>java</tag>
+         
+        <tag>集合框架</tag>
          
          
            
@@ -26,13 +58,15 @@
     
   <url>
     <loc>http://yoursite.com/2018/hexo-blog/</loc>
-    <lastmod>2018-02-02T08:09:11.398Z</lastmod>
+    <lastmod>2018-02-06T08:54:51.339Z</lastmod>
     <data>
         <display>
         <title>用hexo搭建博客</title>
         <pubTime>2018-01-31T09:46:57.000Z</pubTime>
         
         <tag>hexo</tag>
+         
+        <tag>博客</tag>
          
          
            
@@ -47,8 +81,9 @@
     
     
     
+    
   <url>
-    <loc>http://yoursite.com/2018/hello-world/</loc>
+    <loc>http://yoursite.com/2018/2018-01-31-hello-world/</loc>
     <lastmod>2018-01-31T04:48:57.706Z</lastmod>
     <data>
         <display>
