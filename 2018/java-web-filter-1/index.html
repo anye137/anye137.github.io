@@ -88,7 +88,7 @@
 <meta property="og:description" content="Filter 概述Filter（过滤器）用于在 servlet 之外对 request 或者 response 进行拦截、修改，甚至可以拒绝、重定向或者转发 request。Filter 提出了 FilterChain 的概念，一个 FilterChain 包括多个 Filter。客户端请求 request 在抵达 servlet 之前会经过 FilterChain 里的所有 Filter，服务器">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/images/2018/filter.jpg">
-<meta property="og:updated_time" content="2018-02-08T14:07:05.855Z">
+<meta property="og:updated_time" content="2018-02-09T06:07:52.827Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="java web Filter（过滤器）上">
 <meta name="twitter:description" content="Filter 概述Filter（过滤器）用于在 servlet 之外对 request 或者 response 进行拦截、修改，甚至可以拒绝、重定向或者转发 request。Filter 提出了 FilterChain 的概念，一个 FilterChain 包括多个 Filter。客户端请求 request 在抵达 servlet 之前会经过 FilterChain 里的所有 Filter，服务器">
@@ -440,7 +440,7 @@
 </ul>
 <p>一个 web 程序可以配置多个 Filter，<font color="red">如何比较两个Filter 执行顺序</font>：<br>(1) 首先，URL 映射优先级高于 servlet 名称映射，不管其在 web.xml 中配置的顺序如何<br>(2) 其次，如果同为 URL 映射或者同为 servlet 名称映射，则比较<code>&lt;servlet-mapping&gt;</code> 在 web.xml 中出现的顺序</p>
 <h2 id="使用注解配置"><a href="#使用注解配置" class="headerlink" title="使用注解配置"></a>使用注解配置</h2><p>Filter 也可以使用注解配置，下面配置跟上面是等价的</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> javax.servlet.annotation.WebFilter;</span><br><span class="line"><span class="meta">@WebFilter</span>&#123;</span><br><span class="line">    filterName = <span class="string">"myFilter"</span>,</span><br><span class="line">    urlPattern = &#123;<span class="string">"*.do"</span>, <span class="string">"*.jsp"</span>&#125;,</span><br><span class="line">    servletName = &#123;<span class="string">"someServlet"</span>&#125;,</span><br><span class="line">    dispatcherTypes = &#123;DispatcherType.REQUEST, DispatcherType.FORWARD&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SomeFilter</span> <span class="keyword">implements</span> <span class="title">Filter</span></span>&#123;</span><br><span class="line">    <span class="comment">//......</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> javax.servlet.annotation.WebFilter;</span><br><span class="line"><span class="meta">@WebFilter</span>(</span><br><span class="line">    filterName = <span class="string">"myFilter"</span>,</span><br><span class="line">    urlPattern = &#123;<span class="string">"*.do"</span>, <span class="string">"*.jsp"</span>&#125;,</span><br><span class="line">    servletName = &#123;<span class="string">"someServlet"</span>&#125;,</span><br><span class="line">    dispatcherTypes = &#123;DispatcherType.REQUEST, DispatcherType.FORWARD&#125;</span><br><span class="line">    initParams = &#123;</span><br><span class="line">        <span class="meta">@WebInitParam</span>(name = <span class="string">"paramName"</span>, value = <span class="string">"paramValue"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SomeFilter</span> <span class="keyword">implements</span> <span class="title">Filter</span></span>&#123;</span><br><span class="line">    <span class="comment">//......</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>使用注解配置的主要<font color="red">缺点</font>是，<strong>不能对 FilterChain 上的 Filter 进行排序</strong>。</p>
 <p><br></p>
 <h1 id="Filter-常用例子"><a href="#Filter-常用例子" class="headerlink" title="Filter 常用例子"></a>Filter 常用例子</h1><p>我们可以通过在<code>doFilter()</code> 方法内编写代码，达到以下目的：<br>(1) 通过控制是否调用 <code>chain.doFilter()</code> ，来决定是否访问目标资源。例如：防盗链 Filter、权限验证 Filter。<br>(2) 调用 <code>chain.doFilter()</code> 之前，做某些处理。例如：字符编码 Filter。<br>(3) 调用 <code>chain.dpFilter()</code> 之后，做某些处理。例如：内容替换 Filter，GZIP压缩 Filter<br>（当然，我们也可以综合使用上面三种方式）</p>
@@ -525,6 +525,10 @@
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2018/java-web-filter-2/" rel="prev" title="java web Filter（过滤器）下">
+                java web Filter（过滤器）下 <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -604,7 +608,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
