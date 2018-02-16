@@ -82,7 +82,7 @@
 <meta name="description" content="概述本文讲的是，使用 servlet+jsp+jdbc+mysql 实现一个简单的商品管理系统，不使用任何框架，从而加深自己对 java web 基础知识的理解。 实现的主要功能有： (1) 对商品信息的增删查改 (2) 用户的登录注册功能 本文主要讲商品信息的增删查改，下一篇文章讲用户的登录注册。">
 <meta name="keywords" content="java web,商品管理系统,servlet,jsp">
 <meta property="og:type" content="article">
-<meta property="og:title" content="2018-02-14-简单商品管理系统（上）">
+<meta property="og:title" content="简单商品管理系统（上）">
 <meta property="og:url" content="http://yoursite.com/2018/java-web-product-management-1/index.html">
 <meta property="og:site_name" content="anye137&#39;s blogs">
 <meta property="og:description" content="概述本文讲的是，使用 servlet+jsp+jdbc+mysql 实现一个简单的商品管理系统，不使用任何框架，从而加深自己对 java web 基础知识的理解。 实现的主要功能有： (1) 对商品信息的增删查改 (2) 用户的登录注册功能 本文主要讲商品信息的增删查改，下一篇文章讲用户的登录注册。">
@@ -90,9 +90,9 @@
 <meta property="og:image" content="http://yoursite.com/images/2018/02-16-1-package.jpg">
 <meta property="og:image" content="http://yoursite.com/images/2018/02-16-2-package.jpg">
 <meta property="og:image" content="http://yoursite.com/images/2018/02-16-3-listProduct.jpg">
-<meta property="og:updated_time" content="2018-02-16T10:13:10.157Z">
+<meta property="og:updated_time" content="2018-02-16T13:48:58.428Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="2018-02-14-简单商品管理系统（上）">
+<meta name="twitter:title" content="简单商品管理系统（上）">
 <meta name="twitter:description" content="概述本文讲的是，使用 servlet+jsp+jdbc+mysql 实现一个简单的商品管理系统，不使用任何框架，从而加深自己对 java web 基础知识的理解。 实现的主要功能有： (1) 对商品信息的增删查改 (2) 用户的登录注册功能 本文主要讲商品信息的增删查改，下一篇文章讲用户的登录注册。">
 <meta name="twitter:image" content="http://yoursite.com/images/2018/02-16-1-package.jpg">
 
@@ -130,7 +130,7 @@
 
 
 
-  <title>2018-02-14-简单商品管理系统（上） | anye137's blogs</title>
+  <title>简单商品管理系统（上） | anye137's blogs</title>
   
 
 
@@ -318,7 +318,7 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">2018-02-14-简单商品管理系统（上）</h2>
+          <h2 class="post-title" itemprop="name headline">简单商品管理系统（上）</h2>
         
 
         <div class="post-meta">
@@ -381,7 +381,7 @@
 
           
           
-             <span id="/2018/java-web-product-management-1/" class="leancloud_visitors" data-flag-title="2018-02-14-简单商品管理系统（上）">
+             <span id="/2018/java-web-product-management-1/" class="leancloud_visitors" data-flag-title="简单商品管理系统（上）">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -430,7 +430,7 @@
 <p>此外，项目中还有一个 <strong>service 包</strong>，负责实现业务逻辑。包与包之间的关系是：</p>
 <p><strong>(1) domain 中的一些类映射数据库中的表，<br>(2) dao 包使用 jdbc 操作数据库，并将结果映射到 domain 中的java bean类，<br>(3) service 包调用 dao 包的方法来实现业务逻辑，<br>(4) servlet 包调用 service 包的方法来处理或者转发请求，以及实现页面的跳转。</strong></p>
 <p>项目具体文件如下：</p>
-<p><img src="/images/2018/02-16-2-package.jpg" align="center"></p>
+<p><img src="/images/2018/02-16-2-package.jpg" height="400" width="200" align="center"></p>
 <p><br></p>
 <h1 id="项目实现"><a href="#项目实现" class="headerlink" title="项目实现"></a>项目实现</h1><h2 id="数据库建表及插入数据"><a href="#数据库建表及插入数据" class="headerlink" title="数据库建表及插入数据"></a>数据库建表及插入数据</h2><p>新建数据库 management，设置编码为 <strong>utf-8</strong></p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">database</span> <span class="keyword">management</span> <span class="built_in">character</span> <span class="keyword">set</span> utf8;</span><br></pre></td></tr></table></figure>
@@ -514,8 +514,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/java-web-product-management-2/" rel="prev" title="2018-02-16-简单商品管理系统（下）">
-                2018-02-16-简单商品管理系统（下） <i class="fa fa-chevron-right"></i>
+              <a href="/2018/java-web-product-management-2/" rel="prev" title="简单商品管理系统（下）">
+                简单商品管理系统（下） <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>

@@ -5,11 +5,36 @@
     
   <url>
     <loc>http://yoursite.com/2018/java-web-product-management-2/</loc>
-    <lastmod>2018-02-16T13:34:42.660Z</lastmod>
+    <lastmod>2018-02-16T13:49:55.848Z</lastmod>
     <data>
         <display>
-        <title>2018-02-16-简单商品管理系统（下）</title>
+        <title>简单商品管理系统（下）</title>
         <pubTime>2018-02-16T08:35:43.000Z</pubTime>
+        
+        <tag>java web</tag>
+         
+        <tag>商品管理系统</tag>
+         
+         
+           
+             
+              <breadCrumb title="java" url="http://yoursite.com/categories/java/"/>
+          
+             
+              <breadCrumb title="java web" url="http://yoursite.com/categories/java/java-web/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yoursite.com/2018/java-web-product-management-1/</loc>
+    <lastmod>2018-02-16T13:48:58.428Z</lastmod>
+    <data>
+        <display>
+        <title>简单商品管理系统（上）</title>
+        <pubTime>2018-02-14T15:40:04.000Z</pubTime>
         
         <tag>java web</tag>
          
@@ -41,31 +66,6 @@
         <tag>java web</tag>
          
         <tag>Listener</tag>
-         
-         
-           
-             
-              <breadCrumb title="java" url="http://yoursite.com/categories/java/"/>
-          
-             
-              <breadCrumb title="java web" url="http://yoursite.com/categories/java/java-web/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://yoursite.com/2018/java-web-product-management-1/</loc>
-    <lastmod>2018-02-16T10:13:10.157Z</lastmod>
-    <data>
-        <display>
-        <title>2018-02-14-简单商品管理系统（上）</title>
-        <pubTime>2018-02-14T15:40:04.000Z</pubTime>
-        
-        <tag>java web</tag>
-         
-        <tag>商品管理系统</tag>
          
          
            
