@@ -88,7 +88,7 @@
 <meta property="og:description" content="Filter 概述Filter（过滤器）用于在 servlet 之外对 request 或者 response 进行拦截、修改，甚至可以拒绝、重定向或者转发 request。Filter 提出了 FilterChain 的概念，一个 FilterChain 包括多个 Filter。客户端请求 request 在抵达 servlet 之前会经过 FilterChain 里的所有 Filter，服务器">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/images/2018/filter.jpg">
-<meta property="og:updated_time" content="2018-02-11T10:56:26.170Z">
+<meta property="og:updated_time" content="2018-02-16T04:15:24.154Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="java web Filter（过滤器）上">
 <meta name="twitter:description" content="Filter 概述Filter（过滤器）用于在 servlet 之外对 request 或者 response 进行拦截、修改，甚至可以拒绝、重定向或者转发 request。Filter 提出了 FilterChain 的概念，一个 FilterChain 包括多个 Filter。客户端请求 request 在抵达 servlet 之前会经过 FilterChain 里的所有 Filter，服务器">
@@ -412,7 +412,7 @@
       
         <h1 id="Filter-概述"><a href="#Filter-概述" class="headerlink" title="Filter 概述"></a>Filter 概述</h1><p><font color="red">Filter（过滤器）</font>用于在 servlet 之外对 request 或者 response 进行拦截、修改，甚至可以拒绝、重定向或者转发 request。Filter 提出了 <font color="red">FilterChain</font> 的概念，一个 FilterChain 包括多个 Filter。客户端请求 request 在抵达 servlet 之前会经过 FilterChain 里的所有 Filter，服务器响应 response 在从 servlet 抵达客户端浏览器之前也会经过 FilterChain 里的所有Filter。Filter处理过程如图所示：</p>
 <a id="more"></a>
-<p><img src="/images/2018/filter.jpg" width="300" height="200" alt="图片名称" align="center"></p>
+<p><img src="/images/2018/filter.jpg" width="300" height="200" alt="filter" align="center"></p>
 <p><br></p>
 <h1 id="Filter-接口"><a href="#Filter-接口" class="headerlink" title="Filter 接口"></a>Filter 接口</h1><p>一个 Filter 必须实现 <code>javax.servlet.Filter</code> 接口。Filter 接口有<strong>三个方法</strong>，源代码如下：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Filter.java</span></span><br><span class="line"><span class="keyword">package</span> javax.servlet;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Filter</span></span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * web程序启动时调用此方法，用于初始化该Filter</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> config 可以从该参数中获取初始化参数以及ServletContext信息等</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> ServletException</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">(FilterConfig config)</span> <span class="keyword">throws</span> ServletException</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 客户端请求服务器时会经过</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> request 请求 </span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> response 响应</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> chain</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> ServletException</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> IOException</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doFilter</span><span class="params">(ServletRequest request,ServletResponse response,</span></span></span><br><span class="line"><span class="function"><span class="params">            FilterChain chain)</span> <span class="keyword">throws</span> ServletException, IOException</span>;</span><br><span class="line">  </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * web程序关闭时调用此方法，用于销毁一些资源</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">destroy</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -474,7 +474,7 @@
 <p><br></p>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p><font color="red"><strong>Filter（过滤器）是一个很有弹性的机制，功能很强大，而且与servlet、jsp等没有任何的耦合，可自由拆卸。<br>如果配置了多个 Filter，则执行会有先有后，彼此之间还可能会相互影响，要注意正确配置 Filter 的顺序</strong></font>。</p>
 <p>下篇博客将继续写 Filter 使用案例。</p>
-<p><strong>本文章完整代码见 <a href="https://github.com/anye137/Java-Web-Learning/tree/master/Filter" target="_blank" rel="noopener"><font color="blue">Github</font></a></strong>。</p>
+<p><strong>本文章完整代码见 <a href="https://github.com/anye137/Java-Web-Learning/tree/master/FilterAndListener" target="_blank" rel="noopener"><font color="blue">Github</font></a></strong>。</p>
 <p><br></p>
 <h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p>(1) 《Java Web 王者归来》<br>(2) 《Java Web 高级编程》<br>(3)  <a href="http://blog.csdn.net/nokiaisacat/article/details/51326914" target="_blank" rel="noopener">servlet Filter </a> from CSDN<br>(4) <a href="http://blog.csdn.net/xiazdong/article/details/7217022" target="_blank" rel="noopener">Servlet 中文乱码问题及解决方案剖析</a> from CSDN<br>(5) <a href="https://github.com/codingXiaxw/filter" target="_blank" rel="noopener">解决全站字符乱码问题</a>  from GitHub</p>
 
@@ -608,7 +608,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -630,7 +630,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

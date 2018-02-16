@@ -4,8 +4,33 @@
 
     
   <url>
+    <loc>http://yoursite.com/2018/java-web-product-management-2/</loc>
+    <lastmod>2018-02-16T13:34:42.660Z</lastmod>
+    <data>
+        <display>
+        <title>2018-02-16-简单商品管理系统（下）</title>
+        <pubTime>2018-02-16T08:35:43.000Z</pubTime>
+        
+        <tag>java web</tag>
+         
+        <tag>商品管理系统</tag>
+         
+         
+           
+             
+              <breadCrumb title="java" url="http://yoursite.com/categories/java/"/>
+          
+             
+              <breadCrumb title="java web" url="http://yoursite.com/categories/java/java-web/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://yoursite.com/2018/java-web-Listener/</loc>
-    <lastmod>2018-02-11T14:51:08.947Z</lastmod>
+    <lastmod>2018-02-16T10:13:56.490Z</lastmod>
     <data>
         <display>
         <title>java web Listener（监听器）</title>
@@ -31,18 +56,16 @@
 
     
   <url>
-    <loc>http://yoursite.com/2018/java-web-filter-2/</loc>
-    <lastmod>2018-02-11T12:01:57.540Z</lastmod>
+    <loc>http://yoursite.com/2018/java-web-product-management-1/</loc>
+    <lastmod>2018-02-16T10:13:10.157Z</lastmod>
     <data>
         <display>
-        <title>java web Filter（过滤器）下</title>
-        <pubTime>2018-02-08T14:43:03.000Z</pubTime>
+        <title>2018-02-14-简单商品管理系统（上）</title>
+        <pubTime>2018-02-14T15:40:04.000Z</pubTime>
         
-        <tag>java</tag>
-         
         <tag>java web</tag>
          
-        <tag>Filter</tag>
+        <tag>商品管理系统</tag>
          
          
            
@@ -59,7 +82,7 @@
     
   <url>
     <loc>http://yoursite.com/2018/java-web-filter-1/</loc>
-    <lastmod>2018-02-11T10:56:26.170Z</lastmod>
+    <lastmod>2018-02-16T04:15:24.154Z</lastmod>
     <data>
         <display>
         <title>java web Filter（过滤器）上</title>
@@ -74,6 +97,33 @@
         <tag>防盗链</tag>
          
         <tag>字符编码</tag>
+         
+         
+           
+             
+              <breadCrumb title="java" url="http://yoursite.com/categories/java/"/>
+          
+             
+              <breadCrumb title="java web" url="http://yoursite.com/categories/java/java-web/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yoursite.com/2018/java-web-filter-2/</loc>
+    <lastmod>2018-02-11T15:30:52.910Z</lastmod>
+    <data>
+        <display>
+        <title>java web Filter（过滤器）下</title>
+        <pubTime>2018-02-08T14:43:03.000Z</pubTime>
+        
+        <tag>java</tag>
+         
+        <tag>java web</tag>
+         
+        <tag>Filter</tag>
          
          
            
