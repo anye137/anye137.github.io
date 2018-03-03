@@ -4,6 +4,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://anye137.github.io/2018/configure-ssm/</loc>
+    
+    <lastmod>2018-03-03T04:59:00.168Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://anye137.github.io/2018/java-web-product-management-2/</loc>
     
     <lastmod>2018-02-16T13:49:55.848Z</lastmod>
@@ -92,6 +99,13 @@
 <!--
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <url>
+    <loc>http://anye137.github.io/2018/configure-ssm/</loc>
+    
+    <lastmod>2018-03-03T04:59:00.168Z</lastmod>
+    
+  </url>
   
   <url>
     <loc>http://anye137.github.io/2018/java-web-product-management-2/</loc>

@@ -4,6 +4,35 @@
 
     
   <url>
+    <loc>http://yoursite.com/2018/configure-ssm/</loc>
+    <lastmod>2018-03-03T04:59:00.168Z</lastmod>
+    <data>
+        <display>
+        <title>Spring+SpringMVC+MyBatis 配置总结</title>
+        <pubTime>2018-03-01T14:44:07.000Z</pubTime>
+        
+        <tag>java web</tag>
+         
+        <tag>Spring</tag>
+         
+        <tag>Spring MVC</tag>
+         
+        <tag>MyBatis</tag>
+         
+         
+           
+             
+              <breadCrumb title="java" url="http://yoursite.com/categories/java/"/>
+          
+             
+              <breadCrumb title="java web" url="http://yoursite.com/categories/java/java-web/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://yoursite.com/2018/java-web-product-management-2/</loc>
     <lastmod>2018-02-16T13:49:55.848Z</lastmod>
     <data>
