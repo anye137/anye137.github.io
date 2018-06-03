@@ -4,6 +4,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://anye137.github.io/2018/crawler-js-selenium/</loc>
+    
+    <lastmod>2018-06-03T23:35:33.326Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://anye137.github.io/2018/configure-ssm/</loc>
     
     <lastmod>2018-03-03T04:59:00.168Z</lastmod>
@@ -99,6 +106,13 @@
 <!--
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <url>
+    <loc>http://anye137.github.io/2018/crawler-js-selenium/</loc>
+    
+    <lastmod>2018-06-03T23:35:33.326Z</lastmod>
+    
+  </url>
   
   <url>
     <loc>http://anye137.github.io/2018/configure-ssm/</loc>

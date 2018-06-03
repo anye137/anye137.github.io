@@ -4,6 +4,28 @@
 
     
   <url>
+    <loc>http://yoursite.com/2018/crawler-js-selenium/</loc>
+    <lastmod>2018-06-03T23:35:33.326Z</lastmod>
+    <data>
+        <display>
+        <title>爬虫获取 js 动态数据</title>
+        <pubTime>2018-06-03T14:27:26.000Z</pubTime>
+        
+        <tag>爬虫</tag>
+         
+        <tag>js 动态数据</tag>
+         
+         
+           
+             
+              <breadCrumb title="爬虫" url="http://yoursite.com/categories/%E7%88%AC%E8%99%AB/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://yoursite.com/2018/configure-ssm/</loc>
     <lastmod>2018-03-03T04:59:00.168Z</lastmod>
     <data>
