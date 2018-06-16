@@ -1,6 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[Mysql + Grafana 监控爬虫程序]]></title>
+    <url>%2F2018%2Fcrawler-monitor%2F</url>
+    <content type="text"><![CDATA[在使用爬虫爬取大量数据的时候，一般我们都会把程序挂在服务器上运行，然后就可以去干别的事情了。但是，我们还是有必要定时看一下程序运行情况的。虽然我们可以通过 log 信息来监控程序运行情况，但这往往不够直观。所以，今天我就讲讲如何使用 Mysql 和 Grafana 监控爬虫程序的运行状况，并可视化。 1. Grafana 简介 Grafana 是一个数据可视化工具，它并不收集数据，但是可以从数据源（例如 Graphite、Mysql、InfluxDB等）中获取数据并可视化。 2. 运行 GrafanaGrafana 安装教程可以去网上搜，不多说。这里说的是另一种替代方法：使用已经安装好 Grafana 的 Docker 镜像（效果也是一样的）。如果不了解 Docker 的话，可以看下教程 Docker — 从入门到实践 在这里，我们需要先安装好 Docker，并学会一些 Docker 基本命令，例如拉取镜像，容器的创建，容器的运行停止，镜像和容器的删除等等。 安装并运行 Docker 之后： 在 Docker hub 搜索一下包含 Grafana 的镜像，还是出现挺多个的。这里我选择了 kamon/grafana_graphite 在服务器上拉取镜像 1docker pull kamon/grafana_graphite 使用该镜像创建容器，并在后台运行123456789docker run \ -d \ -p 80:80 \ -p 81:81 \ -p 2003:2003 \ -p 8125:8125/udp\ -p 8126:8126\ --name=grafana_graphite \ kamon/grafana_graphite 到这里，我们就得到了一个已经安装了 Grafana 的容器，根本就不用我们手动安装了O(∩_∩)O 哈哈~ 在浏览器中打开 http://your_server_ip:80/，登录（初始用户名和密码都是 admin），我们就可以看到 Grafana 的控制台了，还是挺酷炫的！ 3. 编写爬虫程序并运行略。（在这里，要将爬取到的 item 储存起来，例如插入 mysql 数据库） 4. 编写监控的脚本并运行这里，我们要每隔一定时间查询爬取总量，并计算爬取速度。下面是一个例子：代码分为两部分，首先是在我们存放 item 的数据库建立两个表，每个表有两个字段，一个是查询时间，另一个是 item_total / item_min。123456789101112131415161718192021222324252627282930313233343536import pymysql as mdbimport time# 存放爬取数据的数据库（这里我把统计的数据，存入了爬取数据所在的数据库）DB_NAME = 'db_name'TABLE_NAME1 = 'item_per_min'TABLE_NAME2 = 'item_total'host = 'your_server_ip'user = 'your_user_name'passwd = 'your_pwd'# 爬取的 item 存放的表item_table = 'item_table'def create_table(): use_db_str = 'use ' + DB_NAME create_table_str1 = "CREATE TABLE if not exists " + TABLE_NAME1 + """( `time` datetime NOT NULL, `speed` int NOT NULL DEFAULT '0' ) ENGINE=InnoDB DEFAULT CHARSET=utf8;""" create_table_str2 = "CREATE TABLE if not exists " + TABLE_NAME2 + """( `time` datetime NOT NULL, `total` int NOT NULL DEFAULT '0' ) ENGINE=InnoDB DEFAULT CHARSET=utf8;""" # 数据库连接 conn = mdb.connect(host, user, passwd) cursor = conn.cursor() try: cursor.execute(use_db_str) cursor.execute(create_table_str1) cursor.execute(create_table_str2) conn.commit() except Exception as e: print(e) 代码第二部分是主函数，每隔一分钟查询 items 数，并计算爬取速度，将得到的数据储存起来： 12345678910111213141516171819202122232425if __name__ == '__main__': # 创建表 create_table() conn = mdb.connect(host, user, passwd, DB_NAME) cursor = conn.cursor() before_item = 0 while True: try: cursor.execute('SELECT count(*) FROM %s', item_table ) result = cursor.fetchone() current_item = result[0] print(current_item) # 过去一分钟爬取量 cursor.execute('insert into %s values (now(), %s)' % (TABLE_NAME1, current_item - before_item)) # 爬取总量 cursor.execute('insert into %s values (now(), %s)' % (TABLE_NAME2, current_item)) conn.commit() before_item = current_item except Exception as e: print(e) time.sleep(60) 监控脚本写完后，就可以挂在服务器后台运行了 5. Grafana 配置 配置数据源，这里命名为 monitor_crawler ​ 新建 Dashboard，然后点击 Graph 图标创建图，接着点击 Panel Title -&gt; Edit ​ 选择我们刚才创建的数据源 monitor_crawler ​ 按照 Grafana 提供的模板填写 sql 语句，这里查询了 item_per_min 表12345SELECT UNIX_TIMESTAMP(time) as time_sec, speed as value, &apos;items_min&apos; as metricFROM item_per_min （注意我们选择的是 Time series） 可以选择绘图模式，一般是选 Lines ​ 6. 成果展示 （其实 Grafana 还有很多很酷炫的设置，大家有兴趣可以去探索一下！） 总结在安装好各种环境之后，Mysql + Grafana 监控爬虫程序的步骤： 编写爬虫程序 编写监控脚本，将爬取速度和爬取总量定时存进 Mysql 数据库 Grafana 新建数据源，连接对应的 Mysql 数据库 创建新的 Dashboard，并在里面创建图表，图表数据源选择我们上一步新建的数据源]]></content>
+      <categories>
+        <category>爬虫</category>
+      </categories>
+      <tags>
+        <tag>爬虫</tag>
+        <tag>监控</tag>
+        <tag>Mysql</tag>
+        <tag>Grafana</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[爬虫获取 JS 动态数据（万方数据库文献下载）]]></title>
+    <url>%2F2018%2Fcrawler-js-wanfang%2F</url>
+    <content type="text"><![CDATA[今天讲讲用爬虫下载万方数据库文献。 这是我们要爬取的文献链接:http://www.wanfangdata.com.cn/details/detail.do?_type=perio&amp;id=zgtx201803009 右键那个下载按钮 -&gt; 检查，我们可以看见，按钮的点击事件是一个 js 函数 upload() 。 在网页源代码中，寻找这个 upload() 函数，发现它只在按钮处出现了一次。所以，这个函数应该是由 js 文件加载的。在网页源代码中，寻找 .js（搜索 js 文件），点击每一个 js 文件的链接，看看里面有没有 upload() 函数（这个方法貌似有点蠢，不知有没有更高效的方法）。最后在下图这个文件找到了： upload() 函数代码如下：12345678function onlineReading(page_cnt,id,language,source_db,title,isoa,type,resourceType)&#123; title=window.encodeURI(window.encodeURI(title)); var type = $("#document_type").val(); if(type == "standards")&#123; type="standard"; &#125; window.open("/search/onlineread.do?page_cnt="+page_cnt+"&amp;language="+language+"&amp;resourceType="+type+"&amp;source="+source_db+"&amp;resourceId="+id+"&amp;resourceTitle="+title+"&amp;isoa="+isoa+"&amp;type="+type);&#125; 可以看到，这个函数构造了一个 url， 并在一个新的标签页打开了这个 url。把参数填进去，构造出的 url 为 1http://www.wanfangdata.com.cn/search/downLoad.do?page_cnt=16&amp;language=eng&amp;resourceType=perio&amp;source=WF&amp;resourceId=zgtx201803009&amp;resourceTitle=Spectral Efficiency and Power Allocation for Mixed-ADC Massive MIMO System&amp;isoa=0&amp;type=perio 在浏览器中访问该 url ，发现我们看到的网址，并不是我们构造出的请求 url，说明应该是发生了重定向。 在一个新标签页中，按 F12 监听请求，并打开我们的请求 url 可以看到，我们构造的 url（也就是 downLoad.do? ），重定向到了 submitWeb.do? 。点击 submitWeb.do ，我们可以看到它重定向到了 transaction?，最后才重定向到 downloadliterature.do? 写爬虫时，我们要确保能够到达 downliterature.do?，后面才能下载文件。所以我们先写程序看看能不能提取出这个 downloadliterature.do? 的详细 url。 首先是用正则表达式提取 upload() 函数的参数，然后构造出请求 url，这里我懒得写了，直接 copy 一下： 1url = 'http://www.wanfangdata.com.cn/search/downLoad.do?page_cnt=16&amp;language=eng&amp;resourceType=perio&amp;source=WF&amp;resourceId=zgtx201803009&amp;resourceTitle=Spectral Efficiency and Power Allocation for Mixed-ADC Massive MIMO System&amp;isoa=0&amp;type=perio' 接着发起请求： 1234import requestsr = requests.get(url)print(r.status_code)print(r.url) 运行结果如下： 12200http://www.wanfangdata.com.cn/pay/downloadliterature.do?type=perio&amp;title=Spectral+Efficiency+and+Power+Allocation+for+Mixed-ADC+Massive+MIMO+System&amp;id=zgtx201803009&amp;isresult=false&amp;transaction=%7B%22id%22%3Anull%2C%22transferOutAccountsStatus%22%3Anull%2C%22transaction%22%3A%7B%22id%22%3A%221004368608312180736%22%2C%22status%22%3A1%2C%22createDateTime%22%3Anull%2C%22payDateTime%22%3A1528295111145%2C%22authToken%22%3A%22TGT-4001230-O5ZS0q7FIl2vYtxeLVbVr1LQu2Auh7D4pAjaGsfFg0EAc2oqNa-my.wanfangdata.com.cn%22%2C%22user%22%3A%7B%22accountType%22%3A%22Group%22%2C%22key%22%3A%22hnlgdx%22%7D%2C%22transferIn%22%3A%7B%22accountType%22%3A%22Income%22%2C%22key%22%3A%22PeriodicalFulltext%22%7D%2C%22transferOut%22%3A%7B%22GTimeLimit.hnlgdx%22%3A3.0%7D%2C%22turnover%22%3A3.0%2C%22productDetail%22%3A%22perio_zgtx201803009%22%2C%22productTitle%22%3Anull%2C%22userIP%22%3A%22183.6.159.220%22%2C%22organName%22%3Anull%2C%22memo%22%3Anull%2C%22webTransactionRequest%22%3Anull%2C%22signature%22%3A%22jFHSx941kWx4WEX3sb40p%2B36UW9cduGMuYGPL8yCRS3Gdg0BvqNSKwYJxVTKdMGTRec1pF1an8xM%5CnnIgvniLkT3%2FivH6myLpZ%2BlHCJdj3OxoKIlk3AEQq8%2B4QTDLnfJI5YKW554i2SIyruQpCVCxDBfMS%5CnIh%2Fe8%2BYtbwmuAXcUYwk%3D%22%2C%22delete%22%3Afalse%7D%2C%22isCache%22%3Afalse%7D 还是挺顺利的，一下子就得到了 downloadliterature.do? 的详细 url。这里解释一下：默认情况下，除了 requests.head() 方法，requests 会自动帮我们处理所有重定向。而 response.url 就会返回初始请求重定向后的最终网址。（差点忘了说了，我是用的学校网络，所以能免登陆下载。） 将得到的网址复制到浏览器中打开，会出现一个网页，再弹出下载对话框。这说明，downloadliterature.do? 并不是文件的最终下载链接，如果是文件的最终下载链接的话，就应该会直接弹出对话框。所以，我们的下一步就是找出真正的下载链接。 观察 downloadliterature.do? 网页： 这里有个点击下载的地方，通过 F12 以及查看网页源代码，我们可以看到文件的真正下载链接。接着，我们用正则表达式提取该链接，然后就可以用 requests 下载文件了。 最后，总结一下这一次寻找下载链接的思路： F12 检查 下载按钮 元素，发现，点击后触发的是一个 js 函数 upload()。 在网页源代码中找不到 upload() 的实现，转而在网页包含的 js 文件中找。 找到 upload() 后，根据其实现，构造请求 url。 在浏览器中打开请求 url，发现网页重定向了。用 requests 和 response 获取重定向后的 url 得到重定向的 url 后，打开，并提取其中包含的文件下载链接]]></content>
+      <categories>
+        <category>爬虫</category>
+      </categories>
+      <tags>
+        <tag>爬虫</tag>
+        <tag>JS</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[Python 爬虫中的多进程，多线程和协程（基础）]]></title>
     <url>%2F2018%2Fcrawler-multi-process-thread%2F</url>
     <content type="text"><![CDATA[这篇文章讲提高爬虫效率的三种方法： 多进程 多线程 协程 其实如果要详细讲的话，这三个方法还是挺复杂的，比如说进程间的通信问题，多线程的锁机制问题等。由于本人水平所限，这里就只讲讲这三者的基本用法吧。（虽然如此，掌握了这些基本用法，还是能够显著提升爬虫效率的。） 首先先总结下多进程、多线程和协程三者的特点： 多进程： 多线程： 协程： 下面是代码例子 多进程 多线程 协程]]></content>
@@ -16,7 +42,7 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[爬虫获取 js 动态数据]]></title>
+    <title><![CDATA[爬虫获取 JS 动态数据（漫画图片下载）]]></title>
     <url>%2F2018%2Fcrawler-js-selenium%2F</url>
     <content type="text"><![CDATA[爬虫遇到 js 动态数据时，主要解决方法有两种： 使用一些库，例如 Selenium，来模拟浏览器环境抓取数据。但这样做对内存和 CPU 的消耗都比较大，爬虫效率低，应尽量避免。 手动分析 js 请求 下面我选了一个漫画网站作为小例子，讲一下第二个方法。 https://manhua.sfacg.com/mh/YSJ/4519/ 我们的目的是获取漫画图片 url，然后下载下来。 判断待爬数据是否 js 动态加载的用 chrome 打开该网页，右键漫画图片 -&gt; 检查 我们可以看到图片的 url 就在里面。可以右键此处（蓝色部分）-&gt; copy -&gt; copy xpath 获得图片对应的 xpath，然后可以使用 requests 和 xpath 获取图片 url。当然最后还是失败了。因为这里的图片是 js 动态加载出来的。 获取跟待爬数据有关的 js 代码信息我们可以查看网页源代码，Ctrl+F 定位图片 id “curPic”： 可以看到，里面根本没有图片的 url，图片是 js 加载的。阅读里面的 js 代码，我们可以知道图片 url 是由下面这行代码决定的： 1pic2.src = hosts[getHost()] + picAy[curIndex] 在源码中寻找 hosts 和 picAy，发现它们只在这里出现过。这说明这两个数组可能是由 js 代码加载的。 寻找跟待爬数据有关的 js 请求回到漫画那个页面，我们打开 Chrome 的 F12，点击 network，勾选 js，刷新网页，查看相关 js 请求对应的 preview，看看哪些包含 hosts 和 picAy： 额，这进展还是出乎意料的顺利，第一个 js 就有我们想要寻找的内容了。我们可以看到，这一话漫画的所有图片都在这个 js 请求的响应内容里了。由此图可知，我们进入某一话漫画的第一页时，就有一份 js 代码请求了这一话漫画所有页的图片 url。那么，我们在写程序的时候，该如何得到这份 js 的文件名？ 观察其他漫画的情况，我们可以发现，虽然这份 js 代码的命名没啥规律，不过在网页源代码中，它一般是处于第一个 js 的位置。 总结至此，总结一下如何下载该网站漫画： 获取一话漫画的第一页 url 获取该 url 响应的 html 在 html 中寻找第一个 js 代码文件名 获取该 js 的响应内容，从中提取所有图片 url 总结一下该例子中获取 js 动态数据的思路： 判断是不是 js 加载的数据 如果是 js 加载的，查看网页源代码中待下载数据附近的 js 代码，获取关键信息（比如一些变量名） 回到待爬网页那里，按 F12（我用的 Chrome），点击 network，勾选 js，刷新网页，获取 js 请求 逐个查看每个请求的 preview，看有没有跟待爬取内容相关的信息。]]></content>
       <categories>
@@ -24,7 +50,7 @@
       </categories>
       <tags>
         <tag>爬虫</tag>
-        <tag>js 动态数据</tag>
+        <tag>JS</tag>
       </tags>
   </entry>
   <entry>

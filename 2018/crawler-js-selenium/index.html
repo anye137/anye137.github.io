@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="爬虫, js 动态数据, Selenium" />
+  <meta name="keywords" content="爬虫, JS, Selenium" />
 
 
 
@@ -80,9 +80,9 @@
 
 
 <meta name="description" content="爬虫遇到 js 动态数据时，主要解决方法有两种：  使用一些库，例如 Selenium，来模拟浏览器环境抓取数据。但这样做对内存和 CPU 的消耗都比较大，爬虫效率低，应尽量避免。 手动分析 js 请求  下面我选了一个漫画网站作为小例子，讲一下第二个方法。 https://manhua.sfacg.com/mh/YSJ/4519/ 我们的目的是获取漫画图片 url，然后下载下来。">
-<meta name="keywords" content="爬虫, js 动态数据, Selenium">
+<meta name="keywords" content="爬虫, JS, Selenium">
 <meta property="og:type" content="article">
-<meta property="og:title" content="爬虫获取 js 动态数据">
+<meta property="og:title" content="爬虫获取 JS 动态数据（漫画图片下载）">
 <meta property="og:url" content="http://yoursite.com/2018/crawler-js-selenium/index.html">
 <meta property="og:site_name" content="anye137&#39;s blogs">
 <meta property="og:description" content="爬虫遇到 js 动态数据时，主要解决方法有两种：  使用一些库，例如 Selenium，来模拟浏览器环境抓取数据。但这样做对内存和 CPU 的消耗都比较大，爬虫效率低，应尽量避免。 手动分析 js 请求  下面我选了一个漫画网站作为小例子，讲一下第二个方法。 https://manhua.sfacg.com/mh/YSJ/4519/ 我们的目的是获取漫画图片 url，然后下载下来。">
@@ -90,9 +90,9 @@
 <meta property="og:image" content="http://yoursite.com/images/2018/06-04-0-comic.jpg">
 <meta property="og:image" content="http://yoursite.com/images/2018/06-04-1-comic.jpg">
 <meta property="og:image" content="http://yoursite.com/images/2018/06-04-1-comic.jpg">
-<meta property="og:updated_time" content="2018-06-03T23:35:33.326Z">
+<meta property="og:updated_time" content="2018-06-16T08:41:10.306Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="爬虫获取 js 动态数据">
+<meta name="twitter:title" content="爬虫获取 JS 动态数据（漫画图片下载）">
 <meta name="twitter:description" content="爬虫遇到 js 动态数据时，主要解决方法有两种：  使用一些库，例如 Selenium，来模拟浏览器环境抓取数据。但这样做对内存和 CPU 的消耗都比较大，爬虫效率低，应尽量避免。 手动分析 js 请求  下面我选了一个漫画网站作为小例子，讲一下第二个方法。 https://manhua.sfacg.com/mh/YSJ/4519/ 我们的目的是获取漫画图片 url，然后下载下来。">
 <meta name="twitter:image" content="http://yoursite.com/images/2018/06-04-0-comic.jpg">
 
@@ -130,7 +130,7 @@
 
 
 
-  <title>爬虫获取 js 动态数据 | anye137's blogs</title>
+  <title>爬虫获取 JS 动态数据（漫画图片下载） | anye137's blogs</title>
   
 
 
@@ -318,7 +318,7 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">爬虫获取 js 动态数据</h2>
+          <h2 class="post-title" itemprop="name headline">爬虫获取 JS 动态数据（漫画图片下载）</h2>
         
 
         <div class="post-meta">
@@ -370,7 +370,7 @@
 
           
           
-             <span id="/2018/crawler-js-selenium/" class="leancloud_visitors" data-flag-title="爬虫获取 js 动态数据">
+             <span id="/2018/crawler-js-selenium/" class="leancloud_visitors" data-flag-title="爬虫获取 JS 动态数据（漫画图片下载）">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -411,7 +411,7 @@
 <p><strong>我们的目的是获取漫画图片 url，然后下载下来。</strong></p>
 <a id="more"></a>
 <h1 id="判断待爬数据是否-js-动态加载的"><a href="#判断待爬数据是否-js-动态加载的" class="headerlink" title="判断待爬数据是否 js 动态加载的"></a>判断待爬数据是否 js 动态加载的</h1><p>用 chrome 打开该网页，右键漫画图片 -&gt; 检查</p>
-<p><img src="/images/2018/06-04-0-comic.jpg" alt="filter" align="center"></p>
+<p><img src="/images/2018/06-04-0-comic.jpg" align="center"></p>
 <p>我们可以看到图片的 url 就在里面。可以右键此处（蓝色部分）-&gt; copy -&gt;  copy xpath 获得图片对应的 xpath，然后可以使用 requests 和 xpath 获取图片 url。当然最后还是失败了。因为这里的图片是 js 动态加载出来的。</p>
 <h1 id="获取跟待爬数据有关的-js-代码信息"><a href="#获取跟待爬数据有关的-js-代码信息" class="headerlink" title="获取跟待爬数据有关的 js 代码信息"></a>获取跟待爬数据有关的 js 代码信息</h1><p>我们可以查看网页源代码，Ctrl+F 定位图片 id “curPic”：</p>
 <p><img src="/images/2018/06-04-1-comic.jpg" alt="filter" align="center"></p>
@@ -455,7 +455,7 @@
           
             <a href="/tags/爬虫/" rel="tag"># 爬虫</a>
           
-            <a href="/tags/js-动态数据/" rel="tag"># js 动态数据</a>
+            <a href="/tags/JS/" rel="tag"># JS</a>
           
         </div>
       
@@ -561,7 +561,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-count">13</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -583,7 +583,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-count">22</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

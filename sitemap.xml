@@ -2,6 +2,27 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/2018/crawler-monitor/</loc>
+    
+    <lastmod>2018-06-16T08:56:30.914Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2018/crawler-js-wanfang/</loc>
+    
+    <lastmod>2018-06-16T08:41:24.604Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2018/crawler-js-selenium/</loc>
+    
+    <lastmod>2018-06-16T08:41:10.306Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/2018/hexo-hello-world/</loc>
     
     <lastmod>2018-06-09T02:35:14.351Z</lastmod>
@@ -12,13 +33,6 @@
     <loc>http://yoursite.com/2018/crawler-multi-process-thread/</loc>
     
     <lastmod>2018-06-07T15:27:24.101Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2018/crawler-js-selenium/</loc>
-    
-    <lastmod>2018-06-03T23:35:33.326Z</lastmod>
     
   </url>
   
