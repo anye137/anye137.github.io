@@ -4,6 +4,30 @@
 
     
   <url>
+    <loc>http://yoursite.com/2018/crawler-geetest/</loc>
+    <lastmod>2018-06-18T04:11:13.463Z</lastmod>
+    <data>
+        <display>
+        <title>爬虫之破解极验验证（滑动验证码）</title>
+        <pubTime>2018-06-18T01:21:59.000Z</pubTime>
+        
+        <tag>爬虫</tag>
+         
+        <tag>极限验证</tag>
+         
+        <tag>滑动验证码</tag>
+         
+         
+           
+             
+              <breadCrumb title="爬虫" url="http://yoursite.com/categories/%E7%88%AC%E8%99%AB/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://yoursite.com/2018/crawler-monitor/</loc>
     <lastmod>2018-06-16T08:56:30.914Z</lastmod>
     <data>
