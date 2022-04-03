@@ -17,30 +17,30 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"anye137.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="在使用爬虫爬取大量数据的时候，一般我们都会把程序挂在服务器上运行，然后就可以去干别的事情了。但是，我们还是有必要定时看一下程序运行情况的。虽然我们可以通过 log 信息来监控程序运行情况，但这往往不够直观。所以，今天我就讲讲如何使用 Mysql 和 Grafana 监控爬虫程序的运行状况，并可视化。">
 <meta name="keywords" content="爬虫, JS, Mysql, Grafana">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Mysql + Grafana 监控爬虫程序">
-<meta property="og:url" content="http://yoursite.com/2018/crawler-monitor/index.html">
+<meta property="og:url" content="https://anye137.github.io/2018/crawler-monitor/index.html">
 <meta property="og:site_name" content="anye137&#39;s blogs">
 <meta property="og:description" content="在使用爬虫爬取大量数据的时候，一般我们都会把程序挂在服务器上运行，然后就可以去干别的事情了。但是，我们还是有必要定时看一下程序运行情况的。虽然我们可以通过 log 信息来监控程序运行情况，但这往往不够直观。所以，今天我就讲讲如何使用 Mysql 和 Grafana 监控爬虫程序的运行状况，并可视化。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://yoursite.com/images/2018/06-09-1.png">
-<meta property="og:image" content="http://yoursite.com/images/2018/06-09-2.png">
-<meta property="og:image" content="http://yoursite.com/images/2018/06-09-3.png">
-<meta property="og:image" content="http://yoursite.com/images/2018/06-09-4.png">
-<meta property="og:image" content="http://yoursite.com/images/2018/06-09-5.png">
-<meta property="og:image" content="http://yoursite.com/images/2018/06-09-6.png">
+<meta property="og:image" content="https://anye137.github.io/images/2018/06-09-1.png">
+<meta property="og:image" content="https://anye137.github.io/images/2018/06-09-2.png">
+<meta property="og:image" content="https://anye137.github.io/images/2018/06-09-3.png">
+<meta property="og:image" content="https://anye137.github.io/images/2018/06-09-4.png">
+<meta property="og:image" content="https://anye137.github.io/images/2018/06-09-5.png">
+<meta property="og:image" content="https://anye137.github.io/images/2018/06-09-6.png">
 <meta property="og:updated_time" content="2022-04-03T13:22:07.399Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Mysql + Grafana 监控爬虫程序">
 <meta name="twitter:description" content="在使用爬虫爬取大量数据的时候，一般我们都会把程序挂在服务器上运行，然后就可以去干别的事情了。但是，我们还是有必要定时看一下程序运行情况的。虽然我们可以通过 log 信息来监控程序运行情况，但这往往不够直观。所以，今天我就讲讲如何使用 Mysql 和 Grafana 监控爬虫程序的运行状况，并可视化。">
-<meta name="twitter:image" content="http://yoursite.com/images/2018/06-09-1.png">
+<meta name="twitter:image" content="https://anye137.github.io/images/2018/06-09-1.png">
 
-<link rel="canonical" href="http://yoursite.com/2018/crawler-monitor/">
+<link rel="canonical" href="https://anye137.github.io/2018/crawler-monitor/">
 
 
 <script id="page-configurations">
@@ -159,7 +159,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/crawler-monitor/">
+    <link itemprop="mainEntityOfPage" href="https://anye137.github.io/2018/crawler-monitor/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
