@@ -214,69 +214,96 @@
       
         <p>在使用爬虫爬取<strong>大量</strong>数据的时候，一般我们都会把程序挂在服务器上运行，然后就可以去干别的事情了。但是，我们还是有必要定时看一下程序运行情况的。虽然我们可以通过 log 信息来监控程序运行情况，但这往往不够直观。所以，今天我就讲讲如何使用 Mysql 和 Grafana 监控爬虫程序的<strong>运行状况</strong>，并<strong>可视化</strong>。</p>
 <a id="more"></a>
-<p><br></p>
+
+<br>
+
 <h1 id="1-Grafana-简介"><a href="#1-Grafana-简介" class="headerlink" title="1. Grafana 简介"></a>1. Grafana 简介</h1><blockquote>
 <p>Grafana 是一个数据可视化工具，它并不收集数据，但是可以从数据源（例如 Graphite、Mysql、InfluxDB等）中获取数据并可视化。</p>
 </blockquote>
-<p><br></p>
+<br>
+
 <h1 id="2-运行-Grafana"><a href="#2-运行-Grafana" class="headerlink" title="2. 运行 Grafana"></a>2. 运行 Grafana</h1><p>Grafana 安装教程可以去网上搜，不多说。这里说的是另一种替代方法：使用已经安装好 Grafana 的 Docker 镜像（效果也是一样的）。如果不了解 Docker 的话，可以看下教程 <a href="https://docker_practice.gitee.io/" target="_blank" rel="noopener">Docker — 从入门到实践</a></p>
 <p>在这里，我们需要先安装好 Docker，并学会一些 Docker 基本命令，例如拉取镜像，容器的创建，容器的运行停止，镜像和容器的删除等等。</p>
 <p>安装并运行 Docker 之后：</p>
 <ol>
-<li><p>在 <a href="https://hub.docker.com/" target="_blank" rel="noopener">Docker hub</a> 搜索一下包含 Grafana 的镜像，还是出现挺多个的。这里我选择了 <a href="https://hub.docker.com/r/kamon/grafana_graphite/" target="_blank" rel="noopener"><a href="https://hub.docker.com/u/kamon/" target="_blank" rel="noopener">kamon</a>/<a href="https://hub.docker.com/r/kamon/grafana_graphite/" target="_blank" rel="noopener">grafana_graphite</a>
-</a> </p>
+<li><p>在 <a href="https://hub.docker.com/" target="_blank" rel="noopener">Docker hub</a> 搜索一下包含 Grafana 的镜像，还是出现挺多个的。这里我选择了 <a href="https://hub.docker.com/r/kamon/grafana_graphite/" target="_blank" rel="noopener"><a href="https://hub.docker.com/u/kamon/" target="_blank" rel="noopener">kamon</a>&#x2F;<a href="https://hub.docker.com/r/kamon/grafana_graphite/" target="_blank" rel="noopener">grafana_graphite</a>
+  </a> </p>
 </li>
 <li><p>在服务器上拉取镜像</p>
 </li>
 </ol>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull kamon/grafana_graphite</span><br></pre></td></tr></table></figure>
+
 <ol start="3">
-<li>使用该镜像创建容器，并在后台运行<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">docker run \</span><br><span class="line">  -d \</span><br><span class="line">  -p 80:80 \</span><br><span class="line">  -p 81:81 \</span><br><span class="line">  -p 2003:2003 \</span><br><span class="line">  -p 8125:8125/udp\</span><br><span class="line">  -p 8126:8126\</span><br><span class="line">  --name=grafana_graphite \</span><br><span class="line">  kamon/grafana_graphite</span><br></pre></td></tr></table></figure>
-</li>
+<li>使用该镜像创建容器，并在后台运行<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">docker run \</span><br><span class="line">  -d \</span><br><span class="line">  -p 80:80 \</span><br><span class="line">  -p 81:81 \</span><br><span class="line">  -p 2003:2003 \</span><br><span class="line">  -p 8125:8125/udp\</span><br><span class="line">  -p 8126:8126\</span><br><span class="line">  --name=grafana_graphite \</span><br><span class="line">  kamon/grafana_graphite</span><br></pre></td></tr></table></figure></li>
 </ol>
 <p>到这里，我们就得到了一个已经安装了 Grafana 的容器，根本就不用我们手动安装了O(∩_∩)O 哈哈~</p>
 <ol start="4">
-<li>在浏览器中打开 <a href="http://your_server_ip:80/，登录（初始用户名和密码都是" target="_blank" rel="noopener">http://your_server_ip:80/，登录（初始用户名和密码都是</a> admin），我们就可以看到 Grafana 的控制台了，还是挺酷炫的！</li>
+<li>在浏览器中打开 <a href="http://your_server_ip/%EF%BC%8C%E7%99%BB%E5%BD%95%EF%BC%88%E5%88%9D%E5%A7%8B%E7%94%A8%E6%88%B7%E5%90%8D%E5%92%8C%E5%AF%86%E7%A0%81%E9%83%BD%E6%98%AF" target="_blank" rel="noopener">http://your_server_ip:80/，登录（初始用户名和密码都是</a> admin），我们就可以看到 Grafana 的控制台了，还是挺酷炫的！</li>
 </ol>
-<p><br></p>
+<br>
+
 <h1 id="3-编写爬虫程序并运行"><a href="#3-编写爬虫程序并运行" class="headerlink" title="3. 编写爬虫程序并运行"></a>3. 编写爬虫程序并运行</h1><p>略。（在这里，要将爬取到的 item 储存起来，例如插入 mysql 数据库）</p>
-<p><br></p>
-<h1 id="4-编写监控的脚本并运行"><a href="#4-编写监控的脚本并运行" class="headerlink" title="4. 编写监控的脚本并运行"></a>4. 编写监控的脚本并运行</h1><p>这里，我们要每隔一定时间查询爬取总量，并计算爬取速度。下面是一个例子：<br>代码分为两部分，首先是在我们存放 item 的数据库建立两个表，每个表有两个字段，一个是查询时间，另一个是 <code>item_total / item_min</code>。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pymysql <span class="keyword">as</span> mdb</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"><span class="comment"># 存放爬取数据的数据库（这里我把统计的数据，存入了爬取数据所在的数据库）</span></span><br><span class="line">DB_NAME = <span class="string">'db_name'</span></span><br><span class="line">TABLE_NAME1 = <span class="string">'item_per_min'</span></span><br><span class="line">TABLE_NAME2 = <span class="string">'item_total'</span></span><br><span class="line">host = <span class="string">'your_server_ip'</span></span><br><span class="line">user = <span class="string">'your_user_name'</span></span><br><span class="line">passwd = <span class="string">'your_pwd'</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 爬取的 item 存放的表</span></span><br><span class="line">item_table = <span class="string">'item_table'</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">create_table</span><span class="params">()</span>:</span></span><br><span class="line">    use_db_str = <span class="string">'use '</span> + DB_NAME</span><br><span class="line">    create_table_str1 = <span class="string">"CREATE TABLE if not exists "</span> + TABLE_NAME1 + <span class="string">"""(</span></span><br><span class="line"><span class="string">      `time` datetime NOT NULL,</span></span><br><span class="line"><span class="string">      `speed` int NOT NULL DEFAULT '0'</span></span><br><span class="line"><span class="string">    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;"""</span></span><br><span class="line"></span><br><span class="line">    create_table_str2 = <span class="string">"CREATE TABLE if not exists "</span> + TABLE_NAME2 + <span class="string">"""(</span></span><br><span class="line"><span class="string">        `time` datetime NOT NULL,</span></span><br><span class="line"><span class="string">        `total` int NOT NULL DEFAULT '0'   </span></span><br><span class="line"><span class="string">        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;"""</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 数据库连接</span></span><br><span class="line">    conn = mdb.connect(host, user, passwd)</span><br><span class="line">    cursor = conn.cursor()</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        cursor.execute(use_db_str)</span><br><span class="line">        cursor.execute(create_table_str1)</span><br><span class="line">        cursor.execute(create_table_str2)</span><br><span class="line">        conn.commit()</span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        print(e)</span><br></pre></td></tr></table></figure></p>
+<br>
+
+<h1 id="4-编写监控的脚本并运行"><a href="#4-编写监控的脚本并运行" class="headerlink" title="4. 编写监控的脚本并运行"></a>4. 编写监控的脚本并运行</h1><p>这里，我们要每隔一定时间查询爬取总量，并计算爬取速度。下面是一个例子：<br>代码分为两部分，首先是在我们存放 item 的数据库建立两个表，每个表有两个字段，一个是查询时间，另一个是 <code>item_total / item_min</code>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pymysql <span class="keyword">as</span> mdb</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"><span class="comment"># 存放爬取数据的数据库（这里我把统计的数据，存入了爬取数据所在的数据库）</span></span><br><span class="line">DB_NAME = <span class="string">'db_name'</span></span><br><span class="line">TABLE_NAME1 = <span class="string">'item_per_min'</span></span><br><span class="line">TABLE_NAME2 = <span class="string">'item_total'</span></span><br><span class="line">host = <span class="string">'your_server_ip'</span></span><br><span class="line">user = <span class="string">'your_user_name'</span></span><br><span class="line">passwd = <span class="string">'your_pwd'</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 爬取的 item 存放的表</span></span><br><span class="line">item_table = <span class="string">'item_table'</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">create_table</span><span class="params">()</span>:</span></span><br><span class="line">    use_db_str = <span class="string">'use '</span> + DB_NAME</span><br><span class="line">    create_table_str1 = <span class="string">"CREATE TABLE if not exists "</span> + TABLE_NAME1 + <span class="string">"""(</span></span><br><span class="line"><span class="string">      `time` datetime NOT NULL,</span></span><br><span class="line"><span class="string">      `speed` int NOT NULL DEFAULT '0'</span></span><br><span class="line"><span class="string">    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;"""</span></span><br><span class="line"></span><br><span class="line">    create_table_str2 = <span class="string">"CREATE TABLE if not exists "</span> + TABLE_NAME2 + <span class="string">"""(</span></span><br><span class="line"><span class="string">        `time` datetime NOT NULL,</span></span><br><span class="line"><span class="string">        `total` int NOT NULL DEFAULT '0'   </span></span><br><span class="line"><span class="string">        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;"""</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 数据库连接</span></span><br><span class="line">    conn = mdb.connect(host, user, passwd)</span><br><span class="line">    cursor = conn.cursor()</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        cursor.execute(use_db_str)</span><br><span class="line">        cursor.execute(create_table_str1)</span><br><span class="line">        cursor.execute(create_table_str2)</span><br><span class="line">        conn.commit()</span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        print(e)</span><br></pre></td></tr></table></figure>
+
 <p>代码第二部分是主函数，每隔一分钟查询 items 数，并计算爬取速度，将得到的数据储存起来：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    <span class="comment"># 创建表</span></span><br><span class="line">    create_table()</span><br><span class="line">    conn = mdb.connect(host, user, passwd, DB_NAME)</span><br><span class="line">    cursor = conn.cursor()</span><br><span class="line"></span><br><span class="line">    before_item = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            cursor.execute(<span class="string">'SELECT count(*) FROM %s'</span>, item_table )</span><br><span class="line">            result = cursor.fetchone()</span><br><span class="line">            current_item = result[<span class="number">0</span>]</span><br><span class="line">            print(current_item)</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 过去一分钟爬取量</span></span><br><span class="line">            cursor.execute(<span class="string">'insert into %s values (now(), %s)'</span> % (TABLE_NAME1, current_item - before_item))</span><br><span class="line">            <span class="comment"># 爬取总量</span></span><br><span class="line">            cursor.execute(<span class="string">'insert into %s values (now(), %s)'</span> % (TABLE_NAME2, current_item))</span><br><span class="line"></span><br><span class="line">            conn.commit()</span><br><span class="line">            before_item = current_item</span><br><span class="line">        <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">            print(e)</span><br><span class="line"></span><br><span class="line">        time.sleep(<span class="number">60</span>)</span><br></pre></td></tr></table></figure>
+
 <p>监控脚本写完后，就可以挂在服务器后台运行了</p>
-<p><br></p>
+<br>
+
 <h1 id="5-Grafana-配置"><a href="#5-Grafana-配置" class="headerlink" title="5. Grafana 配置"></a>5. Grafana 配置</h1><ol>
 <li><p>配置数据源，这里命名为 <code>monitor_crawler</code></p>
 <p>​</p>
 </li>
 </ol>
-<p><img src="/images/2018/06-09-1.png" align="center"></p>
+<img src="/images/2018/06-09-1.png" align="center">
+
+
+
 <ol start="2">
 <li><p>新建 Dashboard，然后点击 Graph 图标创建图，接着点击 <code>Panel Title</code> -&gt; <code>Edit</code></p>
 <p>​</p>
 </li>
 </ol>
-<p><img src="/images/2018/06-09-2.png" align="center"></p>
+<img src="/images/2018/06-09-2.png" align="center">
+
+
+
 <ol start="3">
 <li><p>选择我们刚才创建的数据源 <code>monitor_crawler</code></p>
 <p>​</p>
 </li>
 </ol>
-<p><img src="/images/2018/06-09-3.png" align="center"></p>
+<img src="/images/2018/06-09-3.png" align="center">
+
+
+
 <ol start="4">
-<li>按照 Grafana 提供的模板填写 sql 语句，这里查询了 <code>item_per_min</code> 表<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">SELECT</span><br><span class="line">  UNIX_TIMESTAMP(time) as time_sec,</span><br><span class="line">  speed as value,</span><br><span class="line">  &apos;items_min&apos; as metric</span><br><span class="line">FROM item_per_min</span><br></pre></td></tr></table></figure>
-</li>
+<li>按照 Grafana 提供的模板填写 sql 语句，这里查询了 <code>item_per_min</code> 表<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">SELECT</span><br><span class="line">  UNIX_TIMESTAMP(time) as time_sec,</span><br><span class="line">  speed as value,</span><br><span class="line">  &apos;items_min&apos; as metric</span><br><span class="line">FROM item_per_min</span><br></pre></td></tr></table></figure></li>
 </ol>
 <p>（注意我们选择的是 <code>Time series</code>）</p>
-<p><img src="/images/2018/06-09-4.png" align="center"></p>
+<img src="/images/2018/06-09-4.png" align="center">
+
+
+
 <ol start="5">
 <li><p>可以选择绘图模式，一般是选 <code>Lines</code></p>
 <p>​</p>
 </li>
 </ol>
-<p><img src="/images/2018/06-09-5.png" align="center"></p>
-<h1 id="6-成果展示"><a href="#6-成果展示" class="headerlink" title="6. 成果展示"></a>6. 成果展示</h1><p><img src="/images/2018/06-09-6.png" align="center"></p>
+<img src="/images/2018/06-09-5.png" align="center">
+
+
+
+<h1 id="6-成果展示"><a href="#6-成果展示" class="headerlink" title="6. 成果展示"></a>6. 成果展示</h1><img src="/images/2018/06-09-6.png" align="center">
+
+
+
+
 <p>（其实 Grafana 还有很多很酷炫的设置，大家有兴趣可以去探索一下！）</p>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>在安装好各种环境之后，Mysql + Grafana 监控爬虫程序的步骤：</p>
 <blockquote>

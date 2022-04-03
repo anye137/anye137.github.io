@@ -20,18 +20,18 @@
     var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="​        - 搭建博客使用hexo+github搭建个人博客，具体操作见参考网址http://mp.weixin.qq.com/s/rMZZkHbMeKXsSAvAdsgyRw  修改主题这里我用的是next主题，GitHub地址https://github.com/iissnan/hexo-theme-next在站点目录打开git bash，输入">
+  <meta name="description" content="​        - 搭建博客使用hexo+github搭建个人博客，具体操作见参考网址http://mp.weixin.qq.com/s/rMZZkHbMeKXsSAvAdsgyRw   修改主题这里我用的是next主题，GitHub地址https://github.com/iissnan/hexo-theme-next在站点目录打开git bash，输入">
 <meta name="keywords" content="hexo,博客">
 <meta property="og:type" content="article">
 <meta property="og:title" content="用hexo搭建博客">
 <meta property="og:url" content="http://yoursite.com/2018/hexo-blog/index.html">
 <meta property="og:site_name" content="anye137&#39;s blogs">
-<meta property="og:description" content="​        - 搭建博客使用hexo+github搭建个人博客，具体操作见参考网址http://mp.weixin.qq.com/s/rMZZkHbMeKXsSAvAdsgyRw  修改主题这里我用的是next主题，GitHub地址https://github.com/iissnan/hexo-theme-next在站点目录打开git bash，输入">
+<meta property="og:description" content="​        - 搭建博客使用hexo+github搭建个人博客，具体操作见参考网址http://mp.weixin.qq.com/s/rMZZkHbMeKXsSAvAdsgyRw   修改主题这里我用的是next主题，GitHub地址https://github.com/iissnan/hexo-theme-next在站点目录打开git bash，输入">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2022-04-03T13:22:07.393Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="用hexo搭建博客">
-<meta name="twitter:description" content="​        - 搭建博客使用hexo+github搭建个人博客，具体操作见参考网址http://mp.weixin.qq.com/s/rMZZkHbMeKXsSAvAdsgyRw  修改主题这里我用的是next主题，GitHub地址https://github.com/iissnan/hexo-theme-next在站点目录打开git bash，输入">
+<meta name="twitter:description" content="​        - 搭建博客使用hexo+github搭建个人博客，具体操作见参考网址http://mp.weixin.qq.com/s/rMZZkHbMeKXsSAvAdsgyRw   修改主题这里我用的是next主题，GitHub地址https://github.com/iissnan/hexo-theme-next在站点目录打开git bash，输入">
 
 <link rel="canonical" href="http://yoursite.com/2018/hexo-blog/">
 
@@ -207,46 +207,74 @@
       
         <p>​        -</p>
 <h1 id="搭建博客"><a href="#搭建博客" class="headerlink" title="搭建博客"></a>搭建博客</h1><p>使用hexo+github搭建个人博客，具体操作见参考网址<br><a href="http://mp.weixin.qq.com/s/rMZZkHbMeKXsSAvAdsgyRw" target="_blank" rel="noopener">http://mp.weixin.qq.com/s/rMZZkHbMeKXsSAvAdsgyRw</a></p>
-<p><br></p>
+<br>
+
 <h1 id="修改主题"><a href="#修改主题" class="headerlink" title="修改主题"></a>修改主题</h1><p>这里我用的是next主题，GitHub地址<br><a href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="noopener">https://github.com/iissnan/hexo-theme-next</a><br>在站点目录打开git bash，输入</p>
 <a id="more"></a>
+
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/iissnan/hexo-theme-next themes/next</span><br></pre></td></tr></table></figure>
-<p>将next主题下载到站点目录的themes/next文件夹中。打开站点的_config.yml配置文件，修改主题为next<br><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Extensions</span></span><br><span class="line"><span class="comment">## Plugins: https://hexo.io/plugins/</span></span><br><span class="line"><span class="comment">## Themes: https://hexo.io/themes/</span></span><br><span class="line"><span class="attr">theme:</span> <span class="string">next</span></span><br></pre></td></tr></table></figure></p>
-<p>next主题有好几种样式。打开主题中的_config.yml文件，进行设置<br><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ---------------------------------------------------------------</span></span><br><span class="line"><span class="comment"># Scheme Settings</span></span><br><span class="line"><span class="comment"># ---------------------------------------------------------------</span></span><br><span class="line"><span class="comment"># Schemes</span></span><br><span class="line"><span class="comment">#scheme: Muse</span></span><br><span class="line"><span class="comment">#scheme: Mist</span></span><br><span class="line"><span class="comment">#scheme: Pisces</span></span><br><span class="line"><span class="attr">scheme:</span> <span class="string">Gemini</span></span><br></pre></td></tr></table></figure></p>
-<p>最后在站点目录下打开git bash，输入<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ hexo clean</span><br><span class="line">$ hexo g</span><br><span class="line">$ hexo d</span><br></pre></td></tr></table></figure></p>
+
+<p>将next主题下载到站点目录的themes&#x2F;next文件夹中。打开站点的_config.yml配置文件，修改主题为next</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Extensions</span></span><br><span class="line"><span class="comment">## Plugins: https://hexo.io/plugins/</span></span><br><span class="line"><span class="comment">## Themes: https://hexo.io/themes/</span></span><br><span class="line"><span class="attr">theme:</span> <span class="string">next</span></span><br></pre></td></tr></table></figure>
+
+<p>next主题有好几种样式。打开主题中的_config.yml文件，进行设置</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ---------------------------------------------------------------</span></span><br><span class="line"><span class="comment"># Scheme Settings</span></span><br><span class="line"><span class="comment"># ---------------------------------------------------------------</span></span><br><span class="line"><span class="comment"># Schemes</span></span><br><span class="line"><span class="comment">#scheme: Muse</span></span><br><span class="line"><span class="comment">#scheme: Mist</span></span><br><span class="line"><span class="comment">#scheme: Pisces</span></span><br><span class="line"><span class="attr">scheme:</span> <span class="string">Gemini</span></span><br></pre></td></tr></table></figure>
+
+<p>最后在站点目录下打开git bash，输入</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ hexo clean</span><br><span class="line">$ hexo g</span><br><span class="line">$ hexo d</span><br></pre></td></tr></table></figure>
+
 <p>到此，主题修改完毕。<br>其他一些配置，诸如修改作者昵称、头像、网页标题、图标、博客语言，以及增加标签页面和分类页面，设置主页底部的站点建立时间等</p>
 <p>可参考next主题的<a href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="noopener">GitHub</a> 以及 <a href="http://theme-next.iissnan.com/" target="_blank" rel="noopener">NexT使用文档</a></p>
-<p><br></p>
+<br>
+
+
+
 <h1 id="添加本地搜索功能"><a href="#添加本地搜索功能" class="headerlink" title="添加本地搜索功能"></a>添加本地搜索功能</h1><p>参考网址<br><a href="http://hisen.me/20170407-Hexo%20next%E4%B8%BB%E9%A2%98%E6%B7%BB%E5%8A%A0%E6%9C%AC%E5%9C%B0%E6%90%9C%E7%B4%A2%20-%20%E4%B8%8D%E4%BD%BF%E7%94%A8%E7%AC%AC%E4%B8%89%E6%96%B9%E6%9C%8D%E5%8A%A1/" target="_blank" rel="noopener">http://hisen.me/20170407-Hexo%20next%E4%B8%BB%E9%A2%98%E6%B7%BB%E5%8A%A0%E6%9C%AC%E5%9C%B0%E6%90%9C%E7%B4%A2%20-%20%E4%B8%8D%E4%BD%BF%E7%94%A8%E7%AC%AC%E4%B8%89%E6%96%B9%E6%9C%8D%E5%8A%A1/</a></p>
 <p>内容摘录如下：</p>
-<h2 id="安装插件"><a href="#安装插件" class="headerlink" title="安装插件"></a>安装插件</h2><p>在站点根目录打开git bash，输入以下内容，安装 hexo-generator-search 和 hexo-generator-searchdb<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ npm install hexo-generator-search --save</span><br><span class="line">$ npm install hexo-generator-searchdb --save</span><br></pre></td></tr></table></figure></p>
-<h2 id="启用搜索"><a href="#启用搜索" class="headerlink" title="启用搜索"></a>启用搜索</h2><p>编辑站点文件_config.yml，添加以下内容开启搜索<br><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">search:</span></span><br><span class="line"><span class="attr">  path:</span> <span class="string">search.xml</span></span><br><span class="line"><span class="attr">  field:</span> <span class="string">post</span></span><br><span class="line"><span class="attr">  format:</span> <span class="string">html</span></span><br><span class="line"><span class="attr">  limit:</span> <span class="number">10000</span></span><br></pre></td></tr></table></figure></p>
-<p>编辑主题文件_config.yml，启用本地搜索功能：<br><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Local search</span></span><br><span class="line"><span class="attr">local_search:</span></span><br><span class="line"><span class="attr">  enable:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="安装插件"><a href="#安装插件" class="headerlink" title="安装插件"></a>安装插件</h2><p>在站点根目录打开git bash，输入以下内容，安装 hexo-generator-search 和 hexo-generator-searchdb</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ npm install hexo-generator-search --save</span><br><span class="line">$ npm install hexo-generator-searchdb --save</span><br></pre></td></tr></table></figure>
+
+<h2 id="启用搜索"><a href="#启用搜索" class="headerlink" title="启用搜索"></a>启用搜索</h2><p>编辑站点文件_config.yml，添加以下内容开启搜索</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">search:</span></span><br><span class="line"><span class="attr">  path:</span> <span class="string">search.xml</span></span><br><span class="line"><span class="attr">  field:</span> <span class="string">post</span></span><br><span class="line"><span class="attr">  format:</span> <span class="string">html</span></span><br><span class="line"><span class="attr">  limit:</span> <span class="number">10000</span></span><br></pre></td></tr></table></figure>
+
+<p>编辑主题文件_config.yml，启用本地搜索功能：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Local search</span></span><br><span class="line"><span class="attr">local_search:</span></span><br><span class="line"><span class="attr">  enable:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
 <p>最后重新生成和部署站点就行了</p>
-<p><br></p>
+<br>
+
 <h1 id="发布新文章"><a href="#发布新文章" class="headerlink" title="发布新文章"></a>发布新文章</h1><h2 id="新建文章"><a href="#新建文章" class="headerlink" title="新建文章"></a>新建文章</h2><p>站点目录下，输入</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo n <span class="string">"blog_name"</span></span><br></pre></td></tr></table></figure>
-<p>然后站点目录下source/_post文件夹中多了一个 blog_name.md 文件，此文件的内容即是博客的内容。我们可以使用编辑器编辑此文件。个人推荐的编辑器是<a href="https://www.typora.io/?mt=8&amp;uo=4&amp;ct=appcards" target="_blank" rel="noopener">Topyra</a> 或 <a href="https://www.zybuluo.com/cmd/" target="_blank" rel="noopener">Cmd Markdown</a></p>
+
+<p>然后站点目录下source&#x2F;_post文件夹中多了一个 blog_name.md 文件，此文件的内容即是博客的内容。我们可以使用编辑器编辑此文件。个人推荐的编辑器是<a href="https://www.typora.io/?mt=8&uo=4&ct=appcards" target="_blank" rel="noopener">Topyra</a> 或 <a href="https://www.zybuluo.com/cmd/" target="_blank" rel="noopener">Cmd Markdown</a></p>
 <h2 id="添加标签和分类"><a href="#添加标签和分类" class="headerlink" title="添加标签和分类"></a>添加标签和分类</h2><p>blog_name.md文件开头是这样的</p>
 <figure class="highlight md"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: 用hexo搭建博客</span><br><span class="line">date: 2018-01-31 17:46:57</span><br><span class="line">tags: </span><br><span class="line">---</span><br></pre></td></tr></table></figure>
+
 <p>添加标签和分类，如下：</p>
 <figure class="highlight md"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: 用hexo搭建博客</span><br><span class="line">date: 2018-01-31 17:46:57</span><br><span class="line">tags: [hexo]</span><br><span class="line">categories: hexo</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
+
 <p>多个标签可用逗号隔开</p>
 <p>若要创建多级分类，则</p>
 <figure class="highlight md"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">categories: </span><br><span class="line">  - 一级分类</span><br><span class="line">  - 二级分类</span><br></pre></td></tr></table></figure>
+
 <p>要想新建博客时默认带上tags: [] 和 categories:</p>
-<p>打开站点目录下 scaffolds/post.md 文件，默认内容如下：</p>
+<p>打开站点目录下 scaffolds&#x2F;post.md 文件，默认内容如下：</p>
 <figure class="highlight md"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: &#123;&#123; title &#125;&#125;</span><br><span class="line">date: &#123;&#123; date &#125;&#125;</span><br><span class="line">tags:</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
+
 <p>修改成</p>
 <figure class="highlight md"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: &#123;&#123; title &#125;&#125;</span><br><span class="line">date: &#123;&#123; date &#125;&#125;</span><br><span class="line">tags: []</span><br><span class="line">categories:</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
+
 <h2 id="设置阅读全文"><a href="#设置阅读全文" class="headerlink" title="设置阅读全文"></a>设置阅读全文</h2><p>默认情况下，站点首页会显示最新的文章的全部内容，我们可以设置成只显示文章的一部分，然后在后面提供一个链接<strong>阅读全文</strong>来进入文章的详情页。</p>
 <p>在文章中合适的位置添加 <code>&lt; !--more--&gt;</code> 标签，这样只有标签前的内容会在首页中显示</p>
-<p><br></p>
+<br>
+
 <h1 id="预览和发布博客"><a href="#预览和发布博客" class="headerlink" title="预览和发布博客"></a>预览和发布博客</h1><h2 id="预览"><a href="#预览" class="headerlink" title="预览"></a>预览</h2><p>保存博客md文件，进入站点目录，打开git bash，输入</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo s --debug</span><br></pre></td></tr></table></figure>
-<p>浏览器输入 <a href="http://localhost:4000" target="_blank" rel="noopener">http://localhost:4000</a> 即可预览</p>
+
+<p>浏览器输入 <a href="http://localhost:4000/" target="_blank" rel="noopener">http://localhost:4000</a> 即可预览</p>
 <h2 id="发布"><a href="#发布" class="headerlink" title="发布"></a>发布</h2><p>在站点目录下，打开git bash，输入</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ hexo clean</span><br><span class="line">$ hexo g</span><br><span class="line">$ hexo d</span><br></pre></td></tr></table></figure>
+
 <p>即可将博客内容部署到GitHub</p>
 <h1 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h1><p>至此，hexo搭建博客基本完成啦O(∩_∩)O</p>
 <p>其实我之前用过WordPress搭建过博客，然而写了十篇左右就没怎么写了，后来那个站点也弃了，改用有道云笔记记录自己平时的学习笔记。希望以后在做好有道云笔记的同时，也多写写博客！</p>
