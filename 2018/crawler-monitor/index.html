@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.7.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="在使用爬虫爬取大量数据的时候，一般我们都会把程序挂在服务器上运行，然后就可以去干别的事情了。但是，我们还是有必要定时看一下程序运行情况的。虽然我们可以通过 log 信息来监控程序运行情况，但这往往不够直观。所以，今天我就讲讲如何使用 Mysql 和 Grafana 监控爬虫程序的运行状况，并可视化。">
+<meta name="keywords" content="爬虫, JS, Mysql, Grafana">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mysql + Grafana 监控爬虫程序">
+<meta property="og:url" content="http://yoursite.com/2018/crawler-monitor/index.html">
+<meta property="og:site_name" content="anye137&#39;s blogs">
+<meta property="og:description" content="在使用爬虫爬取大量数据的时候，一般我们都会把程序挂在服务器上运行，然后就可以去干别的事情了。但是，我们还是有必要定时看一下程序运行情况的。虽然我们可以通过 log 信息来监控程序运行情况，但这往往不够直观。所以，今天我就讲讲如何使用 Mysql 和 Grafana 监控爬虫程序的运行状况，并可视化。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/images/2018/06-09-1.png">
+<meta property="og:image" content="http://yoursite.com/images/2018/06-09-2.png">
+<meta property="og:image" content="http://yoursite.com/images/2018/06-09-3.png">
+<meta property="og:image" content="http://yoursite.com/images/2018/06-09-4.png">
+<meta property="og:image" content="http://yoursite.com/images/2018/06-09-5.png">
+<meta property="og:image" content="http://yoursite.com/images/2018/06-09-6.png">
+<meta property="og:updated_time" content="2022-04-03T13:22:07.399Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Mysql + Grafana 监控爬虫程序">
+<meta name="twitter:description" content="在使用爬虫爬取大量数据的时候，一般我们都会把程序挂在服务器上运行，然后就可以去干别的事情了。但是，我们还是有必要定时看一下程序运行情况的。虽然我们可以通过 log 信息来监控程序运行情况，但这往往不够直观。所以，今天我就讲讲如何使用 Mysql 和 Grafana 监控爬虫程序的运行状况，并可视化。">
+<meta name="twitter:image" content="http://yoursite.com/images/2018/06-09-1.png">
+
+<link rel="canonical" href="http://yoursite.com/2018/crawler-monitor/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>Mysql + Grafana 监控爬虫程序 | anye137's blogs</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="anye137's blogs" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">anye137's blogs</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/crawler-monitor/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="anye137">
+      <meta itemprop="description" content="anye137's blogs">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="anye137's blogs">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Mysql + Grafana 监控爬虫程序
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-06-16 16:38:20" itemprop="dateCreated datePublished" datetime="2018-06-16T16:38:20+08:00">2018-06-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-04-03 21:22:07" itemprop="dateModified" datetime="2022-04-03T21:22:07+08:00">2022-04-03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/爬虫/" itemprop="url" rel="index"><span itemprop="name">爬虫</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>在使用爬虫爬取<strong>大量</strong>数据的时候，一般我们都会把程序挂在服务器上运行，然后就可以去干别的事情了。但是，我们还是有必要定时看一下程序运行情况的。虽然我们可以通过 log 信息来监控程序运行情况，但这往往不够直观。所以，今天我就讲讲如何使用 Mysql 和 Grafana 监控爬虫程序的<strong>运行状况</strong>，并<strong>可视化</strong>。</p>
+<a id="more"></a>
+<p><br></p>
+<h1 id="1-Grafana-简介"><a href="#1-Grafana-简介" class="headerlink" title="1. Grafana 简介"></a>1. Grafana 简介</h1><blockquote>
+<p>Grafana 是一个数据可视化工具，它并不收集数据，但是可以从数据源（例如 Graphite、Mysql、InfluxDB等）中获取数据并可视化。</p>
+</blockquote>
+<p><br></p>
+<h1 id="2-运行-Grafana"><a href="#2-运行-Grafana" class="headerlink" title="2. 运行 Grafana"></a>2. 运行 Grafana</h1><p>Grafana 安装教程可以去网上搜，不多说。这里说的是另一种替代方法：使用已经安装好 Grafana 的 Docker 镜像（效果也是一样的）。如果不了解 Docker 的话，可以看下教程 <a href="https://docker_practice.gitee.io/" target="_blank" rel="noopener">Docker — 从入门到实践</a></p>
+<p>在这里，我们需要先安装好 Docker，并学会一些 Docker 基本命令，例如拉取镜像，容器的创建，容器的运行停止，镜像和容器的删除等等。</p>
+<p>安装并运行 Docker 之后：</p>
+<ol>
+<li><p>在 <a href="https://hub.docker.com/" target="_blank" rel="noopener">Docker hub</a> 搜索一下包含 Grafana 的镜像，还是出现挺多个的。这里我选择了 <a href="https://hub.docker.com/r/kamon/grafana_graphite/" target="_blank" rel="noopener"><a href="https://hub.docker.com/u/kamon/" target="_blank" rel="noopener">kamon</a>/<a href="https://hub.docker.com/r/kamon/grafana_graphite/" target="_blank" rel="noopener">grafana_graphite</a>
+</a> </p>
+</li>
+<li><p>在服务器上拉取镜像</p>
+</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull kamon/grafana_graphite</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>使用该镜像创建容器，并在后台运行<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">docker run \</span><br><span class="line">  -d \</span><br><span class="line">  -p 80:80 \</span><br><span class="line">  -p 81:81 \</span><br><span class="line">  -p 2003:2003 \</span><br><span class="line">  -p 8125:8125/udp\</span><br><span class="line">  -p 8126:8126\</span><br><span class="line">  --name=grafana_graphite \</span><br><span class="line">  kamon/grafana_graphite</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>到这里，我们就得到了一个已经安装了 Grafana 的容器，根本就不用我们手动安装了O(∩_∩)O 哈哈~</p>
+<ol start="4">
+<li>在浏览器中打开 <a href="http://your_server_ip:80/，登录（初始用户名和密码都是" target="_blank" rel="noopener">http://your_server_ip:80/，登录（初始用户名和密码都是</a> admin），我们就可以看到 Grafana 的控制台了，还是挺酷炫的！</li>
+</ol>
+<p><br></p>
+<h1 id="3-编写爬虫程序并运行"><a href="#3-编写爬虫程序并运行" class="headerlink" title="3. 编写爬虫程序并运行"></a>3. 编写爬虫程序并运行</h1><p>略。（在这里，要将爬取到的 item 储存起来，例如插入 mysql 数据库）</p>
+<p><br></p>
+<h1 id="4-编写监控的脚本并运行"><a href="#4-编写监控的脚本并运行" class="headerlink" title="4. 编写监控的脚本并运行"></a>4. 编写监控的脚本并运行</h1><p>这里，我们要每隔一定时间查询爬取总量，并计算爬取速度。下面是一个例子：<br>代码分为两部分，首先是在我们存放 item 的数据库建立两个表，每个表有两个字段，一个是查询时间，另一个是 <code>item_total / item_min</code>。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pymysql <span class="keyword">as</span> mdb</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"><span class="comment"># 存放爬取数据的数据库（这里我把统计的数据，存入了爬取数据所在的数据库）</span></span><br><span class="line">DB_NAME = <span class="string">'db_name'</span></span><br><span class="line">TABLE_NAME1 = <span class="string">'item_per_min'</span></span><br><span class="line">TABLE_NAME2 = <span class="string">'item_total'</span></span><br><span class="line">host = <span class="string">'your_server_ip'</span></span><br><span class="line">user = <span class="string">'your_user_name'</span></span><br><span class="line">passwd = <span class="string">'your_pwd'</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 爬取的 item 存放的表</span></span><br><span class="line">item_table = <span class="string">'item_table'</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">create_table</span><span class="params">()</span>:</span></span><br><span class="line">    use_db_str = <span class="string">'use '</span> + DB_NAME</span><br><span class="line">    create_table_str1 = <span class="string">"CREATE TABLE if not exists "</span> + TABLE_NAME1 + <span class="string">"""(</span></span><br><span class="line"><span class="string">      `time` datetime NOT NULL,</span></span><br><span class="line"><span class="string">      `speed` int NOT NULL DEFAULT '0'</span></span><br><span class="line"><span class="string">    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;"""</span></span><br><span class="line"></span><br><span class="line">    create_table_str2 = <span class="string">"CREATE TABLE if not exists "</span> + TABLE_NAME2 + <span class="string">"""(</span></span><br><span class="line"><span class="string">        `time` datetime NOT NULL,</span></span><br><span class="line"><span class="string">        `total` int NOT NULL DEFAULT '0'   </span></span><br><span class="line"><span class="string">        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;"""</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 数据库连接</span></span><br><span class="line">    conn = mdb.connect(host, user, passwd)</span><br><span class="line">    cursor = conn.cursor()</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        cursor.execute(use_db_str)</span><br><span class="line">        cursor.execute(create_table_str1)</span><br><span class="line">        cursor.execute(create_table_str2)</span><br><span class="line">        conn.commit()</span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        print(e)</span><br></pre></td></tr></table></figure></p>
+<p>代码第二部分是主函数，每隔一分钟查询 items 数，并计算爬取速度，将得到的数据储存起来：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    <span class="comment"># 创建表</span></span><br><span class="line">    create_table()</span><br><span class="line">    conn = mdb.connect(host, user, passwd, DB_NAME)</span><br><span class="line">    cursor = conn.cursor()</span><br><span class="line"></span><br><span class="line">    before_item = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            cursor.execute(<span class="string">'SELECT count(*) FROM %s'</span>, item_table )</span><br><span class="line">            result = cursor.fetchone()</span><br><span class="line">            current_item = result[<span class="number">0</span>]</span><br><span class="line">            print(current_item)</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 过去一分钟爬取量</span></span><br><span class="line">            cursor.execute(<span class="string">'insert into %s values (now(), %s)'</span> % (TABLE_NAME1, current_item - before_item))</span><br><span class="line">            <span class="comment"># 爬取总量</span></span><br><span class="line">            cursor.execute(<span class="string">'insert into %s values (now(), %s)'</span> % (TABLE_NAME2, current_item))</span><br><span class="line"></span><br><span class="line">            conn.commit()</span><br><span class="line">            before_item = current_item</span><br><span class="line">        <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">            print(e)</span><br><span class="line"></span><br><span class="line">        time.sleep(<span class="number">60</span>)</span><br></pre></td></tr></table></figure>
+<p>监控脚本写完后，就可以挂在服务器后台运行了</p>
+<p><br></p>
+<h1 id="5-Grafana-配置"><a href="#5-Grafana-配置" class="headerlink" title="5. Grafana 配置"></a>5. Grafana 配置</h1><ol>
+<li><p>配置数据源，这里命名为 <code>monitor_crawler</code></p>
+<p>​</p>
+</li>
+</ol>
+<p><img src="/images/2018/06-09-1.png" align="center"></p>
+<ol start="2">
+<li><p>新建 Dashboard，然后点击 Graph 图标创建图，接着点击 <code>Panel Title</code> -&gt; <code>Edit</code></p>
+<p>​</p>
+</li>
+</ol>
+<p><img src="/images/2018/06-09-2.png" align="center"></p>
+<ol start="3">
+<li><p>选择我们刚才创建的数据源 <code>monitor_crawler</code></p>
+<p>​</p>
+</li>
+</ol>
+<p><img src="/images/2018/06-09-3.png" align="center"></p>
+<ol start="4">
+<li>按照 Grafana 提供的模板填写 sql 语句，这里查询了 <code>item_per_min</code> 表<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">SELECT</span><br><span class="line">  UNIX_TIMESTAMP(time) as time_sec,</span><br><span class="line">  speed as value,</span><br><span class="line">  &apos;items_min&apos; as metric</span><br><span class="line">FROM item_per_min</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>（注意我们选择的是 <code>Time series</code>）</p>
+<p><img src="/images/2018/06-09-4.png" align="center"></p>
+<ol start="5">
+<li><p>可以选择绘图模式，一般是选 <code>Lines</code></p>
+<p>​</p>
+</li>
+</ol>
+<p><img src="/images/2018/06-09-5.png" align="center"></p>
+<h1 id="6-成果展示"><a href="#6-成果展示" class="headerlink" title="6. 成果展示"></a>6. 成果展示</h1><p><img src="/images/2018/06-09-6.png" align="center"></p>
+<p>（其实 Grafana 还有很多很酷炫的设置，大家有兴趣可以去探索一下！）</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>在安装好各种环境之后，Mysql + Grafana 监控爬虫程序的步骤：</p>
+<blockquote>
+<ol>
+<li>编写爬虫程序</li>
+<li>编写监控脚本，将爬取速度和爬取总量定时存进 Mysql 数据库</li>
+<li>Grafana 新建数据源，连接对应的 Mysql 数据库</li>
+<li>创建新的 Dashboard，并在里面创建图表，图表数据源选择我们上一步新建的数据源</li>
+</ol>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/爬虫/" rel="tag"># 爬虫</a>
+              <a href="/tags/监控/" rel="tag"># 监控</a>
+              <a href="/tags/Mysql/" rel="tag"># Mysql</a>
+              <a href="/tags/Grafana/" rel="tag"># Grafana</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/crawler-js-wanfang/" rel="prev" title="爬虫获取 JS 动态数据（万方数据库文献下载）">
+      <i class="fa fa-chevron-left"></i> 爬虫获取 JS 动态数据（万方数据库文献下载）
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/crawler-geetest/" rel="next" title="爬虫之破解极验验证（滑动验证码）">
+      爬虫之破解极验验证（滑动验证码） <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-Grafana-简介"><span class="nav-number">1.</span> <span class="nav-text">1. Grafana 简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-运行-Grafana"><span class="nav-number">2.</span> <span class="nav-text">2. 运行 Grafana</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-编写爬虫程序并运行"><span class="nav-number">3.</span> <span class="nav-text">3. 编写爬虫程序并运行</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-编写监控的脚本并运行"><span class="nav-number">4.</span> <span class="nav-text">4. 编写监控的脚本并运行</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-Grafana-配置"><span class="nav-number">5.</span> <span class="nav-text">5. Grafana 配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-成果展示"><span class="nav-number">6.</span> <span class="nav-text">6. 成果展示</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">7.</span> <span class="nav-text">总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">anye137</p>
+  <div class="site-description" itemprop="description">anye137's blogs</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">24</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">anye137</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

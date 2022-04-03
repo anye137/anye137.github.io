@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.7.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="爬虫遇到 js 动态数据时，主要解决方法有两种：  使用一些库，例如 Selenium，来模拟浏览器环境抓取数据。但这样做对内存和 CPU 的消耗都比较大，爬虫效率低，应尽量避免。 手动分析 js 请求  下面我选了一个漫画网站作为小例子，讲一下第二个方法。 https://manhua.sfacg.com/mh/YSJ/4519/ 我们的目的是获取漫画图片 url，然后下载下来。">
+<meta name="keywords" content="爬虫, JS, Selenium">
+<meta property="og:type" content="article">
+<meta property="og:title" content="爬虫获取 JS 动态数据（漫画图片下载）">
+<meta property="og:url" content="http://yoursite.com/2018/crawler-js-selenium/index.html">
+<meta property="og:site_name" content="anye137&#39;s blogs">
+<meta property="og:description" content="爬虫遇到 js 动态数据时，主要解决方法有两种：  使用一些库，例如 Selenium，来模拟浏览器环境抓取数据。但这样做对内存和 CPU 的消耗都比较大，爬虫效率低，应尽量避免。 手动分析 js 请求  下面我选了一个漫画网站作为小例子，讲一下第二个方法。 https://manhua.sfacg.com/mh/YSJ/4519/ 我们的目的是获取漫画图片 url，然后下载下来。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/images/2018/06-04-0-comic.jpg">
+<meta property="og:image" content="http://yoursite.com/images/2018/06-04-1-comic.jpg">
+<meta property="og:image" content="http://yoursite.com/images/2018/06-04-1-comic.jpg">
+<meta property="og:updated_time" content="2022-04-03T13:22:07.398Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="爬虫获取 JS 动态数据（漫画图片下载）">
+<meta name="twitter:description" content="爬虫遇到 js 动态数据时，主要解决方法有两种：  使用一些库，例如 Selenium，来模拟浏览器环境抓取数据。但这样做对内存和 CPU 的消耗都比较大，爬虫效率低，应尽量避免。 手动分析 js 请求  下面我选了一个漫画网站作为小例子，讲一下第二个方法。 https://manhua.sfacg.com/mh/YSJ/4519/ 我们的目的是获取漫画图片 url，然后下载下来。">
+<meta name="twitter:image" content="http://yoursite.com/images/2018/06-04-0-comic.jpg">
+
+<link rel="canonical" href="http://yoursite.com/2018/crawler-js-selenium/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>爬虫获取 JS 动态数据（漫画图片下载） | anye137's blogs</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="anye137's blogs" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">anye137's blogs</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/crawler-js-selenium/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="anye137">
+      <meta itemprop="description" content="anye137's blogs">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="anye137's blogs">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          爬虫获取 JS 动态数据（漫画图片下载）
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-06-03 22:27:26" itemprop="dateCreated datePublished" datetime="2018-06-03T22:27:26+08:00">2018-06-03</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-04-03 21:22:07" itemprop="dateModified" datetime="2022-04-03T21:22:07+08:00">2022-04-03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/爬虫/" itemprop="url" rel="index"><span itemprop="name">爬虫</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>爬虫遇到 js 动态数据时，主要解决方法有两种：</p>
+<ol>
+<li>使用一些库，例如 <font color="red">Selenium</font>，来模拟浏览器环境抓取数据。但这样做对内存和 CPU 的消耗都比较大，爬虫效率低，应尽量避免。</li>
+<li><font color="red">手动分析</font> js 请求</li>
+</ol>
+<p>下面我选了一个漫画网站作为小例子，讲一下第二个方法。</p>
+<p><a href="https://manhua.sfacg.com/mh/YSJ/4519/" target="_blank" rel="noopener">https://manhua.sfacg.com/mh/YSJ/4519/</a></p>
+<p><strong>我们的目的是获取漫画图片 url，然后下载下来。</strong></p>
+<a id="more"></a>
+<h1 id="判断待爬数据是否-js-动态加载的"><a href="#判断待爬数据是否-js-动态加载的" class="headerlink" title="判断待爬数据是否 js 动态加载的"></a>判断待爬数据是否 js 动态加载的</h1><p>用 chrome 打开该网页，右键漫画图片 -&gt; 检查</p>
+<p><img src="/images/2018/06-04-0-comic.jpg" align="center"></p>
+<p>我们可以看到图片的 url 就在里面。可以右键此处（蓝色部分）-&gt; copy -&gt;  copy xpath 获得图片对应的 xpath，然后可以使用 requests 和 xpath 获取图片 url。当然最后还是失败了。因为这里的图片是 js 动态加载出来的。</p>
+<h1 id="获取跟待爬数据有关的-js-代码信息"><a href="#获取跟待爬数据有关的-js-代码信息" class="headerlink" title="获取跟待爬数据有关的 js 代码信息"></a>获取跟待爬数据有关的 js 代码信息</h1><p>我们可以查看网页源代码，Ctrl+F 定位图片 id “curPic”：</p>
+<p><img src="/images/2018/06-04-1-comic.jpg" alt="filter" align="center"></p>
+<p>可以看到，里面根本没有图片的 url，图片是 js 加载的。阅读里面的 js 代码，我们可以知道图片 url 是由下面这行代码决定的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pic2.src = hosts[getHost()] + picAy[curIndex]</span><br></pre></td></tr></table></figure>
+<p>在源码中寻找 <code>hosts</code> 和 <code>picAy</code>，发现它们只在这里出现过。这说明这两个数组可能是由 js 代码加载的。</p>
+<h1 id="寻找跟待爬数据有关的-js-请求"><a href="#寻找跟待爬数据有关的-js-请求" class="headerlink" title="寻找跟待爬数据有关的 js 请求"></a>寻找跟待爬数据有关的 js 请求</h1><p>回到漫画那个页面，我们打开 Chrome 的 F12，点击 network，勾选 js，刷新网页，查看相关 js 请求对应的 preview，看看哪些包含 <code>hosts</code> 和 <code>picAy</code>：</p>
+<p><img src="/images/2018/06-04-1-comic.jpg" alt="filter" align="center"></p>
+<p>额，这进展还是出乎意料的顺利，第一个 js 就有我们想要寻找的内容了。我们可以看到，这一话漫画的所有图片都在这个 js 请求的响应内容里了。由此图可知，我们进入某一话漫画的第一页时，就有一份 js 代码请求了这一话漫画所有页的图片 url。那么，我们在写程序的时候，该如何得到这份 js 的文件名？</p>
+<p>观察其他漫画的情况，我们可以发现，虽然这份 js 代码的命名没啥规律，不过在网页源代码中，它一般是处于第一个 js 的位置。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>至此，总结一下如何下载该网站漫画：</p>
+<ol>
+<li>获取一话漫画的第一页 url</li>
+<li>获取该 url 响应的 html</li>
+<li>在 html 中寻找第一个 js 代码文件名</li>
+<li>获取该 js 的响应内容，从中提取所有图片 url</li>
+</ol>
+<p>总结一下该例子中获取 js 动态数据的思路：</p>
+<ol>
+<li>判断是不是 js 加载的数据</li>
+<li>如果是 js 加载的，查看网页源代码中待下载数据附近的 js 代码，获取关键信息（比如一些变量名）</li>
+<li>回到待爬网页那里，按 F12（我用的 Chrome），点击 network，勾选 js，刷新网页，获取 js 请求</li>
+<li>逐个查看每个请求的 preview，看有没有跟待爬取内容相关的信息。</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/爬虫/" rel="tag"># 爬虫</a>
+              <a href="/tags/JS/" rel="tag"># JS</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/configure-ssm/" rel="prev" title="Spring+SpringMVC+MyBatis 配置总结">
+      <i class="fa fa-chevron-left"></i> Spring+SpringMVC+MyBatis 配置总结
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/crawler-multi-process-thread/" rel="next" title="Python 爬虫中的多进程，多线程和协程（基础）">
+      Python 爬虫中的多进程，多线程和协程（基础） <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#判断待爬数据是否-js-动态加载的"><span class="nav-number">1.</span> <span class="nav-text">判断待爬数据是否 js 动态加载的</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#获取跟待爬数据有关的-js-代码信息"><span class="nav-number">2.</span> <span class="nav-text">获取跟待爬数据有关的 js 代码信息</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#寻找跟待爬数据有关的-js-请求"><span class="nav-number">3.</span> <span class="nav-text">寻找跟待爬数据有关的 js 请求</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">anye137</p>
+  <div class="site-description" itemprop="description">anye137's blogs</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">24</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">anye137</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

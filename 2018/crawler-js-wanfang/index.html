@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.7.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="今天讲讲用爬虫下载万方数据库文献。">
+<meta name="keywords" content="爬虫, JS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="爬虫获取 JS 动态数据（万方数据库文献下载）">
+<meta property="og:url" content="http://yoursite.com/2018/crawler-js-wanfang/index.html">
+<meta property="og:site_name" content="anye137&#39;s blogs">
+<meta property="og:description" content="今天讲讲用爬虫下载万方数据库文献。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/images/2018/06-07-1.jpg">
+<meta property="og:image" content="http://yoursite.com/images/2018/06-07-2.jpg">
+<meta property="og:image" content="http://yoursite.com/images/2018/06-07-3.jpg">
+<meta property="og:image" content="http://yoursite.com/images/2018/06-07-4.jpg">
+<meta property="og:image" content="http://yoursite.com/images/2018/06-07-5.jpg">
+<meta property="og:updated_time" content="2022-04-03T13:22:07.399Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="爬虫获取 JS 动态数据（万方数据库文献下载）">
+<meta name="twitter:description" content="今天讲讲用爬虫下载万方数据库文献。">
+<meta name="twitter:image" content="http://yoursite.com/images/2018/06-07-1.jpg">
+
+<link rel="canonical" href="http://yoursite.com/2018/crawler-js-wanfang/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>爬虫获取 JS 动态数据（万方数据库文献下载） | anye137's blogs</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="anye137's blogs" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">anye137's blogs</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/crawler-js-wanfang/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="anye137">
+      <meta itemprop="description" content="anye137's blogs">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="anye137's blogs">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          爬虫获取 JS 动态数据（万方数据库文献下载）
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-06-16 16:05:05" itemprop="dateCreated datePublished" datetime="2018-06-16T16:05:05+08:00">2018-06-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-04-03 21:22:07" itemprop="dateModified" datetime="2022-04-03T21:22:07+08:00">2022-04-03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/爬虫/" itemprop="url" rel="index"><span itemprop="name">爬虫</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>今天讲讲用爬虫下载<font color="red"><strong>万方数据库文献</strong></font>。</p>
+<a id="more"></a>
+<p>这是我们要爬取的文献链接:<br><a href="http://www.wanfangdata.com.cn/details/detail.do?_type=perio&amp;id=zgtx201803009" target="_blank" rel="noopener">http://www.wanfangdata.com.cn/details/detail.do?_type=perio&amp;id=zgtx201803009</a></p>
+<p><img src="/images/2018/06-07-1.jpg" align="center"></p>
+<p>右键那个下载按钮 -&gt; 检查，我们可以看见，按钮的点击事件是一个 js 函数<font color="red"> upload() </font>。</p>
+<p><img src="/images/2018/06-07-2.jpg" align="center"></p>
+<p>在网页源代码中，寻找这个 <code>upload()</code> 函数，发现它只在按钮处出现了一次。所以，这个函数应该是由 js 文件加载的。<br>在网页源代码中，寻找 <code>.js</code>（搜索 js 文件），点击每一个 js 文件的链接，看看里面有没有 <code>upload()</code> 函数（这个方法貌似有点蠢，不知有没有更高效的方法）。最后在下图这个文件找到了：</p>
+<p><img src="/images/2018/06-07-3.jpg" align="center"></p>
+<p><code>upload()</code> 函数代码如下：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">onlineReading</span>(<span class="params">page_cnt,id,language,source_db,title,isoa,type,resourceType</span>)</span>&#123;</span><br><span class="line">	title=<span class="built_in">window</span>.encodeURI(<span class="built_in">window</span>.encodeURI(title));</span><br><span class="line">	<span class="keyword">var</span> type = $(<span class="string">"#document_type"</span>).val();</span><br><span class="line">	<span class="keyword">if</span>(type == <span class="string">"standards"</span>)&#123;</span><br><span class="line">		type=<span class="string">"standard"</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">window</span>.open(<span class="string">"/search/onlineread.do?page_cnt="</span>+page_cnt+<span class="string">"&amp;language="</span>+language+<span class="string">"&amp;resourceType="</span>+type+<span class="string">"&amp;source="</span>+source_db+<span class="string">"&amp;resourceId="</span>+id+<span class="string">"&amp;resourceTitle="</span>+title+<span class="string">"&amp;isoa="</span>+isoa+<span class="string">"&amp;type="</span>+type);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>可以看到，这个函数构造了一个 url， 并在一个新的标签页打开了这个 url。<br>把参数填进去，构造出的 url 为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://www.wanfangdata.com.cn/search/downLoad.do?page_cnt=16&amp;language=eng&amp;resourceType=perio&amp;source=WF&amp;resourceId=zgtx201803009&amp;resourceTitle=Spectral Efficiency and Power Allocation for Mixed-ADC Massive MIMO System&amp;isoa=0&amp;type=perio</span><br></pre></td></tr></table></figure>
+<p>在浏览器中访问该 url ，发现我们看到的网址，并不是我们构造出的请求 url，说明应该是发生了重定向。</p>
+<p>在一个新标签页中，按 F12 监听请求，并打开我们的请求 url</p>
+<p><img src="/images/2018/06-07-4.jpg" align="center"></p>
+<p>可以看到，我们构造的 url（也就是 <font color="red">downLoad.do?</font> ），重定向到了 <font color="red">submitWeb.do?</font> 。点击 <code>submitWeb.do</code> ，我们可以看到它重定向到了 <font color="red">transaction?</font>，最后才重定向到 <font color="red">downloadliterature.do?</font></p>
+<p>写爬虫时，我们要确保能够到达 <code>downliterature.do?</code>，后面才能下载文件。所以我们先写程序看看能不能提取出这个 <code>downloadliterature.do?</code> 的详细 url。</p>
+<p>首先是用正则表达式提取 <code>upload()</code> 函数的参数，然后构造出请求 url，这里我懒得写了，直接 copy 一下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">url = <span class="string">'http://www.wanfangdata.com.cn/search/downLoad.do?page_cnt=16&amp;language=eng&amp;resourceType=perio&amp;source=WF&amp;resourceId=zgtx201803009&amp;resourceTitle=Spectral Efficiency and Power Allocation for Mixed-ADC Massive MIMO System&amp;isoa=0&amp;type=perio'</span></span><br></pre></td></tr></table></figure>
+<p>接着发起请求：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line">r = requests.get(url)</span><br><span class="line">print(r.status_code)</span><br><span class="line">print(r.url)</span><br></pre></td></tr></table></figure>
+<p>运行结果如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">200</span><br><span class="line">http://www.wanfangdata.com.cn/pay/downloadliterature.do?type=perio&amp;title=Spectral+Efficiency+and+Power+Allocation+for+Mixed-ADC+Massive+MIMO+System&amp;id=zgtx201803009&amp;isresult=false&amp;transaction=%7B%22id%22%3Anull%2C%22transferOutAccountsStatus%22%3Anull%2C%22transaction%22%3A%7B%22id%22%3A%221004368608312180736%22%2C%22status%22%3A1%2C%22createDateTime%22%3Anull%2C%22payDateTime%22%3A1528295111145%2C%22authToken%22%3A%22TGT-4001230-O5ZS0q7FIl2vYtxeLVbVr1LQu2Auh7D4pAjaGsfFg0EAc2oqNa-my.wanfangdata.com.cn%22%2C%22user%22%3A%7B%22accountType%22%3A%22Group%22%2C%22key%22%3A%22hnlgdx%22%7D%2C%22transferIn%22%3A%7B%22accountType%22%3A%22Income%22%2C%22key%22%3A%22PeriodicalFulltext%22%7D%2C%22transferOut%22%3A%7B%22GTimeLimit.hnlgdx%22%3A3.0%7D%2C%22turnover%22%3A3.0%2C%22productDetail%22%3A%22perio_zgtx201803009%22%2C%22productTitle%22%3Anull%2C%22userIP%22%3A%22183.6.159.220%22%2C%22organName%22%3Anull%2C%22memo%22%3Anull%2C%22webTransactionRequest%22%3Anull%2C%22signature%22%3A%22jFHSx941kWx4WEX3sb40p%2B36UW9cduGMuYGPL8yCRS3Gdg0BvqNSKwYJxVTKdMGTRec1pF1an8xM%5CnnIgvniLkT3%2FivH6myLpZ%2BlHCJdj3OxoKIlk3AEQq8%2B4QTDLnfJI5YKW554i2SIyruQpCVCxDBfMS%5CnIh%2Fe8%2BYtbwmuAXcUYwk%3D%22%2C%22delete%22%3Afalse%7D%2C%22isCache%22%3Afalse%7D</span><br></pre></td></tr></table></figure>
+<p>还是挺顺利的，一下子就得到了 <code>downloadliterature.do?</code> 的详细 url。这里解释一下：默认情况下，除了 <code>requests.head()</code> 方法，requests 会自动帮我们处理所有重定向。而 <code>response.url</code> 就会返回初始请求重定向后的最终网址。（<strong>差点忘了说了，我是用的学校网络，所以能免登陆下载。</strong>）</p>
+<p>将得到的网址复制到浏览器中打开，会出现一个网页，再弹出下载对话框。这说明，<code>downloadliterature.do?</code> 并不是文件的最终下载链接，如果是文件的最终下载链接的话，就应该会直接弹出对话框。所以，我们的下一步就是找出<strong>真正的下载链接</strong>。</p>
+<p>观察  <code>downloadliterature.do?</code> 网页：</p>
+<p><img src="/images/2018/06-07-5.jpg" align="center"></p>
+<p>这里有个点击下载的地方，通过 F12 以及查看网页源代码，我们可以看到文件的真正下载链接。接着，我们用正则表达式提取该链接，然后就可以用 requests 下载文件了。</p>
+<p><br><br>最后，总结一下这一次寻找下载链接的思路：</p>
+<blockquote>
+<ol>
+<li>F12 检查 <code>下载按钮</code> 元素，发现，点击后触发的是一个 js 函数 <code>upload()</code>。</li>
+<li>在网页源代码中找不到 <code>upload()</code> 的实现，转而在网页包含的 js 文件中找。</li>
+<li>找到 <code>upload()</code> 后，根据其实现，构造请求 url。</li>
+<li>在浏览器中打开请求 url，发现网页重定向了。用 requests 和 response 获取重定向后的 url</li>
+<li>得到重定向的 url 后，打开，并提取其中包含的文件下载链接</li>
+</ol>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/爬虫/" rel="tag"># 爬虫</a>
+              <a href="/tags/JS/" rel="tag"># JS</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/crawler-multi-process-thread/" rel="prev" title="Python 爬虫中的多进程，多线程和协程（基础）">
+      <i class="fa fa-chevron-left"></i> Python 爬虫中的多进程，多线程和协程（基础）
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/crawler-monitor/" rel="next" title="Mysql + Grafana 监控爬虫程序">
+      Mysql + Grafana 监控爬虫程序 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">anye137</p>
+  <div class="site-description" itemprop="description">anye137's blogs</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">24</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">anye137</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

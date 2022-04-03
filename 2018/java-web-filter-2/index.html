@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.7.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Filter 常用例子3. 登录验证 Filter我们在浏览网站的时候，有时候是没有登录的，或者因为登录很久后自动掉出来。可能有一些请求需要判断用户是否处于登录状态 ，以及该用户的权限。Java Web 程序一般使用 session 或者 cookie 来记录用户是否登录。登录验证 Filter 是将 request 提交给 servlet 之前，对 session 或者 cookie 进行校验。">
+<meta name="keywords" content="filter,java web,过滤器,登录验证,内容替换">
+<meta property="og:type" content="article">
+<meta property="og:title" content="java web Filter（过滤器）下">
+<meta property="og:url" content="http://yoursite.com/2018/java-web-filter-2/index.html">
+<meta property="og:site_name" content="anye137&#39;s blogs">
+<meta property="og:description" content="Filter 常用例子3. 登录验证 Filter我们在浏览网站的时候，有时候是没有登录的，或者因为登录很久后自动掉出来。可能有一些请求需要判断用户是否处于登录状态 ，以及该用户的权限。Java Web 程序一般使用 session 或者 cookie 来记录用户是否登录。登录验证 Filter 是将 request 提交给 servlet 之前，对 session 或者 cookie 进行校验。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2022-04-03T13:22:07.395Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="java web Filter（过滤器）下">
+<meta name="twitter:description" content="Filter 常用例子3. 登录验证 Filter我们在浏览网站的时候，有时候是没有登录的，或者因为登录很久后自动掉出来。可能有一些请求需要判断用户是否处于登录状态 ，以及该用户的权限。Java Web 程序一般使用 session 或者 cookie 来记录用户是否登录。登录验证 Filter 是将 request 提交给 servlet 之前，对 session 或者 cookie 进行校验。">
+
+<link rel="canonical" href="http://yoursite.com/2018/java-web-filter-2/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>java web Filter（过滤器）下 | anye137's blogs</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="anye137's blogs" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">anye137's blogs</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/java-web-filter-2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="anye137">
+      <meta itemprop="description" content="anye137's blogs">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="anye137's blogs">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          java web Filter（过滤器）下
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-02-08 22:43:03" itemprop="dateCreated datePublished" datetime="2018-02-08T22:43:03+08:00">2018-02-08</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-04-03 21:22:07" itemprop="dateModified" datetime="2022-04-03T21:22:07+08:00">2022-04-03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/java-web/" itemprop="url" rel="index"><span itemprop="name">java web</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Filter-常用例子"><a href="#Filter-常用例子" class="headerlink" title="Filter 常用例子"></a>Filter 常用例子</h1><h2 id="3-登录验证-Filter"><a href="#3-登录验证-Filter" class="headerlink" title="3. 登录验证 Filter"></a>3. 登录验证 Filter</h2><p>我们在浏览网站的时候，有时候是没有登录的，或者因为登录很久后自动掉出来。可能有一些请求需要<font color="red">判断用户是否处于登录状态</font> ，以及该用户的权限。Java Web 程序一般使用 <strong>session</strong> 或者 <strong>cookie</strong> 来记录用户是否登录。<strong>登录验证 Filter</strong> 是将 request 提交给 servlet 之前，对 session 或者 cookie 进行校验。如果没有相应的登录信息，或者权限不够，则进行相应的处理，比如跳转到登录界面。</p>
+<p>下面的例子中，我们仅判断用户是否处于登录状态。</p>
+<a id="more"></a>
+<p>PrivilegeFilter.java</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.anye137.filter;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.*;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.annotation.WebFilter;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.*;</span><br><span class="line"></span><br><span class="line"><span class="meta">@WebFilter</span>(filterName=<span class="string">"privilegeFilter"</span>,urlPatterns=<span class="string">"/jsp/afterLogin.jsp"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PrivilegeFilter</span> <span class="keyword">implements</span> <span class="title">Filter</span></span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">(FilterConfig config)</span> <span class="keyword">throws</span> ServletException</span>&#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">destroy</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doFilter</span><span class="params">(ServletRequest request, ServletResponse response, FilterChain chain)</span> <span class="keyword">throws</span> IOException, ServletException</span>&#123;</span><br><span class="line">        </span><br><span class="line">        HttpServletRequest req = (HttpServletRequest)request;</span><br><span class="line">        HttpServletResponse res = (HttpServletResponse)response;</span><br><span class="line">        HttpSession session = req.getSession();</span><br><span class="line">        </span><br><span class="line">        String name = (String) session.getAttribute(<span class="string">"userName"</span>);</span><br><span class="line">        <span class="keyword">if</span>(name==<span class="keyword">null</span> || name.trim().equals(<span class="string">""</span>))</span><br><span class="line">            res.sendRedirect(req.getContextPath()+<span class="string">"/jsp/login.jsp"</span>);</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            chain.doFilter(req, response);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>登录界面 <code>login.jsp</code> </p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;%@ page language=<span class="string">"java"</span> contentType=<span class="string">"text/html; charset=utf-8"</span></span><br><span class="line">    pageEncoding=<span class="string">"utf-8"</span>%&gt;</span><br><span class="line">&lt;!DOCTYPE html PUBLIC <span class="string">"-//W3C//DTD HTML 4.01 Transitional//EN"</span> <span class="string">"http://www.w3.org/TR/html4/loose.dtd"</span>&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">    &lt;head&gt;</span><br><span class="line">        &lt;title&gt;&lt;/title&gt;</span><br><span class="line">    &lt;/head&gt;</span><br><span class="line">  </span><br><span class="line">    &lt;body&gt;</span><br><span class="line">        &lt;form action=<span class="string">"$&#123;pageContext.request.contextPath&#125;/loginServlet"</span> method=<span class="string">"post"</span>&gt;</span><br><span class="line">            姓名：&lt;input type=<span class="string">"text"</span>  name=<span class="string">"name"</span>/&gt;&lt;br&gt;</span><br><span class="line">            &lt;input type=<span class="string">"submit"</span> value=<span class="string">"登录"</span>/&gt;&lt;br&gt;</span><br><span class="line">        &lt;/form&gt;</span><br><span class="line">    &lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+<p>处理登录的 servlet <code>LoginServlet.java</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.anye137.test;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;  </span><br><span class="line"><span class="keyword">import</span> javax.servlet.ServletException;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.annotation.WebServlet;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.*;  </span><br><span class="line"></span><br><span class="line"><span class="meta">@WebServlet</span>(<span class="string">"/loginServlet"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LoginServlet</span> <span class="keyword">extends</span> <span class="title">HttpServlet</span> </span>&#123;  </span><br><span class="line">  </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doGet</span><span class="params">(HttpServletRequest request, HttpServletResponse response)</span>  </span></span><br><span class="line"><span class="function">            <span class="keyword">throws</span> ServletException, IOException </span>&#123;  </span><br><span class="line">        </span><br><span class="line">        HttpSession session = request.getSession();</span><br><span class="line">        session.setAttribute(<span class="string">"userName"</span>, request.getParameter(<span class="string">"userName"</span>));</span><br><span class="line">        response.sendRedirect(<span class="string">"jsp/afterLogin.jsp"</span>);</span><br><span class="line">    &#125;  </span><br><span class="line">  </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doPost</span><span class="params">(HttpServletRequest request, HttpServletResponse response)</span>  </span></span><br><span class="line"><span class="function">            <span class="keyword">throws</span> ServletException, IOException </span>&#123;  </span><br><span class="line">        doGet(request, response);  </span><br><span class="line">    &#125;  </span><br><span class="line">  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>登录后的界面<code>afterLogin.jsp</code></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;%@ page language=<span class="string">"java"</span> contentType=<span class="string">"text/html; charset=utf-8"</span></span><br><span class="line">    pageEncoding=<span class="string">"utf-8"</span>%&gt;</span><br><span class="line">&lt;!DOCTYPE html PUBLIC <span class="string">"-//W3C//DTD HTML 4.01 Transitional//EN"</span> <span class="string">"http://www.w3.org/TR/html4/loose.dtd"</span>&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">    &lt;head&gt;</span><br><span class="line">       &lt;title&gt;&lt;/title&gt;</span><br><span class="line">    &lt;/head&gt;</span><br><span class="line">    &lt;body&gt;</span><br><span class="line">        用户名： &lt;%= session.getAttribute(<span class="string">"name"</span>) %&gt;</span><br><span class="line">        您已成功登陆</span><br><span class="line">    &lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+<p>运行效果：通过<code>login.jsp</code> 页面可以登录进入 <code>afterLogin.jsp</code> 页面，如果没有登录直接输入<code>afterLogin.jsp</code> 的网址，则会跳转到登录界面。</p>
+<p>注意，上面代码中并没有设置 request 和 response 编码，因为我在上一篇文章中已经写好了 <code>CharacterEncodingFilter</code> 。当然，如果不想用字符编码 Filter，我们也可以在 servlet 中简单设置下编码。</p>
+<p><br></p>
+<h2 id="4-内容替换-Filter"><a href="#4-内容替换-Filter" class="headerlink" title="4.内容替换 Filter"></a>4.内容替换 Filter</h2><p>有时候需要对网站的内容进行控制，<strong>防止输出非法内容或者敏感内容</strong>。常规的解决办法是在保存进数据库之前对非法敏感内容进行替环，或者在 servlet 里输出到客户端时进行替环。这两种解决方案都有很大的局限性，例如每个 servlet 都要进行替换、工作量大，与业务耦合比较严重等。</p>
+<p>使用<font color="red">内容替换 Filter</font> 则方便得多，其工作原理是：<strong>在 servlet 内将内容输出到 response 时，response 将内容缓存起来，在 Filter 中进行替换，然后再输出到客户端浏览器。由于默认的 response 并不能严格地缓存输出内容，因此需要自定义一个具备缓存功能的 response</strong>。</p>
+<p>OutputReplaceFilter.java</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.anye137.filter;</span><br><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"><span class="keyword">import</span> java.util.Properties;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.*;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.annotation.WebFilter;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.annotation.WebInitParam;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletResponse;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletResponseWrapper;</span><br><span class="line"></span><br><span class="line"><span class="meta">@WebFilter</span>(</span><br><span class="line">    filterName=<span class="string">"outputReplaceFilter"</span>, </span><br><span class="line">    urlPatterns=<span class="string">"/*"</span>,</span><br><span class="line">    initParams=&#123;<span class="meta">@WebInitParam</span>(name=<span class="string">"file"</span>,value=<span class="string">"/WEB-INF/sensitive.properties"</span>)&#125;  </span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">OutputReplaceFilter</span> <span class="keyword">implements</span> <span class="title">Filter</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//非法词、敏感词配置在 properties文件中</span></span><br><span class="line">    <span class="keyword">private</span> Properties pp = <span class="keyword">new</span> Properties();</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">OutputReplaceFilter</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">      </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">(FilterConfig config)</span> <span class="keyword">throws</span> ServletException </span>&#123;</span><br><span class="line">        <span class="comment">//properties文件名</span></span><br><span class="line">        String file = config.getInitParameter(<span class="string">"file"</span>);</span><br><span class="line">        <span class="comment">//文件位置</span></span><br><span class="line">        String realPath = config.getServletContext().getRealPath(file);</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">try</span>&#123;</span><br><span class="line">            <span class="comment">//如果properties文件是ISO-8859-1编码，可以直接用这句：pp.load(new FileInputStream(realPath));</span></span><br><span class="line">            <span class="comment">//如果文件是utf-8编码，且包含中文，需用下面两句</span></span><br><span class="line">            BufferedInputStream in = <span class="keyword">new</span> BufferedInputStream(<span class="keyword">new</span> FileInputStream(realPath));    </span><br><span class="line">            pp.load(<span class="keyword">new</span> InputStreamReader(in, <span class="string">"utf-8"</span>));                       </span><br><span class="line">        &#125;<span class="keyword">catch</span>(IOException e)&#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">destroy</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doFilter</span><span class="params">(ServletRequest request, ServletResponse response, FilterChain chain)</span> <span class="keyword">throws</span> IOException, ServletException </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"replace"</span>);</span><br><span class="line">	    HttpServletResponse res = (HttpServletResponse)response;</span><br><span class="line">	    <span class="comment">//使用自定义response</span></span><br><span class="line">	    OutputReplaceResponse orr = <span class="keyword">new</span> OutputReplaceResponse(res);</span><br><span class="line">	    </span><br><span class="line">	    <span class="comment">//doFilter，使用自定义 response orr</span></span><br><span class="line">	    chain.doFilter(request, orr);</span><br><span class="line">	    </span><br><span class="line">	    <span class="comment">//得到response输出内容</span></span><br><span class="line">	    String output = orr.getCharArrayWriter().toString();</span><br><span class="line">	    </span><br><span class="line">	    <span class="comment">//遍历所有敏感词</span></span><br><span class="line">	    <span class="keyword">for</span>(Object obj: pp.keySet())&#123;</span><br><span class="line">	        String key = (String)obj;</span><br><span class="line">	        <span class="comment">//替换敏感词</span></span><br><span class="line">	        output = output.replace(key, pp.getProperty(key));</span><br><span class="line">	    &#125;</span><br><span class="line">	    </span><br><span class="line">	    <span class="comment">//通过原来的response的getWriter()方法输出</span></span><br><span class="line">	    PrintWriter out = response.getWriter();</span><br><span class="line">	    <span class="comment">//真正输出到客户端</span></span><br><span class="line">	    out.write(output);		</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">    <span class="comment">//自定义response类</span></span><br><span class="line">	<span class="class"><span class="keyword">class</span> <span class="title">OutputReplaceResponse</span> <span class="keyword">extends</span> <span class="title">HttpServletResponseWrapper</span></span>&#123;                <span class="comment">//字符数组Writer </span></span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>自定义的<code>response</code> 类<code>OutputReplaceResponse</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">OutputReplaceResponse</span> <span class="keyword">extends</span> <span class="title">HttpServletResponseWrapper</span></span>&#123;</span><br><span class="line">        </span><br><span class="line">	    <span class="comment">//字符数组Writer</span></span><br><span class="line">	    <span class="keyword">private</span> CharArrayWriter caw=<span class="keyword">new</span> CharArrayWriter();</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">OutputReplaceResponse</span><span class="params">(HttpServletResponse response)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">super</span>(response);          </span><br><span class="line">        &#125;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> PrintWriter <span class="title">getWriter</span><span class="params">()</span> <span class="keyword">throws</span> IOException</span>&#123;</span><br><span class="line">            <span class="comment">//返回字符数组Writer，缓存内容</span></span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> PrintWriter(caw);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="function"><span class="keyword">public</span> CharArrayWriter <span class="title">getCharArrayWriter</span><span class="params">()</span></span>&#123;</span><br><span class="line">            <span class="keyword">return</span> caw;</span><br><span class="line">        &#125;	    </span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<p>本例中，自定义的 response 只是一个<strong>“伪装”</strong>的 response。servlet会通过它输出内容到客户端，但是<font color="red">它内部只是将内容缓存起来了，并没有真正输出到客户端。最终输出到客户端还是通过原来的 response 完成的</font>。</p>
+<p>词库配置 <code>sensitive.properties</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 自动更正</span><br><span class="line">Chna = China</span><br><span class="line"># 自动替换</span><br><span class="line">赌博 = **</span><br><span class="line">色情 = **</span><br><span class="line">情色 = **</span><br></pre></td></tr></table></figure>
+<p>我把 properties 文件设置为 utf-8 编码的 （eclipse中右键文件名，点Properties 设置就行了），在上面的 Filter 中是这样加载的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">BufferedInputStream in = <span class="keyword">new</span> BufferedInputStream(<span class="keyword">new</span> FileInputStream(realPath));    </span><br><span class="line">pp.load(<span class="keyword">new</span> InputStreamReader(in, <span class="string">"utf-8"</span>));</span><br></pre></td></tr></table></figure>
+<p>使用 <strong>utf-8</strong> 编码的话，在 properties 文件中直接输入中文会正常显示。<br>如果把文件编码设置为 <strong>ISO-8859-1</strong>，这时在编辑器输入中文，只能显示出中文对应的 Unicode 编码，但是对后续的操作其实影响不大。加载此文件只需一行代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pp.load(<span class="keyword">new</span> FileInputStream(realPath));</span><br></pre></td></tr></table></figure>
+<p><br><br>测试页面<code>testReplace.jsp</code></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&lt;%@ page language=<span class="string">"java"</span> contentType=<span class="string">"text/html; charset=UTF-8"</span> %&gt;</span><br><span class="line">&lt;!DOCTYPE html PUBLIC <span class="string">"-//W3C//DTD HTML 4.01 Transitional//EN"</span> <span class="string">"http://www.w3.org/TR/html4/loose.dtd"</span>&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">    &lt;head&gt;</span><br><span class="line">        &lt;title&gt;&lt;/title&gt;</span><br><span class="line">    &lt;/head&gt;</span><br><span class="line">    &lt;body&gt;</span><br><span class="line">        Chna &lt;br/&gt;</span><br><span class="line">        &lt;br/&gt;</span><br><span class="line">        色情 &lt;br/&gt;</span><br><span class="line">        赌博 &lt;br/&gt;</span><br><span class="line">        情色 &lt;br/&gt;</span><br><span class="line">    &lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+<p>在浏览器中输入测试页面网址，可以看到替换后的效果。</p>
+<p>上面 Filter 是在<code>init()</code> 方法中加载 properties 文件的，Filter <code>inti()</code> 方法只在 web 程序第一次运行时调用一次。所以如果词库更新的话，需要<strong>重启</strong> web 程序。</p>
+<p>Filter 还有许多常用例子，例如<strong>缓存Filter</strong>、<strong>GZIP压缩Filter</strong>等，这里就不一一详述了。</p>
+<p><br></p>
+<p>本文详细代码见 <a href="https://github.com/anye137/Java-Web-Learning/tree/master/FilterAndListener" target="_blank" rel="noopener"><font color="blue"><strong>Github</strong></font></a></p>
+<p><br></p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p>(1) 《JavaWeb 王者归来》<br>(2) <a href="http://blog.csdn.net/qq_27093465/article/details/70765870" target="_blank" rel="noopener">Java读写.properties文件实例，解决中文乱码问题</a> from CSDN</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/java/" rel="tag"># java</a>
+              <a href="/tags/java-web/" rel="tag"># java web</a>
+              <a href="/tags/Filter/" rel="tag"># Filter</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/java-web-filter-1/" rel="prev" title="java web Filter（过滤器）上">
+      <i class="fa fa-chevron-left"></i> java web Filter（过滤器）上
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/java-web-Listener/" rel="next" title="java web Listener（监听器）">
+      java web Listener（监听器） <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Filter-常用例子"><span class="nav-number">1.</span> <span class="nav-text">Filter 常用例子</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-登录验证-Filter"><span class="nav-number">1.1.</span> <span class="nav-text">3. 登录验证 Filter</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-内容替换-Filter"><span class="nav-number">1.2.</span> <span class="nav-text">4.内容替换 Filter</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考资料"><span class="nav-number">2.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">anye137</p>
+  <div class="site-description" itemprop="description">anye137's blogs</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">24</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">anye137</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
