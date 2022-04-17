@@ -13,10 +13,6 @@
     <lastmod>2022-04-03</lastmod>
   </url>
   <url>
-    <loc>http://anye137.github.io/2018/crawler-monitor/</loc>
-    <lastmod>2022-04-03</lastmod>
-  </url>
-  <url>
     <loc>http://anye137.github.io/2018/crawler-js-wanfang/</loc>
     <lastmod>2022-04-03</lastmod>
   </url>
@@ -25,11 +21,15 @@
     <lastmod>2022-04-03</lastmod>
   </url>
   <url>
-    <loc>http://anye137.github.io/2018/crawler-multi-process-thread/</loc>
+    <loc>http://anye137.github.io/2018/crawler-monitor/</loc>
     <lastmod>2022-04-03</lastmod>
   </url>
   <url>
     <loc>http://anye137.github.io/2018/crawler-js-selenium/</loc>
+    <lastmod>2022-04-03</lastmod>
+  </url>
+  <url>
+    <loc>http://anye137.github.io/2018/crawler-multi-process-thread/</loc>
     <lastmod>2022-04-03</lastmod>
   </url>
   <url>
