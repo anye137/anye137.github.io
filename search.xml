@@ -152,6 +152,40 @@
       </tags>
   </entry>
   <entry>
+    <title>Python 爬虫中的多进程，多线程和协程（基础）</title>
+    <url>/2018/crawler-multi-process-thread/</url>
+    <content><![CDATA[<p>这篇文章讲提高爬虫效率的三种方法：</p>
+<blockquote>
+<ol>
+<li>多进程</li>
+<li>多线程</li>
+<li>协程</li>
+</ol>
+</blockquote>
+<p>其实如果要详细讲的话，这三个方法还是挺复杂的，比如说进程间的通信问题，多线程的锁机制问题等。由于本人水平所限，这里就只讲讲这三者的基本用法吧。（虽然如此，掌握了这些基本用法，还是能够显著提升爬虫效率的。）</p>
+<p>首先先总结下多进程、多线程和协程三者的特点：</p>
+<blockquote>
+<p>多进程：</p>
+<p>多线程：</p>
+<p>协程：</p>
+</blockquote>
+<p>下面是代码例子</p>
+<p>多进程</p>
+<p>多线程</p>
+<p>协程</p>
+]]></content>
+      <categories>
+        <category>爬虫</category>
+      </categories>
+      <tags>
+        <tag>爬虫</tag>
+        <tag>多进程</tag>
+        <tag>多线程</tag>
+        <tag>协程</tag>
+        <tag>Python</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>爬虫获取 JS 动态数据（漫画图片下载）</title>
     <url>/2018/crawler-js-selenium/</url>
     <content><![CDATA[<p>爬虫遇到 js 动态数据时，主要解决方法有两种：</p>
@@ -201,6 +235,87 @@
       <tags>
         <tag>爬虫</tag>
         <tag>JS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>爬虫之破解极验验证（滑动验证码）</title>
+    <url>/2018/crawler-geetest/</url>
+    <content><![CDATA[<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>说实话，本文代码主要是参考网上资料的。</p>
+<p>极验验证的滑动验证码如下：</p>
+<img src="/images/2018/06-18-1.png" align="center">
+
+<p>其实网上有许多破解极验验证的教程，主要分为两种，一种是<font color="red"><strong>手动分析各种请求</strong></font>，另一种是直接<font color="red"><strong>使用 Selenium 模拟浏览器</strong></font>。前者，破解过程繁琐，开发久，但是运行速度快；后者，开发快，但是运行很慢。。考虑到极验验证一直在更换各种请求 URL，参数等等（毕竟人家靠这个吃饭的啊），手动分析的方法时效性不强。所以，本文主要参考使用 Selenium 破解验证码的方法。</p>
+<a id="more"></a>
+
+<p>本文所使用的验证码例子如下：</p>
+<p><a href="https://www.geetest.com/type/" target="_blank" rel="noopener">极验验证-验证例子</a></p>
+<p>破解过程如下：</p>
+<blockquote>
+<ol>
+<li>访问该页面，点击 “滑动行为验证”，点击 “点击按钮进行验证”，使得滑动验证码出现。</li>
+<li>获取验证码图像和带缺口的验证码图像</li>
+<li>比对两张图像，获得滑块位移</li>
+<li>模拟滑块运动，进行验证</li>
+</ol>
+</blockquote>
+<p>本文代码使用的库如下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"><span class="keyword">from</span> selenium.webdriver.common.by <span class="keyword">import</span> By</span><br><span class="line"><span class="keyword">from</span> selenium.webdriver.common.action_chains <span class="keyword">import</span> ActionChains</span><br><span class="line"><span class="keyword">from</span> selenium.webdriver.support.ui <span class="keyword">import</span> WebDriverWait <span class="keyword">as</span> Wait</span><br><span class="line"><span class="keyword">from</span> selenium.webdriver.support <span class="keyword">import</span> expected_conditions <span class="keyword">as</span> Expect</span><br><span class="line"><span class="keyword">import</span> new.anti.easing <span class="keyword">as</span> easing</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> cv2</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h1 id="1-滑动验证码的出现"><a href="#1-滑动验证码的出现" class="headerlink" title="1. 滑动验证码的出现"></a>1. 滑动验证码的出现</h1><p>这个比较简单啦，首先使用 Selenium 访问网页：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">browser = webdriver.Chrome(</span><br><span class="line">    executable_path=<span class="string">"e:/chromedriver.exe"</span>,</span><br><span class="line">    chrome_options=chrome_options</span><br><span class="line">)</span><br><span class="line">browser.get(<span class="string">'http://www.geetest.com/type/'</span>)</span><br><span class="line"></span><br><span class="line">Wait(browser, <span class="number">60</span>).until(</span><br><span class="line">    Expect.visibility_of_element_located((By.CLASS_NAME, <span class="string">"products-content"</span>))</span><br><span class="line">)</span><br><span class="line">time.sleep(<span class="number">1.2</span>)</span><br></pre></td></tr></table></figure>
+
+<p>接着，点击 “滑动行为验证”：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">slide_captcha = browser.find_element_by_xpath(<span class="string">'//div[@class="products-content"]/ul/li[2]'</span>)</span><br><span class="line">slide_captcha.click()</span><br><span class="line">Wait(browser, <span class="number">60</span>).until(</span><br><span class="line">    Expect.visibility_of_element_located((By.CLASS_NAME, <span class="string">"geetest_radar_tip_content"</span>))</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>然后，点击 “点击按钮进行验证”，就出现验证图片了：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">validate = browser.find_element_by_xpath(<span class="string">'//span[@class="geetest_radar_tip_content"]'</span>)</span><br><span class="line">validate.click()</span><br><span class="line">time.sleep(<span class="number">0.5</span>)</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h1 id="2-获取验证码图像和带缺口的验证码图像"><a href="#2-获取验证码图像和带缺口的验证码图像" class="headerlink" title="2. 获取验证码图像和带缺口的验证码图像"></a>2. 获取验证码图像和带缺口的验证码图像</h1><p>这里用到 Selenium 的截图功能。Selenium 对元素截图会出错（原因我也不知，网上这样说的。。）。所以，我们要全屏截图，然后裁剪出验证码图像。在这里，我们要截取的元素，是重叠的。<strong>对于重叠的元素，我们先执行 JS 脚本，移除部分元素或者使得元素不可见，再截图</strong>。获取图像的函数如下：</p>
+ <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_pictures</span><span class="params">(browser)</span>:</span></span><br><span class="line">    browser.execute_script(<span class="string">'''</span></span><br><span class="line"><span class="string">        var x = document.getElementsByClassName("geetest_canvas_slice geetest_absolute");</span></span><br><span class="line"><span class="string">        x[0].style.display="none";</span></span><br><span class="line"><span class="string">        var y = document.getElementsByClassName("geetest_canvas_fullbg geetest_fade geetest_absolute");</span></span><br><span class="line"><span class="string">        y[0].style.display="none";</span></span><br><span class="line"><span class="string">    '''</span>)</span><br><span class="line">    time.sleep(<span class="number">0.8</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 带缺口的验证码图像的全屏截图</span></span><br><span class="line">    browser.save_screenshot(<span class="string">'img1.jpg'</span>)</span><br><span class="line">    <span class="comment"># 裁剪验证码图像</span></span><br><span class="line">    crop_picture(<span class="string">'img1.jpg'</span>)</span><br><span class="line"></span><br><span class="line">    browser.execute_script(<span class="string">'''</span></span><br><span class="line"><span class="string">        var x = document.getElementsByClassName("geetest_canvas_bg geetest_absolute");</span></span><br><span class="line"><span class="string">        x[0].style.display="none";</span></span><br><span class="line"><span class="string">        var y = document.getElementsByClassName("geetest_canvas_fullbg geetest_fade geetest_absolute");</span></span><br><span class="line"><span class="string">        y[0].style.display="block";</span></span><br><span class="line"><span class="string">    '''</span>)</span><br><span class="line">    time.sleep(<span class="number">0.8</span>)</span><br><span class="line">    <span class="comment"># 不带缺口的验证码图像的全屏截图</span></span><br><span class="line">    browser.save_screenshot(<span class="string">'img2.jpg'</span>)</span><br><span class="line">    <span class="comment"># 裁剪验证码图像</span></span><br><span class="line">    crop_picture(<span class="string">'img2.jpg'</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 使元素恢复成可见的</span></span><br><span class="line">    browser.execute_script(<span class="string">'''</span></span><br><span class="line"><span class="string">        var x = document.getElementsByClassName("geetest_canvas_bg geetest_absolute");</span></span><br><span class="line"><span class="string">        x[0].style.display="block";</span></span><br><span class="line"><span class="string">        var y = document.getElementsByClassName("geetest_canvas_slice geetest_absolute");</span></span><br><span class="line"><span class="string">        y[0].style.display="block";</span></span><br><span class="line"><span class="string">    '''</span>)</span><br></pre></td></tr></table></figure>
+
+<p>其中，裁剪函数如下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">crop_picture</span><span class="params">(filename)</span>:</span></span><br><span class="line">    left = <span class="number">830</span></span><br><span class="line">    top = <span class="number">335</span></span><br><span class="line">    right = left + <span class="number">260</span></span><br><span class="line">    bottom = top + <span class="number">160</span></span><br><span class="line"></span><br><span class="line">    im = Image.open(filename)</span><br><span class="line">    im = im.crop((left, top, right, bottom))</span><br><span class="line">    im.save(filename)</span><br></pre></td></tr></table></figure>
+
+<p>260 和 160 是验证码图像的宽度和高度。830 和 335 是根据屏幕的高和宽以及验证码图像的高和宽计算出来的。对于不同的浏览器和不同的显示器，这些数值可能不一样。合理的话，应该使用程序获取这些高度和宽度并计算的。但是我懒得写了。。</p>
+<br>
+
+<h1 id="3-比对两张图像，获得滑块位移"><a href="#3-比对两张图像，获得滑块位移" class="headerlink" title="3. 比对两张图像，获得滑块位移"></a>3. 比对两张图像，获得滑块位移</h1><p>这里，是对两张图片逐个像素进行匹配，如果某个像素点不匹配，该像素点就是滑块缺口的左上顶点。滑块的位移是水平方向的，初始滑块左上顶底横坐标大约是 12，所以 <code>offset = j - 12</code>。</p>
+<p>但是实际上，我们截图的时候，截的验证码位置可能有误差，所以计算位移要考虑到误差的影响。在我这里，设置为 <code>offset = j</code></p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_offset</span><span class="params">(image1, image2, threshold)</span>:</span></span><br><span class="line">    offset = <span class="number">-1</span></span><br><span class="line">    img1 = cv2.imread(image1)</span><br><span class="line">    img2 = cv2.imread(image2)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">260</span>):</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">160</span>):</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> match(img1[i][j], img2[i][j], threshold):           </span><br><span class="line">                offset = j</span><br><span class="line">                <span class="keyword">return</span> offset</span><br><span class="line">    <span class="keyword">return</span> offset</span><br></pre></td></tr></table></figure>
+
+<p>匹配函数如下（注意 imread 函数读到的像素值是 uint8 类型，相减之后可能溢出，所以要转为 int）：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">match</span><span class="params">(i1, i2, t)</span>:</span></span><br><span class="line">    p1 = [int(p) <span class="keyword">for</span> p <span class="keyword">in</span> i1]</span><br><span class="line">    p2 = [int(p) <span class="keyword">for</span> p <span class="keyword">in</span> i2]</span><br><span class="line">    <span class="keyword">if</span> abs(p1[<span class="number">0</span>] - p2[<span class="number">0</span>]) &lt; t <span class="keyword">and</span> abs(p1[<span class="number">1</span>] - p2[<span class="number">1</span>]) &lt; t <span class="keyword">and</span> abs(p1[<span class="number">2</span>] - p2[<span class="number">2</span>]) &lt; t:</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">True</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">False</span></span><br></pre></td></tr></table></figure>
+
+<p>有个问题，就是，为什么我们要设置一个阈值呢？显而易见的原因是，图像之间可能存在少许误差嘛。不过，实际上，这个阈值设置得蛮大的（我设置为 50），这是因为，有些验证码图像加入了一些阴影干扰。</p>
+<img src="/images/2018/06-18-2.png" align="center">
+
+<img src="/images/2018/06-18-3.png" align="center">
+
+<p>所以，像素之间差距小于阈值的，我们可以认为是跟原图像一样的，或者是阴影干扰项。</p>
+<br>
+
+<h1 id="4-模拟滑块运动，进行验证"><a href="#4-模拟滑块运动，进行验证" class="headerlink" title="4. 模拟滑块运动，进行验证"></a>4. 模拟滑块运动，进行验证</h1><p>注意，得到位移后，不能进行简单的匀速拖拽，因为极验验证会识别是否是机器操作的。所以，拖拽的的过程要精心设计。这里，我啥都没干。。哈哈。直接 copy 了网上的代码，成功率还是蛮高的。验证的代码如下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">do_crack</span><span class="params">(browser, offset)</span>:</span></span><br><span class="line">    knob = browser.find_element_by_class_name(<span class="string">"geetest_slider_button"</span>)</span><br><span class="line">    fake_drag(browser, knob, offset)</span><br><span class="line">    <span class="keyword">return</span></span><br></pre></td></tr></table></figure>
+
+<p>里面调用的函数，可以去参考资料 [2] 那里看</p>
+<br>
+
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><blockquote>
+<p>[1] (极验滑动验证最新破解实践（18年1月底）)[<a href="https://zhuanlan.zhihu.com/p/31995134]" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/31995134]</a></p>
+<p>[2] (使用 Python + Selenium 破解滑块验证码)[<a href="http://www.aneasystone.com/archives/2018/03/python-selenium-geetest-crack.html]" target="_blank" rel="noopener">http://www.aneasystone.com/archives/2018/03/python-selenium-geetest-crack.html]</a></p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>爬虫</category>
+      </categories>
+      <tags>
+        <tag>爬虫</tag>
+        <tag>极限验证</tag>
+        <tag>滑动验证码</tag>
       </tags>
   </entry>
   <entry>
@@ -266,37 +381,20 @@
       </tags>
   </entry>
   <entry>
-    <title>Python 爬虫中的多进程，多线程和协程（基础）</title>
-    <url>/2018/crawler-multi-process-thread/</url>
-    <content><![CDATA[<p>这篇文章讲提高爬虫效率的三种方法：</p>
-<blockquote>
-<ol>
-<li>多进程</li>
-<li>多线程</li>
-<li>协程</li>
-</ol>
-</blockquote>
-<p>其实如果要详细讲的话，这三个方法还是挺复杂的，比如说进程间的通信问题，多线程的锁机制问题等。由于本人水平所限，这里就只讲讲这三者的基本用法吧。（虽然如此，掌握了这些基本用法，还是能够显著提升爬虫效率的。）</p>
-<p>首先先总结下多进程、多线程和协程三者的特点：</p>
-<blockquote>
-<p>多进程：</p>
-<p>多线程：</p>
-<p>协程：</p>
-</blockquote>
-<p>下面是代码例子</p>
-<p>多进程</p>
-<p>多线程</p>
-<p>协程</p>
+    <title>我又回来了</title>
+    <url>/2022/come-back/</url>
+    <content><![CDATA[<p>我又回来写博客了。</p>
+<a id="more"></a>
+
+<p>上一篇 hexo 博客已经是四年前写的了。中间曾去过简书平台写过几篇博客，后面也不了了之。之所以没有坚持下去，主要还是输入不够，所以就没啥可输出的。在加上自己太懒，所以博客荒废了许久。</p>
+<p>这次回归，主要还是因为偶然看到了公司一位同事的 <a href="http://pea3nut.info/" target="_blank" rel="noopener">blog</a>，感觉写得很好，深感佩服。再加上最近自己生活和学习状态确实不够好，所以希望写写博客，通过对外输出，改善一下自己的状态（虽然也没啥人看我的博客）。预计后面的博客应该是以生活日记为主，偶尔会更一下八股文笔记和推荐系统相关笔记。</p>
+<p>时不我待，加油！</p>
 ]]></content>
       <categories>
-        <category>爬虫</category>
+        <category>随笔</category>
       </categories>
       <tags>
-        <tag>爬虫</tag>
-        <tag>多进程</tag>
-        <tag>多线程</tag>
-        <tag>协程</tag>
-        <tag>Python</tag>
+        <tag>随笔</tag>
       </tags>
   </entry>
   <entry>
@@ -416,128 +514,6 @@
       </tags>
   </entry>
   <entry>
-    <title>爬虫之破解极验验证（滑动验证码）</title>
-    <url>/2018/crawler-geetest/</url>
-    <content><![CDATA[<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>说实话，本文代码主要是参考网上资料的。</p>
-<p>极验验证的滑动验证码如下：</p>
-<img src="/images/2018/06-18-1.png" align="center">
-
-<p>其实网上有许多破解极验验证的教程，主要分为两种，一种是<font color="red"><strong>手动分析各种请求</strong></font>，另一种是直接<font color="red"><strong>使用 Selenium 模拟浏览器</strong></font>。前者，破解过程繁琐，开发久，但是运行速度快；后者，开发快，但是运行很慢。。考虑到极验验证一直在更换各种请求 URL，参数等等（毕竟人家靠这个吃饭的啊），手动分析的方法时效性不强。所以，本文主要参考使用 Selenium 破解验证码的方法。</p>
-<a id="more"></a>
-
-<p>本文所使用的验证码例子如下：</p>
-<p><a href="https://www.geetest.com/type/" target="_blank" rel="noopener">极验验证-验证例子</a></p>
-<p>破解过程如下：</p>
-<blockquote>
-<ol>
-<li>访问该页面，点击 “滑动行为验证”，点击 “点击按钮进行验证”，使得滑动验证码出现。</li>
-<li>获取验证码图像和带缺口的验证码图像</li>
-<li>比对两张图像，获得滑块位移</li>
-<li>模拟滑块运动，进行验证</li>
-</ol>
-</blockquote>
-<p>本文代码使用的库如下：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"><span class="keyword">from</span> selenium.webdriver.common.by <span class="keyword">import</span> By</span><br><span class="line"><span class="keyword">from</span> selenium.webdriver.common.action_chains <span class="keyword">import</span> ActionChains</span><br><span class="line"><span class="keyword">from</span> selenium.webdriver.support.ui <span class="keyword">import</span> WebDriverWait <span class="keyword">as</span> Wait</span><br><span class="line"><span class="keyword">from</span> selenium.webdriver.support <span class="keyword">import</span> expected_conditions <span class="keyword">as</span> Expect</span><br><span class="line"><span class="keyword">import</span> new.anti.easing <span class="keyword">as</span> easing</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> cv2</span><br></pre></td></tr></table></figure>
-
-<br>
-
-<h1 id="1-滑动验证码的出现"><a href="#1-滑动验证码的出现" class="headerlink" title="1. 滑动验证码的出现"></a>1. 滑动验证码的出现</h1><p>这个比较简单啦，首先使用 Selenium 访问网页：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">browser = webdriver.Chrome(</span><br><span class="line">    executable_path=<span class="string">"e:/chromedriver.exe"</span>,</span><br><span class="line">    chrome_options=chrome_options</span><br><span class="line">)</span><br><span class="line">browser.get(<span class="string">'http://www.geetest.com/type/'</span>)</span><br><span class="line"></span><br><span class="line">Wait(browser, <span class="number">60</span>).until(</span><br><span class="line">    Expect.visibility_of_element_located((By.CLASS_NAME, <span class="string">"products-content"</span>))</span><br><span class="line">)</span><br><span class="line">time.sleep(<span class="number">1.2</span>)</span><br></pre></td></tr></table></figure>
-
-<p>接着，点击 “滑动行为验证”：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">slide_captcha = browser.find_element_by_xpath(<span class="string">'//div[@class="products-content"]/ul/li[2]'</span>)</span><br><span class="line">slide_captcha.click()</span><br><span class="line">Wait(browser, <span class="number">60</span>).until(</span><br><span class="line">    Expect.visibility_of_element_located((By.CLASS_NAME, <span class="string">"geetest_radar_tip_content"</span>))</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-
-<p>然后，点击 “点击按钮进行验证”，就出现验证图片了：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">validate = browser.find_element_by_xpath(<span class="string">'//span[@class="geetest_radar_tip_content"]'</span>)</span><br><span class="line">validate.click()</span><br><span class="line">time.sleep(<span class="number">0.5</span>)</span><br></pre></td></tr></table></figure>
-
-<br>
-
-<h1 id="2-获取验证码图像和带缺口的验证码图像"><a href="#2-获取验证码图像和带缺口的验证码图像" class="headerlink" title="2. 获取验证码图像和带缺口的验证码图像"></a>2. 获取验证码图像和带缺口的验证码图像</h1><p>这里用到 Selenium 的截图功能。Selenium 对元素截图会出错（原因我也不知，网上这样说的。。）。所以，我们要全屏截图，然后裁剪出验证码图像。在这里，我们要截取的元素，是重叠的。<strong>对于重叠的元素，我们先执行 JS 脚本，移除部分元素或者使得元素不可见，再截图</strong>。获取图像的函数如下：</p>
- <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_pictures</span><span class="params">(browser)</span>:</span></span><br><span class="line">    browser.execute_script(<span class="string">'''</span></span><br><span class="line"><span class="string">        var x = document.getElementsByClassName("geetest_canvas_slice geetest_absolute");</span></span><br><span class="line"><span class="string">        x[0].style.display="none";</span></span><br><span class="line"><span class="string">        var y = document.getElementsByClassName("geetest_canvas_fullbg geetest_fade geetest_absolute");</span></span><br><span class="line"><span class="string">        y[0].style.display="none";</span></span><br><span class="line"><span class="string">    '''</span>)</span><br><span class="line">    time.sleep(<span class="number">0.8</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 带缺口的验证码图像的全屏截图</span></span><br><span class="line">    browser.save_screenshot(<span class="string">'img1.jpg'</span>)</span><br><span class="line">    <span class="comment"># 裁剪验证码图像</span></span><br><span class="line">    crop_picture(<span class="string">'img1.jpg'</span>)</span><br><span class="line"></span><br><span class="line">    browser.execute_script(<span class="string">'''</span></span><br><span class="line"><span class="string">        var x = document.getElementsByClassName("geetest_canvas_bg geetest_absolute");</span></span><br><span class="line"><span class="string">        x[0].style.display="none";</span></span><br><span class="line"><span class="string">        var y = document.getElementsByClassName("geetest_canvas_fullbg geetest_fade geetest_absolute");</span></span><br><span class="line"><span class="string">        y[0].style.display="block";</span></span><br><span class="line"><span class="string">    '''</span>)</span><br><span class="line">    time.sleep(<span class="number">0.8</span>)</span><br><span class="line">    <span class="comment"># 不带缺口的验证码图像的全屏截图</span></span><br><span class="line">    browser.save_screenshot(<span class="string">'img2.jpg'</span>)</span><br><span class="line">    <span class="comment"># 裁剪验证码图像</span></span><br><span class="line">    crop_picture(<span class="string">'img2.jpg'</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 使元素恢复成可见的</span></span><br><span class="line">    browser.execute_script(<span class="string">'''</span></span><br><span class="line"><span class="string">        var x = document.getElementsByClassName("geetest_canvas_bg geetest_absolute");</span></span><br><span class="line"><span class="string">        x[0].style.display="block";</span></span><br><span class="line"><span class="string">        var y = document.getElementsByClassName("geetest_canvas_slice geetest_absolute");</span></span><br><span class="line"><span class="string">        y[0].style.display="block";</span></span><br><span class="line"><span class="string">    '''</span>)</span><br></pre></td></tr></table></figure>
-
-<p>其中，裁剪函数如下：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">crop_picture</span><span class="params">(filename)</span>:</span></span><br><span class="line">    left = <span class="number">830</span></span><br><span class="line">    top = <span class="number">335</span></span><br><span class="line">    right = left + <span class="number">260</span></span><br><span class="line">    bottom = top + <span class="number">160</span></span><br><span class="line"></span><br><span class="line">    im = Image.open(filename)</span><br><span class="line">    im = im.crop((left, top, right, bottom))</span><br><span class="line">    im.save(filename)</span><br></pre></td></tr></table></figure>
-
-<p>260 和 160 是验证码图像的宽度和高度。830 和 335 是根据屏幕的高和宽以及验证码图像的高和宽计算出来的。对于不同的浏览器和不同的显示器，这些数值可能不一样。合理的话，应该使用程序获取这些高度和宽度并计算的。但是我懒得写了。。</p>
-<br>
-
-<h1 id="3-比对两张图像，获得滑块位移"><a href="#3-比对两张图像，获得滑块位移" class="headerlink" title="3. 比对两张图像，获得滑块位移"></a>3. 比对两张图像，获得滑块位移</h1><p>这里，是对两张图片逐个像素进行匹配，如果某个像素点不匹配，该像素点就是滑块缺口的左上顶点。滑块的位移是水平方向的，初始滑块左上顶底横坐标大约是 12，所以 <code>offset = j - 12</code>。</p>
-<p>但是实际上，我们截图的时候，截的验证码位置可能有误差，所以计算位移要考虑到误差的影响。在我这里，设置为 <code>offset = j</code></p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_offset</span><span class="params">(image1, image2, threshold)</span>:</span></span><br><span class="line">    offset = <span class="number">-1</span></span><br><span class="line">    img1 = cv2.imread(image1)</span><br><span class="line">    img2 = cv2.imread(image2)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">260</span>):</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">160</span>):</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> match(img1[i][j], img2[i][j], threshold):           </span><br><span class="line">                offset = j</span><br><span class="line">                <span class="keyword">return</span> offset</span><br><span class="line">    <span class="keyword">return</span> offset</span><br></pre></td></tr></table></figure>
-
-<p>匹配函数如下（注意 imread 函数读到的像素值是 uint8 类型，相减之后可能溢出，所以要转为 int）：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">match</span><span class="params">(i1, i2, t)</span>:</span></span><br><span class="line">    p1 = [int(p) <span class="keyword">for</span> p <span class="keyword">in</span> i1]</span><br><span class="line">    p2 = [int(p) <span class="keyword">for</span> p <span class="keyword">in</span> i2]</span><br><span class="line">    <span class="keyword">if</span> abs(p1[<span class="number">0</span>] - p2[<span class="number">0</span>]) &lt; t <span class="keyword">and</span> abs(p1[<span class="number">1</span>] - p2[<span class="number">1</span>]) &lt; t <span class="keyword">and</span> abs(p1[<span class="number">2</span>] - p2[<span class="number">2</span>]) &lt; t:</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">True</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">False</span></span><br></pre></td></tr></table></figure>
-
-<p>有个问题，就是，为什么我们要设置一个阈值呢？显而易见的原因是，图像之间可能存在少许误差嘛。不过，实际上，这个阈值设置得蛮大的（我设置为 50），这是因为，有些验证码图像加入了一些阴影干扰。</p>
-<img src="/images/2018/06-18-2.png" align="center">
-
-<img src="/images/2018/06-18-3.png" align="center">
-
-<p>所以，像素之间差距小于阈值的，我们可以认为是跟原图像一样的，或者是阴影干扰项。</p>
-<br>
-
-<h1 id="4-模拟滑块运动，进行验证"><a href="#4-模拟滑块运动，进行验证" class="headerlink" title="4. 模拟滑块运动，进行验证"></a>4. 模拟滑块运动，进行验证</h1><p>注意，得到位移后，不能进行简单的匀速拖拽，因为极验验证会识别是否是机器操作的。所以，拖拽的的过程要精心设计。这里，我啥都没干。。哈哈。直接 copy 了网上的代码，成功率还是蛮高的。验证的代码如下：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">do_crack</span><span class="params">(browser, offset)</span>:</span></span><br><span class="line">    knob = browser.find_element_by_class_name(<span class="string">"geetest_slider_button"</span>)</span><br><span class="line">    fake_drag(browser, knob, offset)</span><br><span class="line">    <span class="keyword">return</span></span><br></pre></td></tr></table></figure>
-
-<p>里面调用的函数，可以去参考资料 [2] 那里看</p>
-<br>
-
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><blockquote>
-<p>[1] (极验滑动验证最新破解实践（18年1月底）)[<a href="https://zhuanlan.zhihu.com/p/31995134]" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/31995134]</a></p>
-<p>[2] (使用 Python + Selenium 破解滑块验证码)[<a href="http://www.aneasystone.com/archives/2018/03/python-selenium-geetest-crack.html]" target="_blank" rel="noopener">http://www.aneasystone.com/archives/2018/03/python-selenium-geetest-crack.html]</a></p>
-</blockquote>
-]]></content>
-      <categories>
-        <category>爬虫</category>
-      </categories>
-      <tags>
-        <tag>爬虫</tag>
-        <tag>极限验证</tag>
-        <tag>滑动验证码</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>记一次与同事的闲聊</title>
-    <url>/2022/chat_with_colleague/</url>
-    <content><![CDATA[<p>2022年，我的第一篇生活日记——记一次与同事的闲聊。</p>
-<a id="more"></a>
-
-<p>受疫情影响，公司开始居家办公。由于居家效率低，我还是经常去公司工作的。那一天，刚好同事 A 也去公司上班了。所以我们晚饭就约一起吃。A 虽然和我同样是应届生，但技术过硬，令人佩服。</p>
-<p>恰饭的时候，A 问我当初为啥没有留在广东。我说当时腾讯没面过。他又问，为啥没有面过呢。听到这个问题，我第一感觉也是挺奇怪的，一般说面不过，不就是因为水平不够嘛。于是我回答水平不够。但 A 又问了，为啥水平不够呢？听到他的问题，我又愣了，不知如何回答，只能随口说项目没说好。</p>
-<p>晚上下班后，我反思了下。恰饭的时候，我还觉得 A 问的问题有点奇怪，且过于直接。但其实，他问得还是挺好的。是啊，我为什么水平不够呢？这个本应是我秋招时就应该理清的问题。结果到现在工作半年多了，我还一直没有去思考自己的薄弱点，去提升自己的不足之处。</p>
-<p>emm，现在来想想，自己当初为啥有些面试没过呢，可能主要有以下几个原因：</p>
-<ol>
-<li>做的项目一般，没有啥亮点</li>
-<li>自驱能力弱，没有去主动推进项目</li>
-<li>技术广度深度都不够</li>
-</ol>
-<p>希望，后面的职业生涯，能够慢慢解决以上几个不足之处把。FROM NOW ON ！</p>
-]]></content>
-      <categories>
-        <category>随笔</category>
-      </categories>
-      <tags>
-        <tag>随笔</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>我又回来了</title>
-    <url>/2022/come-back/</url>
-    <content><![CDATA[<p>我又回来写博客了。</p>
-<a id="more"></a>
-
-<p>上一篇 hexo 博客已经是四年前写的了。中间曾去过简书平台写过几篇博客，后面也不了了之。之所以没有坚持下去，主要还是输入不够，所以就没啥可输出的。在加上自己太懒，所以博客荒废了许久。</p>
-<p>这次回归，主要还是因为偶然看到了公司一位同事的 <a href="http://pea3nut.info/" target="_blank" rel="noopener">blog</a>，感觉写得很好，深感佩服。再加上最近自己生活和学习状态确实不够好，所以希望写写博客，通过对外输出，改善一下自己的状态（虽然也没啥人看我的博客）。预计后面的博客应该是以生活日记为主，偶尔会更一下八股文笔记和推荐系统相关笔记。</p>
-<p>时不我待，加油！</p>
-]]></content>
-      <categories>
-        <category>随笔</category>
-      </categories>
-      <tags>
-        <tag>随笔</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>工作相关的碎碎念</title>
     <url>/2022/work_think/</url>
     <content><![CDATA[<p>一些工作相关的碎碎念，记录一下。</p>
@@ -565,111 +541,53 @@
       </tags>
   </entry>
   <entry>
-    <title>java web Filter（过滤器）上</title>
-    <url>/2018/java-web-filter-1/</url>
-    <content><![CDATA[<h1 id="Filter-概述"><a href="#Filter-概述" class="headerlink" title="Filter 概述"></a>Filter 概述</h1><p><font color="red">Filter（过滤器）</font>用于在 servlet 之外对 request 或者 response 进行拦截、修改，甚至可以拒绝、重定向或者转发 request。Filter 提出了 <font color="red">FilterChain</font> 的概念，一个 FilterChain 包括多个 Filter。客户端请求 request 在抵达 servlet 之前会经过 FilterChain 里的所有 Filter，服务器响应 response 在从 servlet 抵达客户端浏览器之前也会经过 FilterChain 里的所有Filter。Filter处理过程如图所示：</p>
+    <title>记一次与同事的闲聊</title>
+    <url>/2022/chat_with_colleague/</url>
+    <content><![CDATA[<p>2022年，我的第一篇生活日记——记一次与同事的闲聊。</p>
 <a id="more"></a>
 
-<img src="/images/2018/filter.jpg" width="300" height="200" alt="filter" align="center">
-
-<br>
-
-<h1 id="Filter-接口"><a href="#Filter-接口" class="headerlink" title="Filter 接口"></a>Filter 接口</h1><p>一个 Filter 必须实现 <code>javax.servlet.Filter</code> 接口。Filter 接口有<strong>三个方法</strong>，源代码如下：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//Filter.java</span></span><br><span class="line"><span class="keyword">package</span> javax.servlet;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Filter</span></span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * web程序启动时调用此方法，用于初始化该Filter</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> config 可以从该参数中获取初始化参数以及ServletContext信息等</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> ServletException</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">(FilterConfig config)</span> <span class="keyword">throws</span> ServletException</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 客户端请求服务器时会经过</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> request 请求 </span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> response 响应</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> chain</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> ServletException</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> IOException</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doFilter</span><span class="params">(ServletRequest request,ServletResponse response,</span></span></span><br><span class="line"><span class="function"><span class="params">            FilterChain chain)</span> <span class="keyword">throws</span> ServletException, IOException</span>;</span><br><span class="line">  </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * web程序关闭时调用此方法，用于销毁一些资源</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">destroy</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>其中，<code>init()</code> 与<code>destroy()</code> 方法只会分别在 web 程序加载和卸载的时候调用。而<code>doFilter()</code> 方法每次有客户端请求时都会被调用一次。</p>
-<p>一个简单的<code>doFilter()</code> 方法例子</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doFilter</span><span class="params">(ServletRequest request, ServletResponse response,</span></span></span><br><span class="line"><span class="function"><span class="params">                     FilterChain chain)</span> <span class="keyword">throws</span> IOException, ServletException</span>&#123;</span><br><span class="line">    System.out.println(<span class="string">"request 被处理之前... "</span>);</span><br><span class="line">    <span class="comment">//一定要执行这句</span></span><br><span class="line">    chain.doFilter(request, response);</span><br><span class="line">    System.out.println(<span class="string">"request 被处理之后，response 抵达客户端之前... "</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>其中<code>chain.doFilter(request, response)</code> <font color="red">将 request 递交给 FilterChain 中的下一个 Filter，如果所有的 Filter 都执行完了则交给 servlet 处理</font>。</p>
-<br>
-
-<h1 id="Filter-配置"><a href="#Filter-配置" class="headerlink" title="Filter 配置"></a>Filter 配置</h1><h2 id="在-web-xml-中配置"><a href="#在-web-xml-中配置" class="headerlink" title="在 web.xml 中配置"></a>在 web.xml 中配置</h2><p>一个例子</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">filter</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-name</span>&gt;</span>filterName<span class="tag">&lt;/<span class="name">filter-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-class</span>&gt;</span>com.anye137.SomeFilter<span class="tag">&lt;/<span class="name">filter-class</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">init-param</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">param-name</span>&gt;</span>paramName<span class="tag">&lt;/<span class="name">param-name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">param-value</span>&gt;</span>paramValue<span class="tag">&lt;/<span class="name">param-value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">init-param</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">filter</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">filter-mapping</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-name</span>&gt;</span>filterName<span class="tag">&lt;/<span class="name">filter-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">url-pattern</span>&gt;</span>*.jsp<span class="tag">&lt;/<span class="name">url-pattern</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">url-pattern</span>&gt;</span>*.do<span class="tag">&lt;/<span class="name">url-pattern</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">servlet-name</span>&gt;</span>someServlet<span class="tag">&lt;/<span class="name">servlet-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dispatcher</span>&gt;</span>REQUEST<span class="tag">&lt;/<span class="name">dispatcher</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dispatcher</span>&gt;</span>FORWARD<span class="tag">&lt;/<span class="name">dispatcher</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">filter-mapping</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>一个 Filter 需要配置<code>&lt;filter&gt;</code> 和<code>&lt;filter-mapping&gt;</code> 标签</p>
-<p><code>&lt;filter&gt;</code> 标签需要配置<code>&lt;filter-name&gt;</code> 和<code>&lt;filter-class&gt;</code> 以及0或多个<code>&lt;init-param&gt;</code> （初始化参数）</p>
-<p><code>&lt;filter-mapping&gt;</code> 配置 Filter 的拦截规则</p>
-<ul>
-<li><code>&lt;url-pattern&gt;</code> 配置 URL 映射，可以配置多个。在上面的例子中，如果一个请求访问的 URL 结尾是 .do 或者是 .jsp，就可以匹配此 Filter。通过使用<code>&lt;url-pattern&gt;</code> ，我们不仅可以拦截 servlet 的请求，还可以拦截其他资源，例如图片、css 文件等</li>
-<li><code>&lt;servlet-name&gt;</code> 配置 servlet 名称映射，即对应的 servlet 会被Filter 拦截，可以配置多个。有时候，许多 URL 会映射到同一个 servlet，这时候使用<code>&lt;servlet-name&gt;</code> 相较于<code>&lt;url-pattern&gt;</code> 比较方便</li>
-<li><code>&lt;dispatcher&gt;</code> 配置派发请求的方式，可以配置多个。如果没有配置任何dispatcher，则默认为 REQUEST。<code>&lt;dispatcher&gt;</code> 取值有：<ol>
-<li><strong>REQUEST</strong>：直接请求，例如直接访问 URL。</li>
-<li><strong>FORWARD</strong>：当调用<code>RequestDispatcher</code> 的<code>forward</code> 方法或者使用<code>&lt;jsp: forward&gt;</code> 标签时，将触发这些请求</li>
-<li><strong>INCLUDE</strong>：当调用<code>RequestDispatcher</code> 的<code>include</code> 方法或者使用<code>&lt;jsp: include&gt;</code> 标签时，将触发这些请求（记住它与<code>&lt;%@ include %&gt;</code> 是不同的）</li>
-<li><strong>ERROR</strong>：访问处理 http 错误（如404 Not Found等）的错误页面的请求</li>
-<li><strong>ASYNC</strong>：（这个我也不太懂，不多说。。。）</li>
+<p>受疫情影响，公司开始居家办公。由于居家效率低，我还是经常去公司工作的。那一天，刚好同事 A 也去公司上班了。所以我们晚饭就约一起吃。A 虽然和我同样是应届生，但技术过硬，令人佩服。</p>
+<p>恰饭的时候，A 问我当初为啥没有留在广东。我说当时腾讯没面过。他又问，为啥没有面过呢。听到这个问题，我第一感觉也是挺奇怪的，一般说面不过，不就是因为水平不够嘛。于是我回答水平不够。但 A 又问了，为啥水平不够呢？听到他的问题，我又愣了，不知如何回答，只能随口说项目没说好。</p>
+<p>晚上下班后，我反思了下。恰饭的时候，我还觉得 A 问的问题有点奇怪，且过于直接。但其实，他问得还是挺好的。是啊，我为什么水平不够呢？这个本应是我秋招时就应该理清的问题。结果到现在工作半年多了，我还一直没有去思考自己的薄弱点，去提升自己的不足之处。</p>
+<p>emm，现在来想想，自己当初为啥有些面试没过呢，可能主要有以下几个原因：</p>
+<ol>
+<li>做的项目一般，没有啥亮点</li>
+<li>自驱能力弱，没有去主动推进项目</li>
+<li>技术广度深度都不够</li>
 </ol>
-</li>
-</ul>
-<p>一个 web 程序可以配置多个 Filter，<font color="red">如何比较两个Filter 执行顺序</font>：<br>(1) 首先，URL 映射优先级高于 servlet 名称映射，不管其在 web.xml 中配置的顺序如何<br>(2) 其次，如果同为 URL 映射或者同为 servlet 名称映射，则比较<code>&lt;servlet-mapping&gt;</code> 在 web.xml 中出现的顺序</p>
-<h2 id="使用注解配置"><a href="#使用注解配置" class="headerlink" title="使用注解配置"></a>使用注解配置</h2><p>Filter 也可以使用注解配置，下面配置跟上面是等价的</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> javax.servlet.annotation.WebFilter;</span><br><span class="line"><span class="meta">@WebFilter</span>(</span><br><span class="line">    filterName = <span class="string">"myFilter"</span>,</span><br><span class="line">    urlPattern = &#123;<span class="string">"*.do"</span>, <span class="string">"*.jsp"</span>&#125;,</span><br><span class="line">    servletName = &#123;<span class="string">"someServlet"</span>&#125;,</span><br><span class="line">    dispatcherTypes = &#123;DispatcherType.REQUEST, DispatcherType.FORWARD&#125;</span><br><span class="line">    initParams = &#123;</span><br><span class="line">        <span class="meta">@WebInitParam</span>(name = <span class="string">"paramName"</span>, value = <span class="string">"paramValue"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SomeFilter</span> <span class="keyword">implements</span> <span class="title">Filter</span></span>&#123;</span><br><span class="line">    <span class="comment">//......</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>使用注解配置的主要<font color="red">缺点</font>是，<strong>不能对 FilterChain 上的 Filter 进行排序</strong>。</p>
-<br>
-
-<h1 id="Filter-常用例子"><a href="#Filter-常用例子" class="headerlink" title="Filter 常用例子"></a>Filter 常用例子</h1><p>我们可以通过在<code>doFilter()</code> 方法内编写代码，达到以下目的：<br>(1) 通过控制是否调用 <code>chain.doFilter()</code> ，来决定是否访问目标资源。例如：防盗链 Filter、权限验证 Filter。<br>(2) 调用 <code>chain.doFilter()</code> 之前，做某些处理。例如：字符编码 Filter。<br>(3) 调用 <code>chain.dpFilter()</code> 之后，做某些处理。例如：内容替换 Filter，GZIP压缩 Filter<br>（当然，我们也可以综合使用上面三种方式）</p>
-<p>下面介绍下一些例子。</p>
-<h2 id="1-防盗链-Filter"><a href="#1-防盗链-Filter" class="headerlink" title="1. 防盗链 Filter"></a>1. 防盗链 Filter</h2><p>实现效果：如果其他的网站引用本网站的图片等资源，将会显示一个错误图片，只有本站内的网页引用时，图片才会正常显示。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.anye137.filter;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.*;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AntiStealingLinkFilter</span> <span class="keyword">implements</span> <span class="title">Filter</span> </span>&#123;    </span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">AntiStealingLinkFilter</span><span class="params">()</span> </span>&#123;&#125;	</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">(FilterConfig fConfig)</span> <span class="keyword">throws</span> ServletException </span>&#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">destroy</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doFilter</span><span class="params">(ServletRequest request, ServletResponse response, FilterChain chain)</span> <span class="keyword">throws</span> IOException, ServletException </span>&#123;	</span><br><span class="line">        HttpServletRequest req=(HttpServletRequest)request;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//请求来源网址</span></span><br><span class="line">        String referer=req.getHeader(<span class="string">"referer"</span>);</span><br><span class="line">      </span><br><span class="line">        <span class="comment">//如果请求不是来自本站</span></span><br><span class="line">        <span class="keyword">if</span>(referer==<span class="keyword">null</span>||!referer.contains(req.getServerName()))&#123;</span><br><span class="line">            req.getRequestDispatcher(<span class="string">"/error.jpg"</span>).forward(req, response);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span>&#123;  <span class="comment">//如果来自本站</span></span><br><span class="line">            chain.doFilter(req, response);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><code>doFilter()</code> 方法中，<strong>首先要将 <code>request</code> 转为 <code>HttpServletRequest</code> 类的对象 req</strong>。只有这样，才能使用一些针对 http 协议的方法，例如 <code>String getMethod()</code> 、<code>String getHeader(String name)</code> 、<code>HttpSession getSession()</code> 等。</p>
-<p>在 web.xml 中配置如下：</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">filter</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-name</span>&gt;</span>antiStealingLinkFilter<span class="tag">&lt;/<span class="name">filter-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-class</span>&gt;</span>com.anye137.filter.AntiStealingLinkFilter<span class="tag">&lt;/<span class="name">filter-class</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">filter</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">filter-mapping</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-name</span>&gt;</span>antiStealingLinkFilter<span class="tag">&lt;/<span class="name">filter-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">url-pattern</span>&gt;</span>/images/*<span class="tag">&lt;/<span class="name">url-pattern</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">filter-mapping</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>在此配置下，从别的网站请求 <strong>WebContent&#x2F;images</strong> 文件夹下的资源，或者<strong>直接输入资源 URL</strong> 就只会显示我们之前在 Filter 类中设置好的 error.jpg。本站访问，则正常显示。</p>
-<br>
-
-<h2 id="2-字符编码-Filter"><a href="#2-字符编码-Filter" class="headerlink" title="2.字符编码 Filter"></a>2.字符编码 Filter</h2><p>字符编码 Filter 是最常用的 Filter 之一，常用来解决 Tomcat 等服务器里 request，response 乱码的问题。本例中我们使用 Filter 来解决<strong>全站中文乱码</strong>问题。</p>
-<p><font color="red">对 response 的设置：</font></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">response.setCharacterEncoding(<span class="string">"utf-8"</span>);</span><br><span class="line">response.setContentType(<span class="string">"text/html;charset=utf-8"</span>);</span><br></pre></td></tr></table></figure>
-
-<p>其中，<code>setCharacterEncoding</code> 用于解决<code>response.getWriter()</code> 输出字符流的乱码问题，其作用是将 response 中的数据解码后发向浏览器。<code>setContentType</code> 用于设置浏览器用我们指定的方式解码，然后呈现出来。</p>
-<p><font color="red">对 request 的设置：</font><br>(1) 若是 <strong>POST</strong> 方式，直接设置</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">request.setCharacterEncoding(<span class="string">"utf-8"</span>); `</span><br></pre></td></tr></table></figure>
-
-<p>(2) 若是 <strong>GET</strong> 方式，</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">paramValue = request.getParameter(paramName)</span><br><span class="line">paramValue = <span class="keyword">new</span> String(paramValue.getBytes(<span class="string">"ISO8859-1"</span>),<span class="string">"utf-8"</span>);</span><br></pre></td></tr></table></figure>
-
-<p>如果对每个 Servlet 都编写上面的代码，则会显得冗赘。使用 Filter 只需一次编写，就能解决全站编码问题。同时，为了实现对 POST 和 GET 方式的分开处理，我们后面实现了<strong>自定义的 Request 类：EncodingRequest.java</strong></p>
-<p>Filter 代码： CharacterEncodingFilter.java</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.anye137.filter;</span><br><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.*;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CharacterEncodingFilter</span> <span class="keyword">implements</span> <span class="title">Filter</span> </span>&#123;</span><br><span class="line">	</span><br><span class="line">    <span class="comment">//是否启用该Filter</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">boolean</span> enabled; </span><br><span class="line">	</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">(FilterConfig config)</span> <span class="keyword">throws</span> ServletException </span>&#123;</span><br><span class="line">        <span class="comment">// 初始化时从 web.xml中加载参数		</span></span><br><span class="line">        enabled = config.getInitParameter(<span class="string">"enabled"</span>).trim().equalsIgnoreCase(<span class="string">"true"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">	</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">destroy</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doFilter</span><span class="params">(ServletRequest request, ServletResponse response, FilterChain chain)</span></span></span><br><span class="line"><span class="function">        <span class="keyword">throws</span> IOException, ServletException </span>&#123;</span><br><span class="line">        <span class="comment">//如果启用了Filter</span></span><br><span class="line">        <span class="keyword">if</span>(enabled)&#123;</span><br><span class="line">             <span class="comment">//设置response编码	</span></span><br><span class="line">             response.setCharacterEncoding(<span class="string">"utf-8"</span>);</span><br><span class="line">             response.setContentType(<span class="string">"text/html;charset=utf-8"</span>);</span><br><span class="line">             <span class="comment">//设置request编码</span></span><br><span class="line">             HttpServletRequest req=(HttpServletRequest)request;	  </span><br><span class="line">             EncodingRequest er=<span class="keyword">new</span> EncodingRequest(req);</span><br><span class="line">		</span><br><span class="line">             chain.doFilter(er, response);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            chain.doFilter(request, response);		</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//内部类</span></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">EncodingRequest</span> <span class="keyword">extends</span> <span class="title">HttpServletRequestWrapper</span></span>&#123;	    	        </span><br><span class="line">        <span class="comment">//代码</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>在<code>CharacterEncodingFilter</code> 类中，先获取初始化参数<code>enabled</code> 判断是否开启该 Filter，如果开启，则先设置 response 编码，然后设置 request 编码。我们使用自定义的<code>EncodingRequest</code> 内部类来实现对<code>request</code> 字符编码的设置（<strong>注意区分 GET 和 POST 处理方式的不同</strong>）。</p>
-<p>内部类<code>EncodingRequest</code> 代码如下：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">EncodingRequest</span> <span class="keyword">extends</span> <span class="title">HttpServletRequestWrapper</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> HttpServletRequest req;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">EncodingRequest</span><span class="params">(HttpServletRequest request)</span></span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(request);</span><br><span class="line">        <span class="keyword">this</span>.req = request;</span><br><span class="line">        <span class="keyword">if</span>(req.getMethod().equalsIgnoreCase(<span class="string">"POST"</span>))&#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                req.setCharacterEncoding(<span class="string">"utf-8"</span>);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (UnsupportedEncodingException e) &#123;					</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getParameter</span><span class="params">(String name)</span></span>&#123;</span><br><span class="line">        String value = <span class="keyword">null</span>;	        </span><br><span class="line">        <span class="keyword">if</span>(req!=<span class="keyword">null</span>)&#123;</span><br><span class="line">            value = req.getParameter(name);</span><br><span class="line">            <span class="keyword">if</span>(req.getMethod().equalsIgnoreCase(<span class="string">"GET"</span>))&#123;</span><br><span class="line">                value = req.getParameter(name);</span><br><span class="line">                <span class="keyword">if</span>(value!=<span class="keyword">null</span>)&#123;</span><br><span class="line">                    <span class="keyword">try</span>&#123;</span><br><span class="line">                        value = <span class="keyword">new</span> String(value.getBytes(<span class="string">"ISO-8859-1"</span>),<span class="string">"utf-8"</span>);</span><br><span class="line">                    &#125;<span class="keyword">catch</span>(UnsupportedEncodingException e)&#123;</span><br><span class="line">                        e.printStackTrace();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;   </span><br><span class="line">        &#125;           </span><br><span class="line">        <span class="keyword">return</span> value;	        	       </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>Filter 在 web.xml 中配置如下：</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">filter</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-name</span>&gt;</span>characterEncodingFilter<span class="tag">&lt;/<span class="name">filter-name</span>&gt;</span>  </span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-class</span>&gt;</span>com.anye137.filter.CharacterEncodingFilter<span class="tag">&lt;/<span class="name">filter-class</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">init-param</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">param-name</span>&gt;</span>enabled<span class="tag">&lt;/<span class="name">param-name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">param-value</span>&gt;</span>true<span class="tag">&lt;/<span class="name">param-value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">init-param</span>&gt;</span> 	</span><br><span class="line"><span class="tag">&lt;/<span class="name">filter</span>&gt;</span></span><br><span class="line">  </span><br><span class="line"><span class="tag">&lt;<span class="name">filter-mapping</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-name</span>&gt;</span>characterEncodingFilter<span class="tag">&lt;/<span class="name">filter-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">url-pattern</span>&gt;</span>/*<span class="tag">&lt;/<span class="name">url-pattern</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">filter-mapping</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>测试页面 <code>testEncoding.jsp</code> :</p>
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">&lt;%@ page language=<span class="string">"java"</span> <span class="keyword">import</span>=<span class="string">"java.util.*"</span> pageEncoding=<span class="string">"UTF-8"</span>%&gt;</span><br><span class="line">&lt;!DOCTYPE HTML PUBLIC <span class="string">"-//W3C//DTD HTML 4.01 Transitional//EN"</span>&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">    &lt;head&gt;</span><br><span class="line">        &lt;title&gt;&lt;/title&gt; </span><br><span class="line">    &lt;/head&gt;</span><br><span class="line">  </span><br><span class="line">    &lt;body&gt;</span><br><span class="line">        &lt;h1&gt;post提交&lt;/h1&gt;</span><br><span class="line">        &lt;form action=<span class="string">"$&#123;pageContext.request.contextPath &#125;/testEncoding"</span> method=<span class="string">"post"</span>&gt;</span><br><span class="line">    	    姓名：&lt;input type=<span class="string">"text"</span>  name=<span class="string">"name"</span>/&gt;&lt;br&gt;</span><br><span class="line">    	    &lt;input type=<span class="string">"submit"</span> value=<span class="string">"提交"</span>/&gt;&lt;br&gt;</span><br><span class="line">        &lt;/form&gt;</span><br><span class="line">      </span><br><span class="line">        &lt;h1&gt;get提交&lt;/h1&gt;</span><br><span class="line">        &lt;form action=<span class="string">"$&#123;pageContext.request.contextPath &#125;/testEncoding"</span> method=<span class="string">"get"</span>&gt;</span><br><span class="line">            姓名：&lt;input type=<span class="string">"text"</span>  name=<span class="string">"name"</span>/&gt;&lt;br&gt;</span><br><span class="line">    	    &lt;input type=<span class="string">"submit"</span> value=<span class="string">"提交"</span>/&gt;&lt;br&gt;</span><br><span class="line">        &lt;/form&gt;</span><br><span class="line">    &lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
-
-<p>处理提交参数的 <code>testEncoding.java</code> :</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.anye137.test;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;  </span><br><span class="line"><span class="keyword">import</span> javax.servlet.ServletException;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.annotation.WebServlet;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.*;  </span><br><span class="line"></span><br><span class="line"><span class="meta">@WebServlet</span>(<span class="string">"/testEncoding"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestEncoding</span> <span class="keyword">extends</span> <span class="title">HttpServlet</span> </span>&#123;  </span><br><span class="line">  </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doGet</span><span class="params">(HttpServletRequest request, HttpServletResponse response)</span>  </span></span><br><span class="line"><span class="function">            <span class="keyword">throws</span> ServletException, IOException </span>&#123;</span><br><span class="line">      <span class="comment">//输出信息，测试是否乱码</span></span><br><span class="line">        response.getWriter().write(<span class="string">"Hello, 测试乱码！输入姓名为： "</span>+request.getParameter(<span class="string">"name"</span>));                 </span><br><span class="line">    &#125;  </span><br><span class="line">  </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doPost</span><span class="params">(HttpServletRequest request, HttpServletResponse response)</span>  </span></span><br><span class="line"><span class="function">            <span class="keyword">throws</span> ServletException, IOException </span>&#123;  </span><br><span class="line">        doGet(request, response);  </span><br><span class="line">    &#125;  </span><br><span class="line">  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>输入<code>testEncoding.jsp</code> 所在网址，填写信息提交后，将由 <code>TestEncoding</code> servlet 来处理提交的信息。该 servlet 会输出一条信息，以此判断是否乱码。至此，我们已经完成了 CharacterEncodingFilter 的编写及测试。</p>
-<p><strong>根据从网上查阅的资料，对 POST 方式和 GET 方式的编码处理是不一样的，我上面的代码也是这样。然而，我在测试的时候发现，把 GET 方式的编码处理方法应用于 POST 方式，也是行得通的，这样代码更简洁点。所以，为什么网上的资料是分开处理的呢？处理字符编码的代码的原理又是啥？这个以后有时间研究下</strong>。</p>
-<br>
-
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p><font color="red"><strong>Filter（过滤器）是一个很有弹性的机制，功能很强大，而且与servlet、jsp等没有任何的耦合，可自由拆卸。<br>如果配置了多个 Filter，则执行会有先有后，彼此之间还可能会相互影响，要注意正确配置 Filter 的顺序</strong></font>。</p>
-<p>下篇博客将继续写 Filter 使用案例。</p>
-<p>**本文章完整代码见 <a href="https://github.com/anye137/Java-Web-Learning/tree/master/FilterAndListener" target="_blank" rel="noopener"><font color="blue">Github</font></a>**。</p>
-<br>
-
-<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p>(1) 《Java Web 王者归来》<br>(2) 《Java Web 高级编程》<br>(3)  <a href="http://blog.csdn.net/nokiaisacat/article/details/51326914" target="_blank" rel="noopener">servlet Filter </a> from CSDN<br>(4) <a href="http://blog.csdn.net/xiazdong/article/details/7217022" target="_blank" rel="noopener">Servlet 中文乱码问题及解决方案剖析</a> from CSDN<br>(5) <a href="https://github.com/codingXiaxw/filter" target="_blank" rel="noopener">解决全站字符乱码问题</a>  from GitHub</p>
+<p>希望，后面的职业生涯，能够慢慢解决以上几个不足之处把。FROM NOW ON ！</p>
 ]]></content>
       <categories>
-        <category>java</category>
-        <category>java web</category>
+        <category>随笔</category>
       </categories>
       <tags>
-        <tag>java</tag>
-        <tag>java web</tag>
-        <tag>Filter</tag>
-        <tag>防盗链</tag>
-        <tag>字符编码</tag>
+        <tag>随笔</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>有偏估计和无偏估计</title>
+    <url>/2022/biased_and_unbiased/</url>
+    <content><![CDATA[<p>最近在看 WCE 的推导，看到「无偏」这个术语，记得以前上概率论也看过这个词，不过早就忘光了。</p>
+<a id="more"></a>
+
+<p>知乎上有个回答写得比较好，在此摘录一下。</p>
+<blockquote>
+<p>作者：包龙图<br>链接：<a href="https://www.zhihu.com/question/22983179/answer/23472111" target="_blank" rel="noopener">https://www.zhihu.com/question/22983179/answer/23472111</a><br>来源：知乎<br>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</p>
+<p>给你举个例子吧：</p>
+<p>现在甲市有一万名小学三年级学生，他们进行了一次统考，考试成绩服从1~100的均匀分布：00001号学生得1分，00002号学生得1.01分……10000号学生得100分。那么他们的平均分是多少？(1+1.01+1.02+….+100)&#x2F;10000&#x3D;50.5，这个值叫做<strong>总体平均数</strong>。</p>
+<p>现在假定你是教委的一个基层人员，教委主任给你一个早上时间，让你估算一下全市学生的平均成绩，你怎么办？把全市一万名学生都问一遍再计算时间显然是来不及了，因此在有限的时间里，你找到了一个聪明的办法：给全市的78所小学每一所学校打了一个电话，让他们随机选取一名学生的成绩报上来，这样你就得到了78个学生的成绩，这78个学生就是你的<strong>样本</strong>。</p>
+<p>你现在的任务很简单了，拿这78个学生的成绩相加并除以78，你就得到了<strong>样本平均数</strong>。你把这个数报告给教委主任，这个数就是你估算出来的全市平均成绩。</p>
+<p>这个样本平均数会不会等于总体平均数50.5？很显然这和你的“手气”有关——不过大多数情况下是不会相等的。</p>
+<p>那么问题来了：既然样本平均数不等于总体平均数（也就是说你报给教委主任的平均分和实际的平均分非常有可能是不一样的），要它还有用吗？有！因为样本平均数是总体平均数的<strong>无偏估计</strong>——也就是说只要你采用这种方法进行估算，估算的结果的期望值（你可以近似理解为很多次估算结果的平均数）既不会大于真实的平均数，也不会小于之。换句话说：你这种估算方法<strong>没有系统上的偏差</strong>，而产生误差的原因只有一个：随机因素（也就是你的手气好坏造成的）。</p>
+</blockquote>
+<p>个人总结：无偏估计，就是<strong>「样本平均值的期望等于总体平均值」</strong>。</p>
+<p>说到无偏估计，想起来了方差的无偏估计，分母为 n-1，特地去搜了一波推导。详细推导可看这个逼乎回答 <a href="https://www.zhihu.com/question/20099757/answer/312670291" target="_blank" rel="noopener">link</a>。</p>
+]]></content>
+      <categories>
+        <category>数学</category>
+      </categories>
+      <tags>
+        <tag>数学</tag>
       </tags>
   </entry>
   <entry>
@@ -886,6 +804,114 @@
       <tags>
         <tag>java web</tag>
         <tag>商品管理系统</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>java web Filter（过滤器）上</title>
+    <url>/2018/java-web-filter-1/</url>
+    <content><![CDATA[<h1 id="Filter-概述"><a href="#Filter-概述" class="headerlink" title="Filter 概述"></a>Filter 概述</h1><p><font color="red">Filter（过滤器）</font>用于在 servlet 之外对 request 或者 response 进行拦截、修改，甚至可以拒绝、重定向或者转发 request。Filter 提出了 <font color="red">FilterChain</font> 的概念，一个 FilterChain 包括多个 Filter。客户端请求 request 在抵达 servlet 之前会经过 FilterChain 里的所有 Filter，服务器响应 response 在从 servlet 抵达客户端浏览器之前也会经过 FilterChain 里的所有Filter。Filter处理过程如图所示：</p>
+<a id="more"></a>
+
+<img src="/images/2018/filter.jpg" width="300" height="200" alt="filter" align="center">
+
+<br>
+
+<h1 id="Filter-接口"><a href="#Filter-接口" class="headerlink" title="Filter 接口"></a>Filter 接口</h1><p>一个 Filter 必须实现 <code>javax.servlet.Filter</code> 接口。Filter 接口有<strong>三个方法</strong>，源代码如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//Filter.java</span></span><br><span class="line"><span class="keyword">package</span> javax.servlet;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Filter</span></span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * web程序启动时调用此方法，用于初始化该Filter</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> config 可以从该参数中获取初始化参数以及ServletContext信息等</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> ServletException</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">(FilterConfig config)</span> <span class="keyword">throws</span> ServletException</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 客户端请求服务器时会经过</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> request 请求 </span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> response 响应</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> chain</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> ServletException</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> IOException</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doFilter</span><span class="params">(ServletRequest request,ServletResponse response,</span></span></span><br><span class="line"><span class="function"><span class="params">            FilterChain chain)</span> <span class="keyword">throws</span> ServletException, IOException</span>;</span><br><span class="line">  </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * web程序关闭时调用此方法，用于销毁一些资源</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">destroy</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中，<code>init()</code> 与<code>destroy()</code> 方法只会分别在 web 程序加载和卸载的时候调用。而<code>doFilter()</code> 方法每次有客户端请求时都会被调用一次。</p>
+<p>一个简单的<code>doFilter()</code> 方法例子</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doFilter</span><span class="params">(ServletRequest request, ServletResponse response,</span></span></span><br><span class="line"><span class="function"><span class="params">                     FilterChain chain)</span> <span class="keyword">throws</span> IOException, ServletException</span>&#123;</span><br><span class="line">    System.out.println(<span class="string">"request 被处理之前... "</span>);</span><br><span class="line">    <span class="comment">//一定要执行这句</span></span><br><span class="line">    chain.doFilter(request, response);</span><br><span class="line">    System.out.println(<span class="string">"request 被处理之后，response 抵达客户端之前... "</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中<code>chain.doFilter(request, response)</code> <font color="red">将 request 递交给 FilterChain 中的下一个 Filter，如果所有的 Filter 都执行完了则交给 servlet 处理</font>。</p>
+<br>
+
+<h1 id="Filter-配置"><a href="#Filter-配置" class="headerlink" title="Filter 配置"></a>Filter 配置</h1><h2 id="在-web-xml-中配置"><a href="#在-web-xml-中配置" class="headerlink" title="在 web.xml 中配置"></a>在 web.xml 中配置</h2><p>一个例子</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">filter</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-name</span>&gt;</span>filterName<span class="tag">&lt;/<span class="name">filter-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-class</span>&gt;</span>com.anye137.SomeFilter<span class="tag">&lt;/<span class="name">filter-class</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">init-param</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">param-name</span>&gt;</span>paramName<span class="tag">&lt;/<span class="name">param-name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">param-value</span>&gt;</span>paramValue<span class="tag">&lt;/<span class="name">param-value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">init-param</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">filter</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">filter-mapping</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-name</span>&gt;</span>filterName<span class="tag">&lt;/<span class="name">filter-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">url-pattern</span>&gt;</span>*.jsp<span class="tag">&lt;/<span class="name">url-pattern</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">url-pattern</span>&gt;</span>*.do<span class="tag">&lt;/<span class="name">url-pattern</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">servlet-name</span>&gt;</span>someServlet<span class="tag">&lt;/<span class="name">servlet-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dispatcher</span>&gt;</span>REQUEST<span class="tag">&lt;/<span class="name">dispatcher</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dispatcher</span>&gt;</span>FORWARD<span class="tag">&lt;/<span class="name">dispatcher</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">filter-mapping</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>一个 Filter 需要配置<code>&lt;filter&gt;</code> 和<code>&lt;filter-mapping&gt;</code> 标签</p>
+<p><code>&lt;filter&gt;</code> 标签需要配置<code>&lt;filter-name&gt;</code> 和<code>&lt;filter-class&gt;</code> 以及0或多个<code>&lt;init-param&gt;</code> （初始化参数）</p>
+<p><code>&lt;filter-mapping&gt;</code> 配置 Filter 的拦截规则</p>
+<ul>
+<li><code>&lt;url-pattern&gt;</code> 配置 URL 映射，可以配置多个。在上面的例子中，如果一个请求访问的 URL 结尾是 .do 或者是 .jsp，就可以匹配此 Filter。通过使用<code>&lt;url-pattern&gt;</code> ，我们不仅可以拦截 servlet 的请求，还可以拦截其他资源，例如图片、css 文件等</li>
+<li><code>&lt;servlet-name&gt;</code> 配置 servlet 名称映射，即对应的 servlet 会被Filter 拦截，可以配置多个。有时候，许多 URL 会映射到同一个 servlet，这时候使用<code>&lt;servlet-name&gt;</code> 相较于<code>&lt;url-pattern&gt;</code> 比较方便</li>
+<li><code>&lt;dispatcher&gt;</code> 配置派发请求的方式，可以配置多个。如果没有配置任何dispatcher，则默认为 REQUEST。<code>&lt;dispatcher&gt;</code> 取值有：<ol>
+<li><strong>REQUEST</strong>：直接请求，例如直接访问 URL。</li>
+<li><strong>FORWARD</strong>：当调用<code>RequestDispatcher</code> 的<code>forward</code> 方法或者使用<code>&lt;jsp: forward&gt;</code> 标签时，将触发这些请求</li>
+<li><strong>INCLUDE</strong>：当调用<code>RequestDispatcher</code> 的<code>include</code> 方法或者使用<code>&lt;jsp: include&gt;</code> 标签时，将触发这些请求（记住它与<code>&lt;%@ include %&gt;</code> 是不同的）</li>
+<li><strong>ERROR</strong>：访问处理 http 错误（如404 Not Found等）的错误页面的请求</li>
+<li><strong>ASYNC</strong>：（这个我也不太懂，不多说。。。）</li>
+</ol>
+</li>
+</ul>
+<p>一个 web 程序可以配置多个 Filter，<font color="red">如何比较两个Filter 执行顺序</font>：<br>(1) 首先，URL 映射优先级高于 servlet 名称映射，不管其在 web.xml 中配置的顺序如何<br>(2) 其次，如果同为 URL 映射或者同为 servlet 名称映射，则比较<code>&lt;servlet-mapping&gt;</code> 在 web.xml 中出现的顺序</p>
+<h2 id="使用注解配置"><a href="#使用注解配置" class="headerlink" title="使用注解配置"></a>使用注解配置</h2><p>Filter 也可以使用注解配置，下面配置跟上面是等价的</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> javax.servlet.annotation.WebFilter;</span><br><span class="line"><span class="meta">@WebFilter</span>(</span><br><span class="line">    filterName = <span class="string">"myFilter"</span>,</span><br><span class="line">    urlPattern = &#123;<span class="string">"*.do"</span>, <span class="string">"*.jsp"</span>&#125;,</span><br><span class="line">    servletName = &#123;<span class="string">"someServlet"</span>&#125;,</span><br><span class="line">    dispatcherTypes = &#123;DispatcherType.REQUEST, DispatcherType.FORWARD&#125;</span><br><span class="line">    initParams = &#123;</span><br><span class="line">        <span class="meta">@WebInitParam</span>(name = <span class="string">"paramName"</span>, value = <span class="string">"paramValue"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SomeFilter</span> <span class="keyword">implements</span> <span class="title">Filter</span></span>&#123;</span><br><span class="line">    <span class="comment">//......</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用注解配置的主要<font color="red">缺点</font>是，<strong>不能对 FilterChain 上的 Filter 进行排序</strong>。</p>
+<br>
+
+<h1 id="Filter-常用例子"><a href="#Filter-常用例子" class="headerlink" title="Filter 常用例子"></a>Filter 常用例子</h1><p>我们可以通过在<code>doFilter()</code> 方法内编写代码，达到以下目的：<br>(1) 通过控制是否调用 <code>chain.doFilter()</code> ，来决定是否访问目标资源。例如：防盗链 Filter、权限验证 Filter。<br>(2) 调用 <code>chain.doFilter()</code> 之前，做某些处理。例如：字符编码 Filter。<br>(3) 调用 <code>chain.dpFilter()</code> 之后，做某些处理。例如：内容替换 Filter，GZIP压缩 Filter<br>（当然，我们也可以综合使用上面三种方式）</p>
+<p>下面介绍下一些例子。</p>
+<h2 id="1-防盗链-Filter"><a href="#1-防盗链-Filter" class="headerlink" title="1. 防盗链 Filter"></a>1. 防盗链 Filter</h2><p>实现效果：如果其他的网站引用本网站的图片等资源，将会显示一个错误图片，只有本站内的网页引用时，图片才会正常显示。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.anye137.filter;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.*;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AntiStealingLinkFilter</span> <span class="keyword">implements</span> <span class="title">Filter</span> </span>&#123;    </span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">AntiStealingLinkFilter</span><span class="params">()</span> </span>&#123;&#125;	</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">(FilterConfig fConfig)</span> <span class="keyword">throws</span> ServletException </span>&#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">destroy</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doFilter</span><span class="params">(ServletRequest request, ServletResponse response, FilterChain chain)</span> <span class="keyword">throws</span> IOException, ServletException </span>&#123;	</span><br><span class="line">        HttpServletRequest req=(HttpServletRequest)request;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//请求来源网址</span></span><br><span class="line">        String referer=req.getHeader(<span class="string">"referer"</span>);</span><br><span class="line">      </span><br><span class="line">        <span class="comment">//如果请求不是来自本站</span></span><br><span class="line">        <span class="keyword">if</span>(referer==<span class="keyword">null</span>||!referer.contains(req.getServerName()))&#123;</span><br><span class="line">            req.getRequestDispatcher(<span class="string">"/error.jpg"</span>).forward(req, response);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span>&#123;  <span class="comment">//如果来自本站</span></span><br><span class="line">            chain.doFilter(req, response);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>doFilter()</code> 方法中，<strong>首先要将 <code>request</code> 转为 <code>HttpServletRequest</code> 类的对象 req</strong>。只有这样，才能使用一些针对 http 协议的方法，例如 <code>String getMethod()</code> 、<code>String getHeader(String name)</code> 、<code>HttpSession getSession()</code> 等。</p>
+<p>在 web.xml 中配置如下：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">filter</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-name</span>&gt;</span>antiStealingLinkFilter<span class="tag">&lt;/<span class="name">filter-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-class</span>&gt;</span>com.anye137.filter.AntiStealingLinkFilter<span class="tag">&lt;/<span class="name">filter-class</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">filter</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">filter-mapping</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-name</span>&gt;</span>antiStealingLinkFilter<span class="tag">&lt;/<span class="name">filter-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">url-pattern</span>&gt;</span>/images/*<span class="tag">&lt;/<span class="name">url-pattern</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">filter-mapping</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>在此配置下，从别的网站请求 <strong>WebContent&#x2F;images</strong> 文件夹下的资源，或者<strong>直接输入资源 URL</strong> 就只会显示我们之前在 Filter 类中设置好的 error.jpg。本站访问，则正常显示。</p>
+<br>
+
+<h2 id="2-字符编码-Filter"><a href="#2-字符编码-Filter" class="headerlink" title="2.字符编码 Filter"></a>2.字符编码 Filter</h2><p>字符编码 Filter 是最常用的 Filter 之一，常用来解决 Tomcat 等服务器里 request，response 乱码的问题。本例中我们使用 Filter 来解决<strong>全站中文乱码</strong>问题。</p>
+<p><font color="red">对 response 的设置：</font></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">response.setCharacterEncoding(<span class="string">"utf-8"</span>);</span><br><span class="line">response.setContentType(<span class="string">"text/html;charset=utf-8"</span>);</span><br></pre></td></tr></table></figure>
+
+<p>其中，<code>setCharacterEncoding</code> 用于解决<code>response.getWriter()</code> 输出字符流的乱码问题，其作用是将 response 中的数据解码后发向浏览器。<code>setContentType</code> 用于设置浏览器用我们指定的方式解码，然后呈现出来。</p>
+<p><font color="red">对 request 的设置：</font><br>(1) 若是 <strong>POST</strong> 方式，直接设置</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">request.setCharacterEncoding(<span class="string">"utf-8"</span>); `</span><br></pre></td></tr></table></figure>
+
+<p>(2) 若是 <strong>GET</strong> 方式，</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">paramValue = request.getParameter(paramName)</span><br><span class="line">paramValue = <span class="keyword">new</span> String(paramValue.getBytes(<span class="string">"ISO8859-1"</span>),<span class="string">"utf-8"</span>);</span><br></pre></td></tr></table></figure>
+
+<p>如果对每个 Servlet 都编写上面的代码，则会显得冗赘。使用 Filter 只需一次编写，就能解决全站编码问题。同时，为了实现对 POST 和 GET 方式的分开处理，我们后面实现了<strong>自定义的 Request 类：EncodingRequest.java</strong></p>
+<p>Filter 代码： CharacterEncodingFilter.java</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.anye137.filter;</span><br><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.*;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CharacterEncodingFilter</span> <span class="keyword">implements</span> <span class="title">Filter</span> </span>&#123;</span><br><span class="line">	</span><br><span class="line">    <span class="comment">//是否启用该Filter</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">boolean</span> enabled; </span><br><span class="line">	</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">(FilterConfig config)</span> <span class="keyword">throws</span> ServletException </span>&#123;</span><br><span class="line">        <span class="comment">// 初始化时从 web.xml中加载参数		</span></span><br><span class="line">        enabled = config.getInitParameter(<span class="string">"enabled"</span>).trim().equalsIgnoreCase(<span class="string">"true"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">	</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">destroy</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doFilter</span><span class="params">(ServletRequest request, ServletResponse response, FilterChain chain)</span></span></span><br><span class="line"><span class="function">        <span class="keyword">throws</span> IOException, ServletException </span>&#123;</span><br><span class="line">        <span class="comment">//如果启用了Filter</span></span><br><span class="line">        <span class="keyword">if</span>(enabled)&#123;</span><br><span class="line">             <span class="comment">//设置response编码	</span></span><br><span class="line">             response.setCharacterEncoding(<span class="string">"utf-8"</span>);</span><br><span class="line">             response.setContentType(<span class="string">"text/html;charset=utf-8"</span>);</span><br><span class="line">             <span class="comment">//设置request编码</span></span><br><span class="line">             HttpServletRequest req=(HttpServletRequest)request;	  </span><br><span class="line">             EncodingRequest er=<span class="keyword">new</span> EncodingRequest(req);</span><br><span class="line">		</span><br><span class="line">             chain.doFilter(er, response);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            chain.doFilter(request, response);		</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//内部类</span></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">EncodingRequest</span> <span class="keyword">extends</span> <span class="title">HttpServletRequestWrapper</span></span>&#123;	    	        </span><br><span class="line">        <span class="comment">//代码</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在<code>CharacterEncodingFilter</code> 类中，先获取初始化参数<code>enabled</code> 判断是否开启该 Filter，如果开启，则先设置 response 编码，然后设置 request 编码。我们使用自定义的<code>EncodingRequest</code> 内部类来实现对<code>request</code> 字符编码的设置（<strong>注意区分 GET 和 POST 处理方式的不同</strong>）。</p>
+<p>内部类<code>EncodingRequest</code> 代码如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">EncodingRequest</span> <span class="keyword">extends</span> <span class="title">HttpServletRequestWrapper</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> HttpServletRequest req;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">EncodingRequest</span><span class="params">(HttpServletRequest request)</span></span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(request);</span><br><span class="line">        <span class="keyword">this</span>.req = request;</span><br><span class="line">        <span class="keyword">if</span>(req.getMethod().equalsIgnoreCase(<span class="string">"POST"</span>))&#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                req.setCharacterEncoding(<span class="string">"utf-8"</span>);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (UnsupportedEncodingException e) &#123;					</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getParameter</span><span class="params">(String name)</span></span>&#123;</span><br><span class="line">        String value = <span class="keyword">null</span>;	        </span><br><span class="line">        <span class="keyword">if</span>(req!=<span class="keyword">null</span>)&#123;</span><br><span class="line">            value = req.getParameter(name);</span><br><span class="line">            <span class="keyword">if</span>(req.getMethod().equalsIgnoreCase(<span class="string">"GET"</span>))&#123;</span><br><span class="line">                value = req.getParameter(name);</span><br><span class="line">                <span class="keyword">if</span>(value!=<span class="keyword">null</span>)&#123;</span><br><span class="line">                    <span class="keyword">try</span>&#123;</span><br><span class="line">                        value = <span class="keyword">new</span> String(value.getBytes(<span class="string">"ISO-8859-1"</span>),<span class="string">"utf-8"</span>);</span><br><span class="line">                    &#125;<span class="keyword">catch</span>(UnsupportedEncodingException e)&#123;</span><br><span class="line">                        e.printStackTrace();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;   </span><br><span class="line">        &#125;           </span><br><span class="line">        <span class="keyword">return</span> value;	        	       </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Filter 在 web.xml 中配置如下：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">filter</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-name</span>&gt;</span>characterEncodingFilter<span class="tag">&lt;/<span class="name">filter-name</span>&gt;</span>  </span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-class</span>&gt;</span>com.anye137.filter.CharacterEncodingFilter<span class="tag">&lt;/<span class="name">filter-class</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">init-param</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">param-name</span>&gt;</span>enabled<span class="tag">&lt;/<span class="name">param-name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">param-value</span>&gt;</span>true<span class="tag">&lt;/<span class="name">param-value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">init-param</span>&gt;</span> 	</span><br><span class="line"><span class="tag">&lt;/<span class="name">filter</span>&gt;</span></span><br><span class="line">  </span><br><span class="line"><span class="tag">&lt;<span class="name">filter-mapping</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-name</span>&gt;</span>characterEncodingFilter<span class="tag">&lt;/<span class="name">filter-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">url-pattern</span>&gt;</span>/*<span class="tag">&lt;/<span class="name">url-pattern</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">filter-mapping</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>测试页面 <code>testEncoding.jsp</code> :</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">&lt;%@ page language=<span class="string">"java"</span> <span class="keyword">import</span>=<span class="string">"java.util.*"</span> pageEncoding=<span class="string">"UTF-8"</span>%&gt;</span><br><span class="line">&lt;!DOCTYPE HTML PUBLIC <span class="string">"-//W3C//DTD HTML 4.01 Transitional//EN"</span>&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">    &lt;head&gt;</span><br><span class="line">        &lt;title&gt;&lt;/title&gt; </span><br><span class="line">    &lt;/head&gt;</span><br><span class="line">  </span><br><span class="line">    &lt;body&gt;</span><br><span class="line">        &lt;h1&gt;post提交&lt;/h1&gt;</span><br><span class="line">        &lt;form action=<span class="string">"$&#123;pageContext.request.contextPath &#125;/testEncoding"</span> method=<span class="string">"post"</span>&gt;</span><br><span class="line">    	    姓名：&lt;input type=<span class="string">"text"</span>  name=<span class="string">"name"</span>/&gt;&lt;br&gt;</span><br><span class="line">    	    &lt;input type=<span class="string">"submit"</span> value=<span class="string">"提交"</span>/&gt;&lt;br&gt;</span><br><span class="line">        &lt;/form&gt;</span><br><span class="line">      </span><br><span class="line">        &lt;h1&gt;get提交&lt;/h1&gt;</span><br><span class="line">        &lt;form action=<span class="string">"$&#123;pageContext.request.contextPath &#125;/testEncoding"</span> method=<span class="string">"get"</span>&gt;</span><br><span class="line">            姓名：&lt;input type=<span class="string">"text"</span>  name=<span class="string">"name"</span>/&gt;&lt;br&gt;</span><br><span class="line">    	    &lt;input type=<span class="string">"submit"</span> value=<span class="string">"提交"</span>/&gt;&lt;br&gt;</span><br><span class="line">        &lt;/form&gt;</span><br><span class="line">    &lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<p>处理提交参数的 <code>testEncoding.java</code> :</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.anye137.test;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;  </span><br><span class="line"><span class="keyword">import</span> javax.servlet.ServletException;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.annotation.WebServlet;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.*;  </span><br><span class="line"></span><br><span class="line"><span class="meta">@WebServlet</span>(<span class="string">"/testEncoding"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestEncoding</span> <span class="keyword">extends</span> <span class="title">HttpServlet</span> </span>&#123;  </span><br><span class="line">  </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doGet</span><span class="params">(HttpServletRequest request, HttpServletResponse response)</span>  </span></span><br><span class="line"><span class="function">            <span class="keyword">throws</span> ServletException, IOException </span>&#123;</span><br><span class="line">      <span class="comment">//输出信息，测试是否乱码</span></span><br><span class="line">        response.getWriter().write(<span class="string">"Hello, 测试乱码！输入姓名为： "</span>+request.getParameter(<span class="string">"name"</span>));                 </span><br><span class="line">    &#125;  </span><br><span class="line">  </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doPost</span><span class="params">(HttpServletRequest request, HttpServletResponse response)</span>  </span></span><br><span class="line"><span class="function">            <span class="keyword">throws</span> ServletException, IOException </span>&#123;  </span><br><span class="line">        doGet(request, response);  </span><br><span class="line">    &#125;  </span><br><span class="line">  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>输入<code>testEncoding.jsp</code> 所在网址，填写信息提交后，将由 <code>TestEncoding</code> servlet 来处理提交的信息。该 servlet 会输出一条信息，以此判断是否乱码。至此，我们已经完成了 CharacterEncodingFilter 的编写及测试。</p>
+<p><strong>根据从网上查阅的资料，对 POST 方式和 GET 方式的编码处理是不一样的，我上面的代码也是这样。然而，我在测试的时候发现，把 GET 方式的编码处理方法应用于 POST 方式，也是行得通的，这样代码更简洁点。所以，为什么网上的资料是分开处理的呢？处理字符编码的代码的原理又是啥？这个以后有时间研究下</strong>。</p>
+<br>
+
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p><font color="red"><strong>Filter（过滤器）是一个很有弹性的机制，功能很强大，而且与servlet、jsp等没有任何的耦合，可自由拆卸。<br>如果配置了多个 Filter，则执行会有先有后，彼此之间还可能会相互影响，要注意正确配置 Filter 的顺序</strong></font>。</p>
+<p>下篇博客将继续写 Filter 使用案例。</p>
+<p>**本文章完整代码见 <a href="https://github.com/anye137/Java-Web-Learning/tree/master/FilterAndListener" target="_blank" rel="noopener"><font color="blue">Github</font></a>**。</p>
+<br>
+
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p>(1) 《Java Web 王者归来》<br>(2) 《Java Web 高级编程》<br>(3)  <a href="http://blog.csdn.net/nokiaisacat/article/details/51326914" target="_blank" rel="noopener">servlet Filter </a> from CSDN<br>(4) <a href="http://blog.csdn.net/xiazdong/article/details/7217022" target="_blank" rel="noopener">Servlet 中文乱码问题及解决方案剖析</a> from CSDN<br>(5) <a href="https://github.com/codingXiaxw/filter" target="_blank" rel="noopener">解决全站字符乱码问题</a>  from GitHub</p>
+]]></content>
+      <categories>
+        <category>java</category>
+        <category>java web</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
+        <tag>java web</tag>
+        <tag>Filter</tag>
+        <tag>防盗链</tag>
+        <tag>字符编码</tag>
       </tags>
   </entry>
   <entry>

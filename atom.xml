@@ -6,7 +6,7 @@
   <link href="http://anye137.github.io/atom.xml" rel="self"/>
   
   <link href="http://anye137.github.io/"/>
-  <updated>2022-04-17T16:59:53.564Z</updated>
+  <updated>2022-08-23T02:17:30.218Z</updated>
   <id>http://anye137.github.io/</id>
   
   <author>
@@ -15,6 +15,27 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>有偏估计和无偏估计</title>
+    <link href="http://anye137.github.io/2022/biased_and_unbiased/"/>
+    <id>http://anye137.github.io/2022/biased_and_unbiased/</id>
+    <published>2022-08-22T12:37:59.000Z</published>
+    <updated>2022-08-23T02:17:30.218Z</updated>
+    
+    <content type="html"><![CDATA[<p>最近在看 WCE 的推导，看到「无偏」这个术语，记得以前上概率论也看过这个词，不过早就忘光了。</p><a id="more"></a><p>知乎上有个回答写得比较好，在此摘录一下。</p><blockquote><p>作者：包龙图<br>链接：<a href="https://www.zhihu.com/question/22983179/answer/23472111" target="_blank" rel="noopener">https://www.zhihu.com/question/22983179/answer/23472111</a><br>来源：知乎<br>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</p><p>给你举个例子吧：</p><p>现在甲市有一万名小学三年级学生，他们进行了一次统考，考试成绩服从1~100的均匀分布：00001号学生得1分，00002号学生得1.01分……10000号学生得100分。那么他们的平均分是多少？(1+1.01+1.02+….+100)&#x2F;10000&#x3D;50.5，这个值叫做<strong>总体平均数</strong>。</p><p>现在假定你是教委的一个基层人员，教委主任给你一个早上时间，让你估算一下全市学生的平均成绩，你怎么办？把全市一万名学生都问一遍再计算时间显然是来不及了，因此在有限的时间里，你找到了一个聪明的办法：给全市的78所小学每一所学校打了一个电话，让他们随机选取一名学生的成绩报上来，这样你就得到了78个学生的成绩，这78个学生就是你的<strong>样本</strong>。</p><p>你现在的任务很简单了，拿这78个学生的成绩相加并除以78，你就得到了<strong>样本平均数</strong>。你把这个数报告给教委主任，这个数就是你估算出来的全市平均成绩。</p><p>这个样本平均数会不会等于总体平均数50.5？很显然这和你的“手气”有关——不过大多数情况下是不会相等的。</p><p>那么问题来了：既然样本平均数不等于总体平均数（也就是说你报给教委主任的平均分和实际的平均分非常有可能是不一样的），要它还有用吗？有！因为样本平均数是总体平均数的<strong>无偏估计</strong>——也就是说只要你采用这种方法进行估算，估算的结果的期望值（你可以近似理解为很多次估算结果的平均数）既不会大于真实的平均数，也不会小于之。换句话说：你这种估算方法<strong>没有系统上的偏差</strong>，而产生误差的原因只有一个：随机因素（也就是你的手气好坏造成的）。</p></blockquote><p>个人总结：无偏估计，就是<strong>「样本平均值的期望等于总体平均值」</strong>。</p><p>说到无偏估计，想起来了方差的无偏估计，分母为 n-1，特地去搜了一波推导。详细推导可看这个逼乎回答 <a href="https://www.zhihu.com/question/20099757/answer/312670291" target="_blank" rel="noopener">link</a>。</p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;最近在看 WCE 的推导，看到「无偏」这个术语，记得以前上概率论也看过这个词，不过早就忘光了。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="数学" scheme="http://anye137.github.io/categories/数学/"/>
+    
+    
+    <category term="数学" scheme="http://anye137.github.io/tags/数学/"/>
+    
+  </entry>
   
   <entry>
     <title>工作相关的碎碎念</title>

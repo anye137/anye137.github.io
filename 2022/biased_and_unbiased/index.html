@@ -20,19 +20,20 @@
     var CONFIG = {"hostname":"anye137.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="anye137&apos;s blogs">
-<meta name="keywords" content="java,web,python,machine learning">
-<meta property="og:type" content="website">
-<meta property="og:title" content="anye137&#39;s blogs">
-<meta property="og:url" content="http://anye137.github.io/categories/爬虫/index.html">
+  <meta name="description" content="最近在看 WCE 的推导，看到「无偏」这个术语，记得以前上概率论也看过这个词，不过早就忘光了。">
+<meta name="keywords" content="数学">
+<meta property="og:type" content="article">
+<meta property="og:title" content="有偏估计和无偏估计">
+<meta property="og:url" content="http://anye137.github.io/2022/biased_and_unbiased/index.html">
 <meta property="og:site_name" content="anye137&#39;s blogs">
-<meta property="og:description" content="anye137&apos;s blogs">
+<meta property="og:description" content="最近在看 WCE 的推导，看到「无偏」这个术语，记得以前上概率论也看过这个词，不过早就忘光了。">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2022-08-23T02:17:30.218Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="anye137&#39;s blogs">
-<meta name="twitter:description" content="anye137&apos;s blogs">
+<meta name="twitter:title" content="有偏估计和无偏估计">
+<meta name="twitter:description" content="最近在看 WCE 的推导，看到「无偏」这个术语，记得以前上概率论也看过这个词，不过早就忘光了。">
 
-<link rel="canonical" href="http://anye137.github.io/categories/爬虫/">
+<link rel="canonical" href="http://anye137.github.io/2022/biased_and_unbiased/">
 
 
 <script id="page-configurations">
@@ -40,12 +41,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-Hans'
   };
 </script>
 
-  <title>Category: 爬虫 | anye137's blogs</title>
+  <title>有偏估计和无偏估计 | anye137's blogs</title>
   
 
 
@@ -144,131 +145,109 @@
         <div class="content-wrap">
           
 
-          <div class="content category">
+          <div class="content post posts-expand">
             
 
+    
   
   
-  
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <h2 class="collection-header">爬虫
-          <small>Category</small>
-        </h2>
-      </div>
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://anye137.github.io/2022/biased_and_unbiased/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="anye137">
+      <meta itemprop="description" content="anye137's blogs">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="anye137's blogs">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          有偏估计和无偏估计
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-08-22 20:37:59" itemprop="dateCreated datePublished" datetime="2022-08-22T20:37:59+08:00">2022-08-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-08-23 10:17:30" itemprop="dateModified" datetime="2022-08-23T10:17:30+08:00">2022-08-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/数学/" itemprop="url" rel="index"><span itemprop="name">数学</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <span class="collection-header">2018</span>
-    </div>
+        <p>最近在看 WCE 的推导，看到「无偏」这个术语，记得以前上概率论也看过这个词，不过早就忘光了。</p>
+<a id="more"></a>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2018-06-18T09:21:59+08:00"
-              content="2018-06-18">
-          06-18
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2018/crawler-geetest/" itemprop="url">
-            <span itemprop="name">爬虫之破解极验验证（滑动验证码）</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2018-06-16T16:38:20+08:00"
-              content="2018-06-16">
-          06-16
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2018/crawler-monitor/" itemprop="url">
-            <span itemprop="name">Mysql + Grafana 监控爬虫程序</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2018-06-16T16:05:05+08:00"
-              content="2018-06-16">
-          06-16
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2018/crawler-js-wanfang/" itemprop="url">
-            <span itemprop="name">爬虫获取 JS 动态数据（万方数据库文献下载）</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2018-06-06T00:06:53+08:00"
-              content="2018-06-06">
-          06-06
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2018/crawler-multi-process-thread/" itemprop="url">
-            <span itemprop="name">Python 爬虫中的多进程，多线程和协程（基础）</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2018-06-03T22:27:26+08:00"
-              content="2018-06-03">
-          06-03
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2018/crawler-js-selenium/" itemprop="url">
-            <span itemprop="name">爬虫获取 JS 动态数据（漫画图片下载）</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
+<p>知乎上有个回答写得比较好，在此摘录一下。</p>
+<blockquote>
+<p>作者：包龙图<br>链接：<a href="https://www.zhihu.com/question/22983179/answer/23472111" target="_blank" rel="noopener">https://www.zhihu.com/question/22983179/answer/23472111</a><br>来源：知乎<br>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</p>
+<p>给你举个例子吧：</p>
+<p>现在甲市有一万名小学三年级学生，他们进行了一次统考，考试成绩服从1~100的均匀分布：00001号学生得1分，00002号学生得1.01分……10000号学生得100分。那么他们的平均分是多少？(1+1.01+1.02+….+100)&#x2F;10000&#x3D;50.5，这个值叫做<strong>总体平均数</strong>。</p>
+<p>现在假定你是教委的一个基层人员，教委主任给你一个早上时间，让你估算一下全市学生的平均成绩，你怎么办？把全市一万名学生都问一遍再计算时间显然是来不及了，因此在有限的时间里，你找到了一个聪明的办法：给全市的78所小学每一所学校打了一个电话，让他们随机选取一名学生的成绩报上来，这样你就得到了78个学生的成绩，这78个学生就是你的<strong>样本</strong>。</p>
+<p>你现在的任务很简单了，拿这78个学生的成绩相加并除以78，你就得到了<strong>样本平均数</strong>。你把这个数报告给教委主任，这个数就是你估算出来的全市平均成绩。</p>
+<p>这个样本平均数会不会等于总体平均数50.5？很显然这和你的“手气”有关——不过大多数情况下是不会相等的。</p>
+<p>那么问题来了：既然样本平均数不等于总体平均数（也就是说你报给教委主任的平均分和实际的平均分非常有可能是不一样的），要它还有用吗？有！因为样本平均数是总体平均数的<strong>无偏估计</strong>——也就是说只要你采用这种方法进行估算，估算的结果的期望值（你可以近似理解为很多次估算结果的平均数）既不会大于真实的平均数，也不会小于之。换句话说：你这种估算方法<strong>没有系统上的偏差</strong>，而产生误差的原因只有一个：随机因素（也就是你的手气好坏造成的）。</p>
+</blockquote>
+<p>个人总结：无偏估计，就是<strong>「样本平均值的期望等于总体平均值」</strong>。</p>
+<p>说到无偏估计，想起来了方差的无偏估计，分母为 n-1，特地去搜了一波推导。详细推导可看这个逼乎回答 <a href="https://www.zhihu.com/question/20099757/answer/312670291" target="_blank" rel="noopener">link</a>。</p>
 
     </div>
-  </div>
-  
-  
-  
 
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/数学/" rel="tag"># 数学</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/work_think/" rel="prev" title="工作相关的碎碎念">
+      <i class="fa fa-chevron-left"></i> 工作相关的碎碎念
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
   
 
 
