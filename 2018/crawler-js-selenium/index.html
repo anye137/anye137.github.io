@@ -218,21 +218,16 @@
 <p><a href="https://manhua.sfacg.com/mh/YSJ/4519/" target="_blank" rel="noopener">https://manhua.sfacg.com/mh/YSJ/4519/</a></p>
 <p><strong>我们的目的是获取漫画图片 url，然后下载下来。</strong></p>
 <a id="more"></a>
-
 <h1 id="判断待爬数据是否-js-动态加载的"><a href="#判断待爬数据是否-js-动态加载的" class="headerlink" title="判断待爬数据是否 js 动态加载的"></a>判断待爬数据是否 js 动态加载的</h1><p>用 chrome 打开该网页，右键漫画图片 -&gt; 检查</p>
-<img src="/images/2018/06-04-0-comic.jpg" align="center">
-
+<p><img src="/images/2018/06-04-0-comic.jpg" align="center"></p>
 <p>我们可以看到图片的 url 就在里面。可以右键此处（蓝色部分）-&gt; copy -&gt;  copy xpath 获得图片对应的 xpath，然后可以使用 requests 和 xpath 获取图片 url。当然最后还是失败了。因为这里的图片是 js 动态加载出来的。</p>
 <h1 id="获取跟待爬数据有关的-js-代码信息"><a href="#获取跟待爬数据有关的-js-代码信息" class="headerlink" title="获取跟待爬数据有关的 js 代码信息"></a>获取跟待爬数据有关的 js 代码信息</h1><p>我们可以查看网页源代码，Ctrl+F 定位图片 id “curPic”：</p>
-<img src="/images/2018/06-04-1-comic.jpg" alt="filter" align="center">
-
+<p><img src="/images/2018/06-04-1-comic.jpg" alt="filter" align="center"></p>
 <p>可以看到，里面根本没有图片的 url，图片是 js 加载的。阅读里面的 js 代码，我们可以知道图片 url 是由下面这行代码决定的：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pic2.src = hosts[getHost()] + picAy[curIndex]</span><br></pre></td></tr></table></figure>
-
 <p>在源码中寻找 <code>hosts</code> 和 <code>picAy</code>，发现它们只在这里出现过。这说明这两个数组可能是由 js 代码加载的。</p>
 <h1 id="寻找跟待爬数据有关的-js-请求"><a href="#寻找跟待爬数据有关的-js-请求" class="headerlink" title="寻找跟待爬数据有关的 js 请求"></a>寻找跟待爬数据有关的 js 请求</h1><p>回到漫画那个页面，我们打开 Chrome 的 F12，点击 network，勾选 js，刷新网页，查看相关 js 请求对应的 preview，看看哪些包含 <code>hosts</code> 和 <code>picAy</code>：</p>
-<img src="/images/2018/06-04-1-comic.jpg" alt="filter" align="center">
-
+<p><img src="/images/2018/06-04-1-comic.jpg" alt="filter" align="center"></p>
 <p>额，这进展还是出乎意料的顺利，第一个 js 就有我们想要寻找的内容了。我们可以看到，这一话漫画的所有图片都在这个 js 请求的响应内容里了。由此图可知，我们进入某一话漫画的第一页时，就有一份 js 代码请求了这一话漫画所有页的图片 url。那么，我们在写程序的时候，该如何得到这份 js 的文件名？</p>
 <p>观察其他漫画的情况，我们可以发现，虽然这份 js 代码的命名没啥规律，不过在网页源代码中，它一般是处于第一个 js 的位置。</p>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>至此，总结一下如何下载该网站漫画：</p>
@@ -347,18 +342,18 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-count">20</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
-        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
-        <span class="site-state-item-count">26</span>
+        <span class="site-state-item-count">28</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -432,6 +427,8 @@
 
 
 
+
+  
 
   
 

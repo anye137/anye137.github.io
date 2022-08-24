@@ -20,13 +20,13 @@
     var CONFIG = {"hostname":"anye137.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="概述说实话，本文代码主要是参考网上资料的。 极验验证的滑动验证码如下：   其实网上有许多破解极验验证的教程，主要分为两种，一种是手动分析各种请求，另一种是直接使用 Selenium 模拟浏览器。前者，破解过程繁琐，开发久，但是运行速度快；后者，开发快，但是运行很慢。。考虑到极验验证一直在更换各种请求 URL，参数等等（毕竟人家靠这个吃饭的啊），手动分析的方法时效性不强。所以，本文主要参考使用 S">
+  <meta name="description" content="概述说实话，本文代码主要是参考网上资料的。 极验验证的滑动验证码如下：  其实网上有许多破解极验验证的教程，主要分为两种，一种是手动分析各种请求，另一种是直接使用 Selenium 模拟浏览器。前者，破解过程繁琐，开发久，但是运行速度快；后者，开发快，但是运行很慢。。考虑到极验验证一直在更换各种请求 URL，参数等等（毕竟人家靠这个吃饭的啊），手动分析的方法时效性不强。所以，本文主要参考使用 Se">
 <meta name="keywords" content="爬虫, 极限验证, 验证码, 破解">
 <meta property="og:type" content="article">
 <meta property="og:title" content="爬虫之破解极验验证（滑动验证码）">
 <meta property="og:url" content="http://anye137.github.io/2018/crawler-geetest/index.html">
 <meta property="og:site_name" content="anye137&#39;s blogs">
-<meta property="og:description" content="概述说实话，本文代码主要是参考网上资料的。 极验验证的滑动验证码如下：   其实网上有许多破解极验验证的教程，主要分为两种，一种是手动分析各种请求，另一种是直接使用 Selenium 模拟浏览器。前者，破解过程繁琐，开发久，但是运行速度快；后者，开发快，但是运行很慢。。考虑到极验验证一直在更换各种请求 URL，参数等等（毕竟人家靠这个吃饭的啊），手动分析的方法时效性不强。所以，本文主要参考使用 S">
+<meta property="og:description" content="概述说实话，本文代码主要是参考网上资料的。 极验验证的滑动验证码如下：  其实网上有许多破解极验验证的教程，主要分为两种，一种是手动分析各种请求，另一种是直接使用 Selenium 模拟浏览器。前者，破解过程繁琐，开发久，但是运行速度快；后者，开发快，但是运行很慢。。考虑到极验验证一直在更换各种请求 URL，参数等等（毕竟人家靠这个吃饭的啊），手动分析的方法时效性不强。所以，本文主要参考使用 Se">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://anye137.github.io/images/2018/06-18-1.png">
 <meta property="og:image" content="http://anye137.github.io/images/2018/06-18-2.png">
@@ -34,7 +34,7 @@
 <meta property="og:updated_time" content="2022-04-03T13:22:07.399Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="爬虫之破解极验验证（滑动验证码）">
-<meta name="twitter:description" content="概述说实话，本文代码主要是参考网上资料的。 极验验证的滑动验证码如下：   其实网上有许多破解极验验证的教程，主要分为两种，一种是手动分析各种请求，另一种是直接使用 Selenium 模拟浏览器。前者，破解过程繁琐，开发久，但是运行速度快；后者，开发快，但是运行很慢。。考虑到极验验证一直在更换各种请求 URL，参数等等（毕竟人家靠这个吃饭的啊），手动分析的方法时效性不强。所以，本文主要参考使用 S">
+<meta name="twitter:description" content="概述说实话，本文代码主要是参考网上资料的。 极验验证的滑动验证码如下：  其实网上有许多破解极验验证的教程，主要分为两种，一种是手动分析各种请求，另一种是直接使用 Selenium 模拟浏览器。前者，破解过程繁琐，开发久，但是运行速度快；后者，开发快，但是运行很慢。。考虑到极验验证一直在更换各种请求 URL，参数等等（毕竟人家靠这个吃饭的啊），手动分析的方法时效性不强。所以，本文主要参考使用 Se">
 <meta name="twitter:image" content="http://anye137.github.io/images/2018/06-18-1.png">
 
 <link rel="canonical" href="http://anye137.github.io/2018/crawler-geetest/">
@@ -211,11 +211,9 @@
       
         <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>说实话，本文代码主要是参考网上资料的。</p>
 <p>极验验证的滑动验证码如下：</p>
-<img src="/images/2018/06-18-1.png" align="center">
-
+<p><img src="/images/2018/06-18-1.png" align="center"></p>
 <p>其实网上有许多破解极验验证的教程，主要分为两种，一种是<font color="red"><strong>手动分析各种请求</strong></font>，另一种是直接<font color="red"><strong>使用 Selenium 模拟浏览器</strong></font>。前者，破解过程繁琐，开发久，但是运行速度快；后者，开发快，但是运行很慢。。考虑到极验验证一直在更换各种请求 URL，参数等等（毕竟人家靠这个吃饭的啊），手动分析的方法时效性不强。所以，本文主要参考使用 Selenium 破解验证码的方法。</p>
 <a id="more"></a>
-
 <p>本文所使用的验证码例子如下：</p>
 <p><a href="https://www.geetest.com/type/" target="_blank" rel="noopener">极验验证-验证例子</a></p>
 <p>破解过程如下：</p>
@@ -229,53 +227,37 @@
 </blockquote>
 <p>本文代码使用的库如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"><span class="keyword">from</span> selenium.webdriver.common.by <span class="keyword">import</span> By</span><br><span class="line"><span class="keyword">from</span> selenium.webdriver.common.action_chains <span class="keyword">import</span> ActionChains</span><br><span class="line"><span class="keyword">from</span> selenium.webdriver.support.ui <span class="keyword">import</span> WebDriverWait <span class="keyword">as</span> Wait</span><br><span class="line"><span class="keyword">from</span> selenium.webdriver.support <span class="keyword">import</span> expected_conditions <span class="keyword">as</span> Expect</span><br><span class="line"><span class="keyword">import</span> new.anti.easing <span class="keyword">as</span> easing</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> cv2</span><br></pre></td></tr></table></figure>
-
-<br>
-
+<p><br></p>
 <h1 id="1-滑动验证码的出现"><a href="#1-滑动验证码的出现" class="headerlink" title="1. 滑动验证码的出现"></a>1. 滑动验证码的出现</h1><p>这个比较简单啦，首先使用 Selenium 访问网页：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">browser = webdriver.Chrome(</span><br><span class="line">    executable_path=<span class="string">"e:/chromedriver.exe"</span>,</span><br><span class="line">    chrome_options=chrome_options</span><br><span class="line">)</span><br><span class="line">browser.get(<span class="string">'http://www.geetest.com/type/'</span>)</span><br><span class="line"></span><br><span class="line">Wait(browser, <span class="number">60</span>).until(</span><br><span class="line">    Expect.visibility_of_element_located((By.CLASS_NAME, <span class="string">"products-content"</span>))</span><br><span class="line">)</span><br><span class="line">time.sleep(<span class="number">1.2</span>)</span><br></pre></td></tr></table></figure>
-
 <p>接着，点击 “滑动行为验证”：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">slide_captcha = browser.find_element_by_xpath(<span class="string">'//div[@class="products-content"]/ul/li[2]'</span>)</span><br><span class="line">slide_captcha.click()</span><br><span class="line">Wait(browser, <span class="number">60</span>).until(</span><br><span class="line">    Expect.visibility_of_element_located((By.CLASS_NAME, <span class="string">"geetest_radar_tip_content"</span>))</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-
 <p>然后，点击 “点击按钮进行验证”，就出现验证图片了：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">validate = browser.find_element_by_xpath(<span class="string">'//span[@class="geetest_radar_tip_content"]'</span>)</span><br><span class="line">validate.click()</span><br><span class="line">time.sleep(<span class="number">0.5</span>)</span><br></pre></td></tr></table></figure>
-
-<br>
-
+<p><br></p>
 <h1 id="2-获取验证码图像和带缺口的验证码图像"><a href="#2-获取验证码图像和带缺口的验证码图像" class="headerlink" title="2. 获取验证码图像和带缺口的验证码图像"></a>2. 获取验证码图像和带缺口的验证码图像</h1><p>这里用到 Selenium 的截图功能。Selenium 对元素截图会出错（原因我也不知，网上这样说的。。）。所以，我们要全屏截图，然后裁剪出验证码图像。在这里，我们要截取的元素，是重叠的。<strong>对于重叠的元素，我们先执行 JS 脚本，移除部分元素或者使得元素不可见，再截图</strong>。获取图像的函数如下：</p>
  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_pictures</span><span class="params">(browser)</span>:</span></span><br><span class="line">    browser.execute_script(<span class="string">'''</span></span><br><span class="line"><span class="string">        var x = document.getElementsByClassName("geetest_canvas_slice geetest_absolute");</span></span><br><span class="line"><span class="string">        x[0].style.display="none";</span></span><br><span class="line"><span class="string">        var y = document.getElementsByClassName("geetest_canvas_fullbg geetest_fade geetest_absolute");</span></span><br><span class="line"><span class="string">        y[0].style.display="none";</span></span><br><span class="line"><span class="string">    '''</span>)</span><br><span class="line">    time.sleep(<span class="number">0.8</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 带缺口的验证码图像的全屏截图</span></span><br><span class="line">    browser.save_screenshot(<span class="string">'img1.jpg'</span>)</span><br><span class="line">    <span class="comment"># 裁剪验证码图像</span></span><br><span class="line">    crop_picture(<span class="string">'img1.jpg'</span>)</span><br><span class="line"></span><br><span class="line">    browser.execute_script(<span class="string">'''</span></span><br><span class="line"><span class="string">        var x = document.getElementsByClassName("geetest_canvas_bg geetest_absolute");</span></span><br><span class="line"><span class="string">        x[0].style.display="none";</span></span><br><span class="line"><span class="string">        var y = document.getElementsByClassName("geetest_canvas_fullbg geetest_fade geetest_absolute");</span></span><br><span class="line"><span class="string">        y[0].style.display="block";</span></span><br><span class="line"><span class="string">    '''</span>)</span><br><span class="line">    time.sleep(<span class="number">0.8</span>)</span><br><span class="line">    <span class="comment"># 不带缺口的验证码图像的全屏截图</span></span><br><span class="line">    browser.save_screenshot(<span class="string">'img2.jpg'</span>)</span><br><span class="line">    <span class="comment"># 裁剪验证码图像</span></span><br><span class="line">    crop_picture(<span class="string">'img2.jpg'</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 使元素恢复成可见的</span></span><br><span class="line">    browser.execute_script(<span class="string">'''</span></span><br><span class="line"><span class="string">        var x = document.getElementsByClassName("geetest_canvas_bg geetest_absolute");</span></span><br><span class="line"><span class="string">        x[0].style.display="block";</span></span><br><span class="line"><span class="string">        var y = document.getElementsByClassName("geetest_canvas_slice geetest_absolute");</span></span><br><span class="line"><span class="string">        y[0].style.display="block";</span></span><br><span class="line"><span class="string">    '''</span>)</span><br></pre></td></tr></table></figure>
-
 <p>其中，裁剪函数如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">crop_picture</span><span class="params">(filename)</span>:</span></span><br><span class="line">    left = <span class="number">830</span></span><br><span class="line">    top = <span class="number">335</span></span><br><span class="line">    right = left + <span class="number">260</span></span><br><span class="line">    bottom = top + <span class="number">160</span></span><br><span class="line"></span><br><span class="line">    im = Image.open(filename)</span><br><span class="line">    im = im.crop((left, top, right, bottom))</span><br><span class="line">    im.save(filename)</span><br></pre></td></tr></table></figure>
-
 <p>260 和 160 是验证码图像的宽度和高度。830 和 335 是根据屏幕的高和宽以及验证码图像的高和宽计算出来的。对于不同的浏览器和不同的显示器，这些数值可能不一样。合理的话，应该使用程序获取这些高度和宽度并计算的。但是我懒得写了。。</p>
-<br>
-
+<p><br></p>
 <h1 id="3-比对两张图像，获得滑块位移"><a href="#3-比对两张图像，获得滑块位移" class="headerlink" title="3. 比对两张图像，获得滑块位移"></a>3. 比对两张图像，获得滑块位移</h1><p>这里，是对两张图片逐个像素进行匹配，如果某个像素点不匹配，该像素点就是滑块缺口的左上顶点。滑块的位移是水平方向的，初始滑块左上顶底横坐标大约是 12，所以 <code>offset = j - 12</code>。</p>
 <p>但是实际上，我们截图的时候，截的验证码位置可能有误差，所以计算位移要考虑到误差的影响。在我这里，设置为 <code>offset = j</code></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_offset</span><span class="params">(image1, image2, threshold)</span>:</span></span><br><span class="line">    offset = <span class="number">-1</span></span><br><span class="line">    img1 = cv2.imread(image1)</span><br><span class="line">    img2 = cv2.imread(image2)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">260</span>):</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">160</span>):</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> match(img1[i][j], img2[i][j], threshold):           </span><br><span class="line">                offset = j</span><br><span class="line">                <span class="keyword">return</span> offset</span><br><span class="line">    <span class="keyword">return</span> offset</span><br></pre></td></tr></table></figure>
-
 <p>匹配函数如下（注意 imread 函数读到的像素值是 uint8 类型，相减之后可能溢出，所以要转为 int）：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">match</span><span class="params">(i1, i2, t)</span>:</span></span><br><span class="line">    p1 = [int(p) <span class="keyword">for</span> p <span class="keyword">in</span> i1]</span><br><span class="line">    p2 = [int(p) <span class="keyword">for</span> p <span class="keyword">in</span> i2]</span><br><span class="line">    <span class="keyword">if</span> abs(p1[<span class="number">0</span>] - p2[<span class="number">0</span>]) &lt; t <span class="keyword">and</span> abs(p1[<span class="number">1</span>] - p2[<span class="number">1</span>]) &lt; t <span class="keyword">and</span> abs(p1[<span class="number">2</span>] - p2[<span class="number">2</span>]) &lt; t:</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">True</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">False</span></span><br></pre></td></tr></table></figure>
-
 <p>有个问题，就是，为什么我们要设置一个阈值呢？显而易见的原因是，图像之间可能存在少许误差嘛。不过，实际上，这个阈值设置得蛮大的（我设置为 50），这是因为，有些验证码图像加入了一些阴影干扰。</p>
-<img src="/images/2018/06-18-2.png" align="center">
-
-<img src="/images/2018/06-18-3.png" align="center">
-
+<p><img src="/images/2018/06-18-2.png" align="center"></p>
+<p><img src="/images/2018/06-18-3.png" align="center"></p>
 <p>所以，像素之间差距小于阈值的，我们可以认为是跟原图像一样的，或者是阴影干扰项。</p>
-<br>
-
+<p><br></p>
 <h1 id="4-模拟滑块运动，进行验证"><a href="#4-模拟滑块运动，进行验证" class="headerlink" title="4. 模拟滑块运动，进行验证"></a>4. 模拟滑块运动，进行验证</h1><p>注意，得到位移后，不能进行简单的匀速拖拽，因为极验验证会识别是否是机器操作的。所以，拖拽的的过程要精心设计。这里，我啥都没干。。哈哈。直接 copy 了网上的代码，成功率还是蛮高的。验证的代码如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">do_crack</span><span class="params">(browser, offset)</span>:</span></span><br><span class="line">    knob = browser.find_element_by_class_name(<span class="string">"geetest_slider_button"</span>)</span><br><span class="line">    fake_drag(browser, knob, offset)</span><br><span class="line">    <span class="keyword">return</span></span><br></pre></td></tr></table></figure>
-
 <p>里面调用的函数，可以去参考资料 [2] 那里看</p>
-<br>
-
+<p><br></p>
 <h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><blockquote>
-<p>[1] (极验滑动验证最新破解实践（18年1月底）)[<a href="https://zhuanlan.zhihu.com/p/31995134]" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/31995134]</a></p>
-<p>[2] (使用 Python + Selenium 破解滑块验证码)[<a href="http://www.aneasystone.com/archives/2018/03/python-selenium-geetest-crack.html]" target="_blank" rel="noopener">http://www.aneasystone.com/archives/2018/03/python-selenium-geetest-crack.html]</a></p>
+<p>[1] (极验滑动验证最新破解实践（18年1月底）)[<a href="https://zhuanlan.zhihu.com/p/31995134" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/31995134</a>]</p>
+<p>[2] (使用 Python + Selenium 破解滑块验证码)[<a href="http://www.aneasystone.com/archives/2018/03/python-selenium-geetest-crack.html" target="_blank" rel="noopener">http://www.aneasystone.com/archives/2018/03/python-selenium-geetest-crack.html</a>]</p>
 </blockquote>
 
     </div>
@@ -376,18 +358,18 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-count">20</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
-        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
-        <span class="site-state-item-count">26</span>
+        <span class="site-state-item-count">28</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -461,6 +443,8 @@
 
 
 
+
+  
 
   
 
